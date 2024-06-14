@@ -1,18 +1,9 @@
-import express, { Request, Response } from 'express'
+import { config as configDotEnv } from 'dotenv'
 
-const app = express()
-const port = process.env.PORT || 3000
+import { startServer } from './server'
 
-app.use(express.json())
+configDotEnv()
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Hello World!')
-})
-
-if (process.env.NODE_ENV !== 'test') {
-  app.listen(port, () => {
-    console.log(`Server is running on port ${port}`)
-  })
-}
+const app = startServer()
 
 export default app
