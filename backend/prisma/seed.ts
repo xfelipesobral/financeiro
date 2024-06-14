@@ -4,7 +4,15 @@ import { passwordToHash } from '../src/utils/password'
 const prisma = new PrismaClient()
 
 const banks = ['Nubank', 'Sicredi']
-const categories = ['Alimentação', 'Assinaturas', 'Diversos', 'Jogos', 'FFI', 'Ação', 'RDB', 'Salário']
+
+const categories: { description: string, type: 'DEBIT' | 'CREDIT' }[] = [
+    { description: 'Alimentação', type: 'DEBIT' },
+    { description: 'Assinaturas', type: 'DEBIT' },
+    { description: 'Diversos', type: 'DEBIT' },
+    { description: 'Jogos', type: 'DEBIT' },
+    { description: 'Investimentos', type: 'DEBIT' },
+    { description: 'Salário', type: 'CREDIT' }
+]
 
 async function main() {
     await prisma.user.upsert({
@@ -19,12 +27,12 @@ async function main() {
     })
 
     let id = 0
-    for (const description of categories) {
+    for (const { description, type } of categories) {
         id++
         await prisma.category.upsert({
             where: { id },
-            update: { description },
-            create: { id, description }
+            update: { description, type },
+            create: { id, description, type }
         })
     }
 
@@ -37,7 +45,7 @@ async function main() {
             create: { id, name }
         })
     }
-    
+
     console.log('Seed completed ✅')
 }
 

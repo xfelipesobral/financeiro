@@ -57,7 +57,13 @@ model Bank {
 model Category {
   id           Int           @id
   description  String
+  type         CategoryType  @default(CREDIT)
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   transactions Transaction[]
+}
+
+enum CategoryType {
+  DEBIT
+  CREDIT
 }
