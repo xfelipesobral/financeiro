@@ -8,5 +8,6 @@ const transactionRoutes = Router()
 transactionRoutes.post('/', upsert)
 transactionRoutes.put('/patch/:id', upsert)
 transactionRoutes.get('/:id', find)
+transactionRoutes.get('/', find)
 
 export { transactionRoutes }
