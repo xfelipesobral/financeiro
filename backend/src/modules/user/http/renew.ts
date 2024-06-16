@@ -9,7 +9,7 @@ export async function renew(req: Request, res: Response) {
     }
 
     try {
-        const accessToken = await new SessionService().renewAcessToken(refreshToken, req.headers['user-agent'] || 'unknown')
+        const accessToken = await new SessionService().renew(refreshToken, req.headers['user-agent'] || 'unknown')
         return res.status(200).json({ accessToken })
     } catch (error) {
         return res.status(500).json({ message: (error as Error).message })

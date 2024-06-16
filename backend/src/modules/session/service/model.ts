@@ -7,13 +7,13 @@ export interface UpdateSessionParams {
 }
 
 export interface SessionFunctionsModel {
-    createSession(userId: string, tokenId: string, identifier?: string): Promise<string>
-    deleteSession(refreshToken: string): Promise<void>
-    findSession(refreshToken: string): Promise<Session | null>
-    updateSession(params: UpdateSessionParams): Promise<void>
+    create(userId: string, tokenId: string, identifier?: string): Promise<string>
+    delete(refreshToken: string): Promise<void>
+    findById(refreshToken: string): Promise<Session | null>
+    update(params: UpdateSessionParams): Promise<void>
 }
 
 export interface SessionFunctionsService {
-    validateSession(refreshToken: string): Promise<boolean>
-    renewAcessToken(refreshToken: string, identifier: string): Promise<string>
+    validate(refreshToken: string): Promise<boolean>
+    renew(refreshToken: string, identifier: string): Promise<string>
 }

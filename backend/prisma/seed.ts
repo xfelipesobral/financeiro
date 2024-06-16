@@ -11,7 +11,18 @@ const categories: { description: string, type: 'DEBIT' | 'CREDIT' }[] = [
     { description: 'Diversos', type: 'DEBIT' },
     { description: 'Jogos', type: 'DEBIT' },
     { description: 'Investimentos', type: 'DEBIT' },
-    { description: 'Salário', type: 'CREDIT' }
+    { description: 'Salário', type: 'CREDIT' },
+    { description: 'Dentista', type: 'DEBIT' },
+    { description: 'Saúde', type: 'DEBIT' },
+    { description: 'Transporte', type: 'DEBIT' },
+    { description: 'Educação', type: 'DEBIT' },
+    { description: 'Roupas', type: 'DEBIT' },
+    { description: 'Casa', type: 'DEBIT' },
+    { description: 'Mercado', type: 'DEBIT' },
+    { description: 'Lazer', type: 'DEBIT' },
+    { description: 'Viagem', type: 'DEBIT' },
+    { description: 'Presente', type: 'DEBIT' },
+    { description: 'Transferência', type: 'CREDIT' }
 ]
 
 async function main() {

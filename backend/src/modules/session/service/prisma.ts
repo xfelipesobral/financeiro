@@ -6,7 +6,7 @@ import { SessionFunctionsModel, UpdateSessionParams } from './model'
 export class SessionModel implements SessionFunctionsModel {
     private prisma = new PrismaClient().session
 
-    async updateSession({ id, content, tokenId }: UpdateSessionParams): Promise<void> {
+    async update({ id, content, tokenId }: UpdateSessionParams): Promise<void> {
         await this.prisma.update({
             where: {
                 id
@@ -18,7 +18,7 @@ export class SessionModel implements SessionFunctionsModel {
         })
     }
 
-    async createSession(userId: string, tokenId: string, identifier: string = 'UNKNOW'): Promise<string> {
+    async create(userId: string, tokenId: string, identifier: string = 'UNKNOW'): Promise<string> {
         const id = uuid()
 
         await this.prisma.create({
@@ -34,7 +34,7 @@ export class SessionModel implements SessionFunctionsModel {
         return id
     }
 
-    async deleteSession(refreshToken: string): Promise<void> {
+    async delete(refreshToken: string): Promise<void> {
         await this.prisma.delete({
             where: {
                 id: refreshToken
@@ -42,7 +42,7 @@ export class SessionModel implements SessionFunctionsModel {
         })
     }
 
-    findSession(refreshToken: string): Promise<Session | null> {
+    findById(refreshToken: string): Promise<Session | null> {
         return this.prisma.findUnique({
             where: {
                 id: refreshToken

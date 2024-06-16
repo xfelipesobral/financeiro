@@ -8,8 +8,8 @@ import { SessionModel } from './prisma'
 export class SessionService extends SessionModel implements SessionFunctionsService {
     private daysLimitSession = 30
 
-    async validateSession(refreshToken: string): Promise<boolean> {
-        const session = await super.findSession(refreshToken)
+    async validate(refreshToken: string): Promise<boolean> {
+        const session = await super.findById(refreshToken)
 
         if (!session) {
             return false
@@ -17,32 +17,33 @@ export class SessionService extends SessionModel implements SessionFunctionsServ
 
         const limit = addDays(session.createdAt, this.daysLimitSession)
 
-        // Check if the refresh token is expired
+        // Checa se a sessao expirou
         if (limit > new Date()) {
-            return true // Session is valid
+            return true // Sessao valida
         }
-
-        await super.deleteSession(refreshToken) // Delete the session
-        return false // Session is invalid
+        
+        // Caso tenha expirado...
+        await super.delete(refreshToken) // Deleta sessao
+        return false
     }
 
-    async renewAcessToken(refreshToken: string, identifier: string): Promise<string> {
-        const session = await super.findSession(refreshToken)
+    async renew(refreshToken: string, identifier: string): Promise<string> {
+        const session = await super.findById(refreshToken)
 
         if (!session) {
             throw new Error('Invalid refresh token')
         }
 
-        // Calculate the limit date for the refresh token
+        // Calcula o limite maximo de vida da sessao
         const limit = addDays(session.createdAt, this.daysLimitSession)
 
-        // Check if the refresh token is expired or if the session identifier is different
+        // Verifica se a sessao ja expirou ou se o identificador nao bate com quem gerou
         if (limit < new Date() || session.identifier !== identifier) {
-            await super.deleteSession(refreshToken) // Delete the session
+            await super.delete(refreshToken) // Delete the session
             throw new Error('Refresh token expired')
         }
 
-        // Create a new access token
+        // Cria accessToken
         const { id, token } = createAccessToken({
             options: {
                 subject: session.userId,
@@ -50,8 +51,8 @@ export class SessionService extends SessionModel implements SessionFunctionsServ
             }
         })
 
-        // Update the session with the new access token
-        await super.updateSession({
+        // Atualiza a sessao com o novo token
+        await super.update({
             id: session.id,
             content: session.content,
             tokenId: id

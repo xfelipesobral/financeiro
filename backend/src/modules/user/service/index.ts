@@ -25,7 +25,7 @@ export class UserService extends UserModel implements UserFunctionsService {
                 }
             })
 
-            const refreshToken = await new SessionService().createSession(user.id, id, identifier)
+            const refreshToken = await new SessionService().create(user.id, id, identifier)
 
             return {
                 accessToken: token,
