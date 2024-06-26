@@ -1,5 +1,7 @@
 'use server'
 
+import { writeRefreshToken, writeToken } from '@/lib/storage/authentication'
+
 import api from '../'
 
 interface Login {
@@ -20,13 +22,14 @@ const errorTranslations: { [key: string]: string } = {
     'Email and password are required': 'Email e senha são obrigatórios'
 }
 
-export default async function login(email: string, password: string) {
+export default async function login(email: string, password: string): Promise<boolean | string> {
     try {
-        const { data } = await api().post<Login>('/user/login', { email, password })
+        const { data: { accessToken, refreshToken } } = await api().post<Login>('/user/login', { email, password })
 
-        
+        writeRefreshToken(refreshToken)
+        writeToken(accessToken)
 
-        return data
+        return true
     } catch (e) {
         const { response: { data: { message } } } = e as LoginError
         return errorTranslations[message] || 'Erro inesperado, tente novamente mais tarde'

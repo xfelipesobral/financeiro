@@ -6,6 +6,6 @@ import { renew } from '../modules/user/http/renew'
 const userRoutes = Router()
 
 userRoutes.post('/login', authenticate)
-userRoutes.patch('/renew', renew)
+userRoutes.patch('/login', renew)
 
 export { userRoutes }
