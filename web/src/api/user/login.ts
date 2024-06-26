@@ -23,6 +23,9 @@ const errorTranslations: { [key: string]: string } = {
 export default async function login(email: string, password: string) {
     try {
         const { data } = await api().post<Login>('/user/login', { email, password })
+
+        
+
         return data
     } catch (e) {
         const { response: { data: { message } } } = e as LoginError

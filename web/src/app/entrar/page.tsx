@@ -8,19 +8,25 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { toast } from 'sonner'
+import { useState } from 'react'
+import { Loader2 } from 'lucide-react'
 
-interface Form { 
+interface Form {
 	email: string
 	password: string
 }
 
 export default function Entrar() {
+	const [loading, setLoading] = useState(false)
+
 	const { register, getValues } = useForm<Form>()
 
 	const submit = async () => {
 		const { email, password } = getValues()
 
+		setLoading(true)
 		const response = await login(email, password)
+		setLoading(false)
 
 		if (typeof response === 'string') {
 			toast.error(response)
@@ -49,7 +55,14 @@ export default function Entrar() {
 					</div>
 				</div>
 				<div className='flex items-center p-6 pt-0'>
-					<Button onClick={submit} className='w-full'>Entrar</Button>
+					<Button
+						disabled={loading}
+						onClick={submit}
+						className='w-full flex gap-2'
+					>
+						{ loading && <Loader2 className='w-4 h-4 animate-spin' /> }
+						Entrar
+					</Button>
 				</div>
 			</div>
 		</div>
