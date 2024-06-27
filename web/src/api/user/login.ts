@@ -2,7 +2,7 @@
 
 import { writeRefreshToken, writeToken } from '@/lib/storage/authentication'
 
-import api from '../'
+import api from '..'
 
 interface Login {
     accessToken: string

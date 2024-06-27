@@ -8,7 +8,7 @@ interface Filters {
     finalDate?: string
     bankId?: string
     categoryId?: string
-    type?: string
+    type?: 'CREDIT' | 'DEBIT'
     page?: string
     limit?: string
 }
@@ -18,6 +18,8 @@ export async function find(req: Request, res: Response) {
     const querys = req.query as Filters
     
     try {
+        if (querys.type && !['CREDIT', 'DEBIT'].includes(querys.type)) return res.status(400).json({ message: 'Invalid type' })
+
         // Busca tranasacao especifica por id
         if (id) {
             const transaction = await new TransactionService().findById(id)
@@ -40,6 +42,8 @@ export async function find(req: Request, res: Response) {
 
         if (querys.bankId) filters.bankId = Number(querys.bankId)
         if (querys.categoryId) filters.categoryId = Number(querys.categoryId)
+
+        if (querys.type) filters.type = querys.type
 
         // Busca transacoes do usuario
         const transactions = await new TransactionService().findByUserId(req.user.id, filters)
