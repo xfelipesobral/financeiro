@@ -4,6 +4,8 @@ import { authenticated } from '../middlewares/authenticated'
 
 import { userRoutes } from './user.routes'
 import { transactionRoutes } from './transaction.routes'
+import { bankRoutes } from './banks.routes'
+import { categoryRoutes } from './categories.routes'
 
 const router = Router()
 
@@ -15,5 +17,7 @@ router.get('/', (req: Request, res: Response) => {
 
 router.use('/user', userRoutes)
 router.use('/transaction', authenticated, transactionRoutes)
+router.use('/bank', authenticated, bankRoutes)
+router.use('/category', authenticated, categoryRoutes)
 
 export default router

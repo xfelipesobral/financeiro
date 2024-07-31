@@ -1,11 +1,12 @@
-import { Prisma, PrismaClient, Transaction } from '@prisma/client'
+import { Prisma, Transaction } from '@prisma/client'
+import { prisma } from '../../db'
 
 import { uuid } from '../../../utils/uuid'
 
 import { TransactionFilterFindParams, TransactionFunctionsModel, UpsertTransactionParams } from './model'
 
 export class TransactionModel implements TransactionFunctionsModel {
-    private prisma = new PrismaClient().transaction
+    private prisma = prisma.transaction
 
     findByUserId(userId: string, { bankId, categoryId, finalDate, initialDate, type, take, skip }: TransactionFilterFindParams): Promise<Transaction[]> {
         return this.prisma.findMany({
@@ -52,7 +53,7 @@ export class TransactionModel implements TransactionFunctionsModel {
             }
         })
     }
-    
+
     upsert({ id, amount, bankId, userId, categoryId, date, description }: UpsertTransactionParams): Promise<Transaction> {
         if (!id) id = uuid()
 

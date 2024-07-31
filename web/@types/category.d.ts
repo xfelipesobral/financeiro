@@ -5,3 +5,5 @@ interface Category {
     createdAt: string
     updatedAt: string
 }
+
+type CategoryType = 'DEBIT' | 'CREDIT'

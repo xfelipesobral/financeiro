@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import { transactionsList } from '@/api/transaction/list'
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table'
-import { brDateTime } from '@/lib/formatDate'
+import { brDate } from '@/lib/formatDate'
 import { numberToReal } from '@/lib/formatNumber'
 
 export default function Inflow() {
@@ -45,7 +45,7 @@ export default function Inflow() {
                         <TableCell>{bankName}</TableCell>
                         <TableCell>{description}</TableCell>
                         <TableCell>{categoryDescription}</TableCell>
-                        <TableCell>{brDateTime(date)}</TableCell>
+                        <TableCell>{brDate(date)}</TableCell>
                         <TableCell className='text-right'>{numberToReal(Number(amount))}</TableCell>
                     </TableRow>
                 ))}

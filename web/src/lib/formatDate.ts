@@ -4,3 +4,7 @@ import { ptBR } from 'date-fns/locale'
 export function brDateTime(date: Date | number | string) {
     return format(date, 'dd/MM/yyyy HH:mm', { locale: ptBR })
 }
+
+export function brDate(date: Date | number | string) {
+    return format(date, 'dd/MM/yyyy', { locale: ptBR })
+}

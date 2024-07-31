@@ -9,14 +9,6 @@ interface Login {
     refreshToken: string
 }
 
-interface LoginError {
-    response: {
-        data: {
-            message: string
-        }
-    }
-}
-
 const errorTranslations: { [key: string]: string } = {
     'Invalid email or password': 'Email ou senha inválidos',
     'Email and password are required': 'Email e senha são obrigatórios'
@@ -31,7 +23,7 @@ export default async function login(email: string, password: string): Promise<bo
 
         return true
     } catch (e) {
-        const { response: { data: { message } } } = e as LoginError
-        return errorTranslations[message] || 'Erro inesperado, tente novamente mais tarde'
+        const { response: { data: { message } } } = e as ResponseError
+        return errorTranslations[message || ''] || 'Erro inesperado, tente novamente mais tarde'
     }
 }
