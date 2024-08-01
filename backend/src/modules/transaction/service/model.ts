@@ -20,11 +20,19 @@ export interface TransactionFilterFindParams {
     skip?: number
 }
 
+export interface TransactionSum {
+    balance: number
+    credit: number
+    debit: number
+}
+
 export interface TransactionFunctionsModel {
     findById(id: string): Promise<Transaction | null>
     findByUserId(userId: string, filters: TransactionFilterFindParams): Promise<Transaction[]>
     delete(id: string): Promise<void>
     upsert(transaction: UpsertTransactionParams): Promise<Transaction>
+    totalByUserId(userId: string, filters: TransactionFilterFindParams): Promise<TransactionSum>
+    sumByType(userId: string, type: CategoryType, filters: TransactionFilterFindParams): Promise<number>
 }
 
 export interface TransactionFunctionsService {

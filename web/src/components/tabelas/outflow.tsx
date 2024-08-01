@@ -1,35 +1,56 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, ForwardedRef, forwardRef, useImperativeHandle, useRef } from 'react'
 
 import { transactionsList } from '@/api/transaction/list'
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table'
 import { brDate } from '@/lib/formatDate'
 import { numberToReal } from '@/lib/formatNumber'
+import { format } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
 
-export default function Outflow() {
+interface OutflowProps {
+    initialDate?: Date
+    finalDate?: Date
+}
+
+export interface OutflowRef {
+    reload: () => void
+}
+
+function Outflow({ finalDate, initialDate }: OutflowProps, ref: ForwardedRef<OutflowRef>) {
     const [transactions, setTransactions] = useState<Transaction[]>([])
 
     useEffect(() => {
-        transactionsList({ type: 'DEBIT' }).then((data) => {
-            setTransactions(data)
-        })
-    }, [])
+        load()
+    }, [finalDate, initialDate])
+
+    const timeout1 = useRef<number | undefined>(undefined)
+
+    const load = () => {
+        window.clearTimeout(timeout1.current)
+
+        timeout1.current = window.setTimeout(() => {
+            transactionsList({
+                type: 'DEBIT',
+                initialDate: initialDate?.toJSON(),
+                finalDate: finalDate?.toJSON(),
+                limit: '5'
+            }).then((data) => {
+                setTransactions(data)
+            })
+        }, 100)
+    }
+
+    useImperativeHandle(ref, () => ({
+        reload: load
+    }))
 
     return (
-        <Table>
-            <TableHeader>
-                <TableRow>
-                    <TableHead>Banco</TableHead>
-                    <TableHead>Descrição</TableHead>
-                    <TableHead>Categoria</TableHead>
-                    <TableHead>Data</TableHead>
-                    <TableHead className='text-right'>Valor</TableHead>
-                </TableRow>
-            </TableHeader>
-            <TableBody>
-                {transactions.map(({
+        <div className='divide-y'>
+            {
+                transactions.map(({
                     id,
                     amount,
                     description,
@@ -40,16 +61,24 @@ export default function Outflow() {
                     category: {
                         description: categoryDescription
                     }
-                }) => (
-                    <TableRow key={id}>
-                        <TableCell>{bankName}</TableCell>
-                        <TableCell>{description}</TableCell>
-                        <TableCell>{categoryDescription}</TableCell>
-                        <TableCell>{brDate(date)}</TableCell>
-                        <TableCell className='text-right'>{numberToReal(Number(amount))}</TableCell>
-                    </TableRow>
-                ))}
-            </TableBody>
-        </Table>
+                }) => {
+
+                    return (
+                        <div key={id} className='flex justify-between py-2'>
+                            <div>
+                                <p>{description || 'Sem descrição'}</p>
+                                <p className='text-sm text-muted-foreground'>{categoryDescription}</p>
+                            </div>
+                            <div className='text-right'>
+                                <p className='font-semibold'>{numberToReal(Number(amount))}</p>
+                                <p className='text-sm text-muted-foreground capitalize'>{format(date, 'MMMM d', { locale: ptBR })}</p>
+                            </div>
+                        </div>
+                    )
+                })
+            }
+        </div>
     )
 }
+
+export default forwardRef(Outflow)

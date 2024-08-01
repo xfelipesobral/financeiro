@@ -11,3 +11,9 @@ interface Transaction {
     category: Category
     bank: Bank
 }
+
+interface TransactionTotals {
+    balance: number
+    credit: number
+    debit: number
+}

@@ -15,7 +15,7 @@ import { toast } from 'sonner'
 
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Tabs, TabsList, TabsTrigger } from '@radix-ui/react-tabs'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useEffect, useState } from 'react'
 import { Combobox } from '../input/combobox'
 import { comboBanksList } from '@/api/bank/list'
@@ -75,8 +75,6 @@ export function Transaction({ id, reloadTransactions }: Params) {
         if (!bank) return toast.error('Banco é obrigatório')
         if (!category) return toast.error('Categoria é obrigatória')
 
-        date.setHours(0, 0, 0) // Remove horas da data
-
         setLoading(true)
         const newTransactionResponse = await newTransaction({
             amount: amountNumber,
@@ -101,16 +99,16 @@ export function Transaction({ id, reloadTransactions }: Params) {
             </DialogTrigger>
             <DialogContent className='sm:max-w-[600px] w-full'>
                 <DialogHeader>
-                    <DialogTitle>Nova movimentação</DialogTitle>
+                    <DialogTitle>Nova transação</DialogTitle>
                     <DialogDescription className='max-w-[400px]'>
                         Preencha os campos abaixo para criar uma nova movimentação. Clique em salvar para confirmar.
                     </DialogDescription>
                 </DialogHeader>
                 <div className='grid gap-4'>
                     <Tabs value={type} onValueChange={i => setType(i as CategoryType)}>
-                        <TabsList className='p-2 items-center justify-center rounded-md bg-muted text-muted-foreground grid w-full grid-cols-2'>
-                            <TabsTrigger className={tabTriggerClassName} value='DEBIT'>Saída</TabsTrigger>
-                            <TabsTrigger className={tabTriggerClassName} value='CREDIT'>Entrada</TabsTrigger>
+                        <TabsList className='w-full'>
+                            <TabsTrigger className='w-full' value='DEBIT'>Saída</TabsTrigger>
+                            <TabsTrigger className='w-full' value='CREDIT'>Entrada</TabsTrigger>
                         </TabsList>
                     </Tabs>
 

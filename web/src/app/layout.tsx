@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils'
 import { Toaster } from '@/components/ui/sonner'
 
 import './globals.css'
+import { TooltipProvider } from '@/components/ui/tooltip'
 
 const inter = Inter({
 	subsets: ['latin'],
@@ -27,8 +28,10 @@ export default function RootLayout({
 				'min-h-screen bg-background font-sans antialiased',
 				inter.variable
 			)}>
-				<main>{children}</main>
-				<Toaster position='top-center' />
+				<TooltipProvider>
+					<main>{children}</main>
+					<Toaster position='top-center' />
+				</TooltipProvider>
 			</body>
 		</html>
 	)
