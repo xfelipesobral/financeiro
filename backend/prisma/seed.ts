@@ -3,7 +3,7 @@ import { passwordToHash } from '../src/utils/password'
 
 const prisma = new PrismaClient()
 
-const banks = ['Nubank', 'Sicredi']
+const banks = ['Nubank', 'Sicredi', 'XP Investimentos']
 
 const categories: { description: string, type: 'DEBIT' | 'CREDIT' }[] = [
     { description: 'Alimentação', type: 'DEBIT' },
@@ -24,6 +24,8 @@ const categories: { description: string, type: 'DEBIT' | 'CREDIT' }[] = [
     { description: 'Presente', type: 'DEBIT' },
     { description: 'Transferência', type: 'CREDIT' }
 ]
+
+const paymentsMethods = ['Dinheiro', 'Cartão de Crédito', 'Cartão de Débito', 'Pix', 'Transferência', 'Boleto', 'Cheque']
 
 async function main() {
     await prisma.user.upsert({
@@ -51,6 +53,16 @@ async function main() {
     for (const name of banks) {
         id++
         await prisma.bank.upsert({
+            where: { id },
+            update: { name },
+            create: { id, name }
+        })
+    }
+
+    id = 0
+    for (const name of paymentsMethods) {
+        id++
+        await prisma.paymentMethod.upsert({
             where: { id },
             update: { name },
             create: { id, name }

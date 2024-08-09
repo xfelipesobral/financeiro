@@ -79,6 +79,7 @@ export class TransactionModel implements TransactionFunctionsModel {
                 date,
                 description,
                 categoryId,
+                balance: 0,
             }
         })
     }
