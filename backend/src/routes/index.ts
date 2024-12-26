@@ -2,10 +2,10 @@ import { Router, Request, Response } from 'express'
 
 import { authenticated } from '../middlewares/authenticated'
 
-import { userRoutes } from './user.routes'
-import { transactionRoutes } from './transaction.routes'
-import { bankRoutes } from './banks.routes'
-import { categoryRoutes } from './categories.routes'
+import { userRoutes } from '../modules/user/http'
+import { transactionRoutes } from '../modules/transaction/http'
+import { bankRoutes } from '../modules/bank/http'
+import { categoryRoutes } from '../modules/category/http'
 
 const router = Router()
 

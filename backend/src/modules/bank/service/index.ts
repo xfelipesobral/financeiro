@@ -1,6 +1,7 @@
 
-import { BankFunctionsService } from './model'
 import { BankModel } from './prisma'
 
-export class BankService extends BankModel implements BankFunctionsService {
+export class BankService extends BankModel {
 }
+
+export const bank = new BankService()

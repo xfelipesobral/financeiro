@@ -1,10 +1,8 @@
 import { User } from '@prisma/client'
 
-import { UserFunctionsModel } from './model'
-
 import { prisma } from '../../db'
 
-export class UserModel implements UserFunctionsModel {
+export class UserModel {
     private prisma = prisma.user
 
     findById(id: string): Promise<User | null> {

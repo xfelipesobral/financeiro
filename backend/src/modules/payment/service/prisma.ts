@@ -1,9 +1,28 @@
-import { Payment, Prisma } from '@prisma/client';
-import { PaymentFilterFindParams, PaymentFunctionsModel, PaymentUpsert } from './model'
-import { prisma } from '../../db';
-import { uuid } from '../../../utils/uuid';
+import { Payment, Prisma } from '@prisma/client'
+import { prisma } from '../../db'
+import { uuid } from '../../../utils/uuid'
 
-export class PaymentModel implements PaymentFunctionsModel {
+interface PaymentFilterFindParams {
+    initialDate?: Date
+    finalDate?: Date
+    bankId?: number
+    categoryId?: number
+    take?: number
+    skip?: number
+}
+
+interface PaymentUpsert {
+    id?: string
+    userId: string
+    paymentMethodId: number
+    transactionId: string
+    cardId?: string
+    amount: number
+    description: string
+    date: Date
+}
+
+export class PaymentModel {
     private prisma = prisma.payment
 
     findById(id: string): Promise<Payment | null> {
@@ -45,6 +64,7 @@ export class PaymentModel implements PaymentFunctionsModel {
                 paymentMethodId
             },
             create: {
+                id,
                 amount: prismaAmount,
                 date,
                 description,

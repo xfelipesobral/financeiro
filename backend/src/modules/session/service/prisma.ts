@@ -2,9 +2,13 @@ import { Session } from '@prisma/client'
 import { prisma } from '../../db'
 import { v4 as uuid } from 'uuid'
 
-import { SessionFunctionsModel, UpdateSessionParams } from './model'
+interface UpdateSessionParams { 
+    id: string, 
+    content: string, 
+    tokenId: string
+}
 
-export class SessionModel implements SessionFunctionsModel {
+export class SessionModel  {
     private prisma = prisma.session
 
     async update({ id, content, tokenId }: UpdateSessionParams): Promise<void> {

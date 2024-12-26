@@ -2,10 +2,9 @@
 import { addDays } from '../../../utils/addDays'
 import { createAccessToken } from '../../../utils/token'
 
-import { SessionFunctionsService } from './model'
 import { SessionModel } from './prisma'
 
-export class SessionService extends SessionModel implements SessionFunctionsService {
+export class SessionService extends SessionModel {
     private daysLimitSession = 30
 
     async validate(refreshToken: string): Promise<boolean> {
@@ -61,3 +60,5 @@ export class SessionService extends SessionModel implements SessionFunctionsServ
         return token
     }
 }
+
+export const session = new SessionService()

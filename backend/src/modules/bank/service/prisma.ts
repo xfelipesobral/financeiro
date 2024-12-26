@@ -1,9 +1,7 @@
 import { Bank } from '@prisma/client'
 import { prisma } from '../../db'
 
-import { BankFunctionsModel } from './model'
-
-export class BankModel implements BankFunctionsModel {
+export class BankModel {
     private prisma = prisma.bank
 
     findById(id: number): Promise<Bank | null> {

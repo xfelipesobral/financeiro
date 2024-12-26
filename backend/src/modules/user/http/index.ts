@@ -1,7 +1,7 @@
 import { Router } from 'express'
 
-import { authenticate } from '../modules/user/http/authenticate' 
-import { renew } from '../modules/user/http/renew'
+import { authenticate } from './authenticate' 
+import { renew } from './renew'
  
 const userRoutes = Router()
 

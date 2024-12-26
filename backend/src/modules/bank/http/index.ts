@@ -1,6 +1,6 @@
 import { Router } from 'express'
 
-import { find } from '../modules/bank/http/find'
+import { find } from './find'
 
 const bankRoutes = Router()
 

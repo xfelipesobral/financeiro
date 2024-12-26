@@ -1,9 +1,7 @@
 import { Category, CategoryType } from '@prisma/client'
 import { prisma } from '../../db'
 
-import { CategoryFunctionsModel } from './model'
-
-export class CategoryModel implements CategoryFunctionsModel {
+export class CategoryModel {
     private prisma = prisma.category
 
     findById(id: number): Promise<Category | null> {

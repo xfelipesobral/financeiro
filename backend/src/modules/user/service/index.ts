@@ -4,11 +4,10 @@ import { validatePasswordHash } from '../../../utils/password'
 
 import { SessionService } from '../../session/service'
 
-import { UserFunctionsService } from './model'
 import { UserModel } from './prisma'
 import { createAccessToken } from '../../../utils/token'
 
-export class UserService extends UserModel implements UserFunctionsService {
+export class UserService extends UserModel {
 
     async authenticate(email: string, password: string, identifier?: string): Promise<{ accessToken: string, refreshToken: string }> {
         if (!password || !email) {
@@ -36,3 +35,5 @@ export class UserService extends UserModel implements UserFunctionsService {
         throw new Error('Invalid email or password')
     }
 }
+
+export const user = new UserService()

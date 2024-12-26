@@ -1,6 +1,7 @@
 
-import { TransactionFunctionsService } from './model'
 import { TransactionModel } from './prisma'
 
-export class TransactionService extends TransactionModel implements TransactionFunctionsService {
+export class TransactionService extends TransactionModel {
 }
+
+export const transaction = new TransactionService()

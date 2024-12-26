@@ -3,9 +3,33 @@ import { prisma } from '../../db'
 
 import { uuid } from '../../../utils/uuid'
 
-import { TransactionFilterFindParams, TransactionFunctionsModel, TransactionSum, UpsertTransactionParams } from './model'
+export interface UpsertTransactionParams {
+    id?: string
+    amount: number
+    bankAccountId: string
+    categoryId: number
+    date: Date
+    description: string
+    userId: string
+}
 
-export class TransactionModel implements TransactionFunctionsModel {
+export interface TransactionFilterFindParams {
+    initialDate?: Date
+    finalDate?: Date
+    bankId?: number
+    categoryId?: number
+    type?: CategoryType
+    take?: number
+    skip?: number
+}
+
+export interface TransactionSum {
+    balance: number
+    credit: number
+    debit: number
+}
+
+export class TransactionModel {
     private prisma = prisma.transaction
 
     findByUserId(userId: string, { bankId, categoryId, finalDate, initialDate, type, take, skip }: TransactionFilterFindParams): Promise<Transaction[]> {
@@ -26,7 +50,7 @@ export class TransactionModel implements TransactionFunctionsModel {
             skip,
             include: {
                 category: true,
-                bank: true
+                bankAccount: true
             },
             orderBy: [{
                 date: 'desc',
@@ -43,7 +67,7 @@ export class TransactionModel implements TransactionFunctionsModel {
             },
             include: {
                 category: true,
-                bank: true
+                bankAccount: true
             }
         })
     }
@@ -56,7 +80,7 @@ export class TransactionModel implements TransactionFunctionsModel {
         })
     }
 
-    upsert({ id, amount, bankId, userId, categoryId, date, description }: UpsertTransactionParams): Promise<Transaction> {
+    upsert({ id, amount, bankAccountId, userId, categoryId, date, description }: UpsertTransactionParams): Promise<Transaction> {
         if (!id) id = uuid()
 
         const prismaAmount = new Prisma.Decimal(amount)
@@ -67,7 +91,7 @@ export class TransactionModel implements TransactionFunctionsModel {
             },
             update: {
                 amount: prismaAmount,
-                bankId,
+                bankAccountId,
                 date,
                 description
             },
@@ -75,7 +99,7 @@ export class TransactionModel implements TransactionFunctionsModel {
                 id,
                 amount: prismaAmount,
                 userId,
-                bankId,
+                bankAccountId,
                 date,
                 description,
                 categoryId,

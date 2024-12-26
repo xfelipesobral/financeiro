@@ -1,10 +1,38 @@
 'use client'
 
-import { ArrowLeftRight, ShoppingCart, Wallet } from 'lucide-react'
+import { ArrowLeftRight, Landmark, LucideIcon, Wallet } from 'lucide-react'
 import Link from 'next/link'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
+
+interface MenuItemProps {
+    now: boolean
+    name: string
+    Icon: LucideIcon
+    href: string
+}
+
+function MenuItem({ now, name, Icon, href }: MenuItemProps) {
+
+    return (
+        <Tooltip>
+            <TooltipTrigger asChild>
+                <Link
+                    href={href}
+                    className={cn([
+                        'flex h-9 w-9 items-center justify-center rounded-lg hover:bg-accent text-muted-foreground hover:text-accent-foreground transition-all md:h-8 md:w-8 duration-500',
+                        { 'bg-accent text-accent-foreground': now }
+                    ])}
+                >
+                    <Icon className='h-5 w-5' />
+                    <span className='sr-only'>{name}</span>
+                </Link>
+            </TooltipTrigger>
+            <TooltipContent side='right'>{name}</TooltipContent>
+        </Tooltip>
+    )
+}
 
 export default function WebNav() {
     const pathname = usePathname()
@@ -19,21 +47,8 @@ export default function WebNav() {
                     <Wallet className='h-4 w-4 transition-all group-hover:scale-110' />
                 </Link>
 
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <Link
-                            href='/painel/transacoes'
-                            className={cn([
-                                'flex h-9 w-9 items-center justify-center rounded-lg hover:bg-accent text-muted-foreground hover:text-accent-foreground transition-all md:h-8 md:w-8 duration-500',
-                                { 'bg-accent text-accent-foreground': pathname === '/painel/transacoes' }
-                            ])}
-                        >
-                            <ArrowLeftRight className='h-5 w-5' />
-                            <span className='sr-only'>Transações</span>
-                        </Link>
-                    </TooltipTrigger>
-                    <TooltipContent side='right'>Transações</TooltipContent>
-                </Tooltip>
+                <MenuItem now={pathname === '/painel/transacoes'} name='Transações' Icon={ArrowLeftRight} href='/painel/transacoes' />
+                <MenuItem now={pathname === '/painel/contas'} name='Contas' Icon={Landmark} href='/painel/contas' />
             </nav>
         </div>
     )

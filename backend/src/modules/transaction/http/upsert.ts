@@ -1,20 +1,20 @@
 import { Request, Response } from 'express'
 
 import { CategoryService } from '../../category/service'
-import { BankService } from '../../bank/service'
 
 import { TransactionService } from '../service'
+import { bankAccount } from '../../bankAccount/service'
 
 interface TransactionParams {
     amount?: number
-    bankId?: number
+    bankAccountId?: string
     categoryId?: number
     date?: Date
     description?: string
 }
 
 export async function upsert(req: Request, res: Response) {
-    const { amount, bankId, categoryId, date, description } = req.body as TransactionParams
+    const { amount, bankAccountId, categoryId, date, description } = req.body as TransactionParams
     const { id } = req.params as { id: string | undefined }
 
     if (!amount || amount < 0) {
@@ -25,7 +25,7 @@ export async function upsert(req: Request, res: Response) {
         return res.status(400).json({ message: 'Description is required' })
     }
 
-    if (!bankId || !categoryId) {
+    if (!bankAccountId || !categoryId) {
         return res.status(400).json({ message: 'Bank and category are required' })
     }
 
@@ -35,8 +35,8 @@ export async function upsert(req: Request, res: Response) {
     }
 
     // Verifica se banco existe
-    if (!await new BankService().findById(bankId)) {
-        return res.status(400).json({ message: 'Bank not found' })
+    if (!await bankAccount.findById(bankAccountId)) {
+        return res.status(400).json({ message: 'Bank account not found' })
     }
 
     if (id) {
@@ -49,7 +49,7 @@ export async function upsert(req: Request, res: Response) {
         const transaction = await new TransactionService().upsert({
             id,
             amount,
-            bankId,
+            bankAccountId,
             categoryId,
             date: date || new Date(),
             description,

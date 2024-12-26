@@ -1,6 +1,6 @@
 import { Router } from 'express'
 
-import { find } from '../modules/category/http/find'
+import { find } from './find'
 
 const categoryRoutes = Router()
 

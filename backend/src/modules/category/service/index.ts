@@ -1,6 +1,7 @@
 
-import { CategoryFunctionsService } from './model'
 import { CategoryModel } from './prisma'
 
-export class CategoryService extends CategoryModel implements CategoryFunctionsService {
+export class CategoryService extends CategoryModel {
 }
+
+export const category = new CategoryService()

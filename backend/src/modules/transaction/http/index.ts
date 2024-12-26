@@ -1,8 +1,8 @@
 import { Router } from 'express'
 
-import { upsert } from '../modules/transaction/http/upsert'
-import { find } from '../modules/transaction/http/find'
-import { total } from '../modules/transaction/http/total'
+import { upsert } from './upsert'
+import { find } from './find'
+import { total } from './total'
 
 const transactionRoutes = Router()
 
