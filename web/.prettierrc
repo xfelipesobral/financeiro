@@ -5,8 +5,5 @@
     "tabWidth": 4,
     "semi": false,
     "endOfLine": "auto",
-    "printWidth": 150,
-    "plugins": [
-        "prettier-plugin-prisma"
-    ]
+    "printWidth": 150
 }
