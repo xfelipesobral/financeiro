@@ -16,12 +16,12 @@ const errorTranslations: { [key: string]: string } = {
     'Bank and category are required': 'Banco e categoria são obrigatórios',
     'Category not found': 'Categoria não encontrada',
     'Bank not found': 'Banco não encontrado',
-    'Transaction not found': 'Transação não encontrada'
+    'Transaction not found': 'Transação não encontrada',
 }
 
 export async function newTransaction(transaction: NewTransaction): Promise<string> {
     try {
-        const response = await api().post('/transaction', transaction)
+        const response = await (await api()).post('/transaction', transaction)
 
         if (response.data?.id) {
             return ''
@@ -29,7 +29,11 @@ export async function newTransaction(transaction: NewTransaction): Promise<strin
 
         throw new Error('Id não encontrado')
     } catch (e) {
-        const { response: { data: { message } } } = e as ResponseError
+        const {
+            response: {
+                data: { message },
+            },
+        } = e as ResponseError
         return errorTranslations[message || ''] || 'Erro inesperado, tente novamente mais tarde'
     }
 }

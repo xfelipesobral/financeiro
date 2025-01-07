@@ -16,7 +16,7 @@ interface Form {
 }
 
 export function BankAccount() {
-    const [open, setOpen] = useState(false)
+    const [open, setOpen] = useState(true)
     const [loading, setLoading] = useState(false)
     const [banks, setBanks] = useState<ComboboxItem[]>([])
 
@@ -34,9 +34,7 @@ export function BankAccount() {
             <DialogContent className="sm:max-w-[600px] w-full">
                 <DialogHeader>
                     <DialogTitle>Nova conta de banco</DialogTitle>
-                    <DialogDescription className="max-w-[400px]">
-                        Adicione uma nova conta de banco para registrar suas movimentações financeiras.
-                    </DialogDescription>
+                    <DialogDescription>Adicione uma nova conta de banco para registrar suas movimentações financeiras.</DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4">
                     <Controller

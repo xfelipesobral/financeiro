@@ -9,7 +9,7 @@ interface Filters {
 
 export async function categoryList(filters: Filters): Promise<Category[]> {
     try {
-        const { data } = await api().get<Category[]>('/category', { params: filters })
+        const { data } = await (await api()).get<Category[]>('/category', { params: filters })
         return data
     } catch (e) {
         console.log('*ERROR CategoryList: ', e)
@@ -19,5 +19,5 @@ export async function categoryList(filters: Filters): Promise<Category[]> {
 
 export async function comboCategoryList(filters: Filters): Promise<ComboboxItem[]> {
     const list = await categoryList(filters)
-    return list.map(category => ({ value: category.id.toString(), label: category.description }))
+    return list.map((category) => ({ value: category.id.toString(), label: category.description }))
 }

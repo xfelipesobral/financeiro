@@ -1,5 +1,6 @@
 import { BankAccount } from '@prisma/client'
 import { prisma } from '../../db'
+import { uuid } from '../../../utils/uuid'
 
 export class BankAccountModel {
 	private prisma = prisma.bankAccount
@@ -19,6 +20,17 @@ export class BankAccountModel {
 			},
 			include: {
 				bank: true,
+			}
+		})
+	}
+
+	create(userId: string, bankId: number, description = '') {
+		return this.prisma.create({
+			data: {
+				id: uuid(),
+				bankId,
+				description,
+				userId
 			}
 		})
 	}

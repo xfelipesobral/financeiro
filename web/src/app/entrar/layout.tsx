@@ -2,12 +2,12 @@ import { getToken } from '@/lib/storage/authentication'
 
 import { redirect } from 'next/navigation'
 
-export default function LayoutEntrar({
-	children,
+export default async function LayoutEntrar({
+    children,
 }: Readonly<{
-	children: React.ReactNode
+    children: React.ReactNode
 }>) {
-    if (getToken()) {
+    if (await getToken()) {
         redirect('/painel')
     }
 

@@ -5,7 +5,7 @@ import { renew } from './renew'
  
 const userRoutes = Router()
 
-userRoutes.post('/login', authenticate)
-userRoutes.patch('/login', renew)
+userRoutes.post('/login', authenticate) // Rota de autenticacao
+userRoutes.patch('/login', renew) // Rota de renovacao de token de autenticacao
 
 export { userRoutes }

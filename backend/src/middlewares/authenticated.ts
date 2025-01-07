@@ -27,7 +27,7 @@ export async function authenticated(req: Request, res: Response, next: NextFunct
         return res.status(401).json({ message: 'Token invalid!' })
     }
 
-    if (!await new UserService().findById(userId)) {
+    if (!(await new UserService().findById(userId))) {
         return res.status(401).json({ message: 'User not found!' })
     }
 
