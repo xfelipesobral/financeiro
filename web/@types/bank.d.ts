@@ -6,9 +6,10 @@ interface Bank {
 }
 
 interface BankAccount {
-    id: number
-    bank: Bank
-    description: string
-    createdAt: string
-    updatedAt: string
+    id: string
+    description: string | null
+    bankId: number
+    userId: string
+    createdAt: Date
+    updatedAt: Date
 }
