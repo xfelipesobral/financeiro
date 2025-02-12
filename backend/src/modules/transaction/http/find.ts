@@ -6,7 +6,7 @@ import { TransactionFilterFindParams } from '../service/prisma'
 interface Filters {
     initialDate?: string
     finalDate?: string
-    bankId?: string
+    bankAccountId?: string
     categoryId?: string
     type?: 'CREDIT' | 'DEBIT'
     page?: string
@@ -47,7 +47,6 @@ export async function find(req: Request, res: Response) {
         if (querys.initialDate) filters.initialDate = new Date(querys.initialDate)
         if (querys.finalDate) filters.finalDate = new Date(querys.finalDate)
 
-        if (querys.bankId) filters.bankId = Number(querys.bankId)
         if (querys.categoryId) filters.categoryId = Number(querys.categoryId)
 
         if (querys.type) filters.type = querys.type

@@ -16,7 +16,7 @@ export interface UpsertTransactionParams {
 export interface TransactionFilterFindParams {
     initialDate?: Date
     finalDate?: Date
-    bankId?: number
+    bankAccountId?: string
     categoryId?: number
     type?: CategoryType
     take?: number
@@ -32,51 +32,57 @@ export interface TransactionSum {
 export class TransactionModel {
     private prisma = prisma.transaction
 
-    findByUserId(userId: string, { bankId, categoryId, finalDate, initialDate, type, take, skip }: TransactionFilterFindParams): Promise<Transaction[]> {
+    findByUserId(
+        userId: string,
+        { bankAccountId, categoryId, finalDate, initialDate, type, take, skip }: TransactionFilterFindParams
+    ): Promise<Transaction[]> {
         return this.prisma.findMany({
             where: {
                 userId,
                 date: {
                     gte: initialDate,
-                    lte: finalDate
+                    lte: finalDate,
                 },
-                bankId,
+                bankAccountId,
                 categoryId,
                 category: {
-                    type
-                }
+                    type,
+                },
             },
             take,
             skip,
             include: {
                 category: true,
-                bankAccount: true
+                bankAccount: true,
             },
-            orderBy: [{
-                date: 'desc',
-            }, {
-                updatedAt: 'desc'
-            }]
+            orderBy: [
+                {
+                    date: 'desc',
+                },
+                {
+                    updatedAt: 'desc',
+                },
+            ],
         })
     }
 
     findById(id: string): Promise<Transaction | null> {
         return this.prisma.findUnique({
             where: {
-                id
+                id,
             },
             include: {
                 category: true,
-                bankAccount: true
-            }
+                bankAccount: true,
+            },
         })
     }
 
     async delete(id: string): Promise<void> {
         await this.prisma.delete({
             where: {
-                id
-            }
+                id,
+            },
         })
     }
 
@@ -87,13 +93,13 @@ export class TransactionModel {
 
         return this.prisma.upsert({
             where: {
-                id
+                id,
             },
             update: {
                 amount: prismaAmount,
                 bankAccountId,
                 date,
-                description
+                description,
             },
             create: {
                 id,
@@ -103,49 +109,51 @@ export class TransactionModel {
                 date,
                 description,
                 categoryId,
-                balance: 0,
-            }
+            },
         })
     }
 
     async sumByType(userId: string, type: CategoryType, filters: TransactionFilterFindParams): Promise<number> {
         const result = await this.prisma.aggregate({
             _sum: {
-                amount: true
+                amount: true,
             },
             where: {
                 userId,
                 date: {
                     gte: filters.initialDate,
-                    lte: filters.finalDate
+                    lte: filters.finalDate,
                 },
-                bankId: filters.bankId,
+                bankAccountId: filters.bankAccountId,
                 categoryId: filters.categoryId,
                 category: {
-                    type
-                }
-            }
+                    type,
+                },
+            },
         })
 
         return Number(result._sum.amount) || 0
     }
 
-    async totalByUserId(userId: string, { bankId, categoryId, finalDate, initialDate, type }: TransactionFilterFindParams): Promise<TransactionSum> {
+    async totalByUserId(
+        userId: string,
+        { bankAccountId, categoryId, finalDate, initialDate, type }: TransactionFilterFindParams
+    ): Promise<TransactionSum> {
         let debit = 0
         let credit = 0
 
         if (type === 'DEBIT' || !type) {
-            debit = await this.sumByType(userId, 'DEBIT', { bankId, categoryId, finalDate, initialDate })
+            debit = await this.sumByType(userId, 'DEBIT', { bankAccountId, categoryId, finalDate, initialDate })
         }
 
         if (type === 'CREDIT' || !type) {
-            credit = await this.sumByType(userId, 'CREDIT', { bankId, categoryId, finalDate, initialDate })
+            credit = await this.sumByType(userId, 'CREDIT', { bankAccountId, categoryId, finalDate, initialDate })
         }
 
         return {
             credit,
             debit,
-            balance: credit - debit
+            balance: credit - debit,
         }
     }
 }
