@@ -3,35 +3,38 @@ import { prisma } from '../../db'
 import { uuid } from '../../../utils/uuid'
 
 export class BankAccountModel {
-	private prisma = prisma.bankAccount
+    private prisma = prisma.bankAccount
 
-	findAll(): Promise<BankAccount[]> {
-		return this.prisma.findMany({
-			include: {
-				bank: true,
-			}
-		})
-	}
+    findAll(): Promise<BankAccount[]> {
+        return this.prisma.findMany({
+            include: {
+                bank: true,
+            },
+        })
+    }
 
-	findById(id: string): Promise<BankAccount | null> {
-		return this.prisma.findUnique({
-			where: {
-				id,
-			},
-			include: {
-				bank: true,
-			}
-		})
-	}
+    findById(id: string): Promise<BankAccount | null> {
+        return this.prisma.findUnique({
+            where: {
+                id,
+            },
+            include: {
+                bank: true,
+            },
+        })
+    }
 
-	create(userId: string, bankId: number, description = '') {
-		return this.prisma.create({
-			data: {
-				id: uuid(),
-				bankId,
-				description,
-				userId
-			}
-		})
-	}
+    create(userId: string, bankId: number, accountNumber: string = '', branchCode: string = '', description = '', pixKeys: string[] = []) {
+        return this.prisma.create({
+            data: {
+                id: uuid(),
+                bankId,
+                description,
+                userId,
+                accountNumber,
+                branchCode,
+                pixKeys,
+            },
+        })
+    }
 }

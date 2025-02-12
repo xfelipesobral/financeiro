@@ -8,7 +8,8 @@ export async function authenticated(req: Request, res: Response, next: NextFunct
     const bearerToken = req.headers.authorization
 
     if (!bearerToken) {
-        return res.status(401).json({ message: 'Token missing!' })
+        res.status(401).json({ message: 'Token missing!' })
+        return
     }
 
     // Remove o comeco do bearer token
@@ -24,11 +25,13 @@ export async function authenticated(req: Request, res: Response, next: NextFunct
 
         userId = sub
     } catch {
-        return res.status(401).json({ message: 'Token invalid!' })
+        res.status(401).json({ message: 'Token invalid!' })
+        return
     }
 
     if (!(await new UserService().findById(userId))) {
-        return res.status(401).json({ message: 'User not found!' })
+        res.status(401).json({ message: 'User not found!' })
+        return
     }
 
     req.user = { id: userId }

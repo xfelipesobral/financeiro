@@ -18,30 +18,36 @@ export async function upsert(req: Request, res: Response) {
     const { id } = req.params as { id: string | undefined }
 
     if (!amount || amount < 0) {
-        return res.status(400).json({ message: 'Amount is required and must be greater than zero' })
+        res.status(400).json({ message: 'Amount is required and must be greater than zero' })
+        return
     }
 
     if (!description) {
-        return res.status(400).json({ message: 'Description is required' })
+        res.status(400).json({ message: 'Description is required' })
+        return
     }
 
     if (!bankAccountId || !categoryId) {
-        return res.status(400).json({ message: 'Bank and category are required' })
+        res.status(400).json({ message: 'Bank and category are required' })
+        return
     }
 
     // Verifica se categoria existe
-    if (!await new CategoryService().findById(categoryId)) {
-        return res.status(400).json({ message: 'Category not found' })
+    if (!(await new CategoryService().findById(categoryId))) {
+        res.status(400).json({ message: 'Category not found' })
+        return
     }
 
     // Verifica se banco existe
-    if (!await bankAccount.findById(bankAccountId)) {
-        return res.status(400).json({ message: 'Bank account not found' })
+    if (!(await bankAccount.findById(bankAccountId))) {
+        res.status(400).json({ message: 'Bank account not found' })
+        return
     }
 
     if (id) {
         if (await new TransactionService().findById(id)) {
-            return res.status(400).json({ message: 'Transaction not found' })
+            res.status(400).json({ message: 'Transaction not found' })
+            return
         }
     }
 
@@ -56,8 +62,10 @@ export async function upsert(req: Request, res: Response) {
             userId: req.user.id,
         })
 
-        return res.status(200).json(transaction)
+        res.status(200).json(transaction)
+        return
     } catch (e) {
-        return res.status(500).json({ message: (e as Error).message })
+        res.status(500).json({ message: (e as Error).message })
+        return
     }
 }

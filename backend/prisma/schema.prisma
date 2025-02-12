@@ -20,8 +20,6 @@ model User {
   payments     Payment[]
   transactions Transaction[]
   sessions     Session[]
-  cards        Cards[]
-  recurrences  Recurrence[]
   bankAccounts BankAccount[]
 }
 
@@ -42,7 +40,6 @@ model Transaction {
   bankAccountId String
   categoryId    Int
   amount        Decimal
-  balance       Decimal
   description   String
   date          DateTime    @default(now())
   createdAt     DateTime    @default(now())
@@ -51,23 +48,6 @@ model Transaction {
   bankAccount   BankAccount @relation(fields: [bankAccountId], references: [id])
   category      Category    @relation(fields: [categoryId], references: [id])
   payments      Payment[]
-  Bank          Bank?       @relation(fields: [bankId], references: [id])
-  bankId        Int?
-}
-
-model Recurrence {
-  id            Int         @id
-  userId        String
-  bankAccountId String
-  categoryId    Int
-  amount        Decimal
-  description   String
-  date          DateTime
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-  user          User        @relation(fields: [userId], references: [id])
-  category      Category    @relation(fields: [categoryId], references: [id])
-  bankAccount   BankAccount @relation(fields: [bankAccountId], references: [id])
 }
 
 model Bank {
@@ -75,22 +55,23 @@ model Bank {
   name         String
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
-  transactions Transaction[]
-  cards        Cards[]
   bankAccounts BankAccount[]
 }
 
 model BankAccount {
-  id           String        @id
-  description  String?
-  bankId       Int
-  userId       String
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  bank         Bank          @relation(fields: [bankId], references: [id])
-  user         User          @relation(fields: [userId], references: [id])
-  recurrences  Recurrence[]
-  transactions Transaction[]
+  id            String        @id
+  description   String?
+  bankId        Int
+  userId        String
+  branchCode    String
+  accountNumber String
+  pixKeys       String[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  bank          Bank          @relation(fields: [bankId], references: [id])
+  user          User          @relation(fields: [userId], references: [id])
+  transactions  Transaction[]
+  cards         Cards[]
 }
 
 model Category {
@@ -100,7 +81,6 @@ model Category {
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   transactions Transaction[]
-  recurrences  Recurrence[]
 }
 
 model PaymentMethod {
@@ -129,19 +109,17 @@ model Payment {
 }
 
 model Cards {
-  id          String    @id
-  userId      String
-  name        String
-  closingDay  DateTime
-  type        CardType
-  description String
-  limit       Decimal
-  bankId      Int
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  user        User      @relation(fields: [userId], references: [id])
-  bank        Bank      @relation(fields: [bankId], references: [id])
-  payments    Payment[]
+  id            String      @id
+  name          String
+  closingDay    DateTime
+  type          CardType
+  description   String
+  limit         Decimal
+  bankAccountId String
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  bankAccount   BankAccount @relation(fields: [bankAccountId], references: [id])
+  payments      Payment[]
 }
 
 enum CategoryType {
@@ -152,4 +130,5 @@ enum CategoryType {
 enum CardType {
   CREDIT
   DEBIT
+  CREDIT_AND_DEBIT
 }

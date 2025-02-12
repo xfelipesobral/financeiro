@@ -5,13 +5,16 @@ export async function renew(req: Request, res: Response) {
     const { refreshToken } = req.body
 
     if (!refreshToken) {
-        return res.status(400).json({ message: 'Refresh token is required' })
+        res.status(400).json({ message: 'Refresh token is required' })
+        return
     }
 
     try {
         const accessToken = await new SessionService().renew(refreshToken, req.headers['user-agent'] || 'unknown')
-        return res.status(200).json({ accessToken })
+        res.status(200).json({ accessToken })
+        return
     } catch (error) {
-        return res.status(500).json({ message: (error as Error).message })
+        res.status(500).json({ message: (error as Error).message })
+        return
     }
 }

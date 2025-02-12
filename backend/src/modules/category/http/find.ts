@@ -18,21 +18,28 @@ export async function find(req: Request, res: Response) {
         if (finalId) {
             const category = await new CategoryService().findById(Number(finalId))
 
-            if (!category) return res.status(204).json({ message: 'Category not found' })
+            if (!category) {
+                res.status(204).json({ message: 'Category not found' })
+                return
+            }
 
-            return res.status(200).json(category)
+            res.status(200).json(category)
+            return
         }
 
         if (querys.type) {
             const categories = await new CategoryService().findByType(querys.type as CategoryType)
 
-            return res.status(200).json(categories)
+            res.status(200).json(categories)
+            return
         }
 
         const categories = await new CategoryService().find()
 
-        return res.status(200).json(categories)
+        res.status(200).json(categories)
+        return
     } catch (e) {
-        return res.status(500).json({ message: (e as Error).message })
+        res.status(500).json({ message: (e as Error).message })
+        return
     }
 }
