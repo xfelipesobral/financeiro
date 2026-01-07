@@ -1,18 +1,17 @@
-
 import { addDays } from '../../../utils/addDays'
 import { createAccessToken } from '../../../utils/token'
+import { user } from '../../user/service'
+import { SessionRepository } from '../repository'
 
-import { SessionModel } from './prisma'
-
-export class SessionService extends SessionModel {
+export class SessionService extends SessionRepository {
     private daysLimitSession = 30
 
     async validate(refreshToken: string): Promise<boolean> {
-        const session = await super.findById(refreshToken)
+        const session = await super.findByRefreshToken(refreshToken)
 
         if (!session) {
             return false
-        }   
+        }
 
         const limit = addDays(session.createdAt, this.daysLimitSession)
 
@@ -20,17 +19,22 @@ export class SessionService extends SessionModel {
         if (limit > new Date()) {
             return true // Sessao valida
         }
-        
+
         // Caso tenha expirado...
         await super.delete(refreshToken) // Deleta sessao
         return false
     }
 
     async renew(refreshToken: string, identifier: string): Promise<string> {
-        const session = await super.findById(refreshToken)
+        const session = await super.findByRefreshToken(refreshToken)
 
         if (!session) {
             throw new Error('Invalid refresh token')
+        }
+
+        const sessionUser = await user.findById(session.userId)
+        if (!sessionUser) {
+            throw new Error('User not found')
         }
 
         // Calcula o limite maximo de vida da sessao
@@ -45,18 +49,18 @@ export class SessionService extends SessionModel {
         // Cria accessToken
         const { id, token } = createAccessToken({
             options: {
-                subject: session.userId,
-                expiresIn: '1h'
-            }
+                subject: sessionUser.guid,
+                expiresIn: '1h',
+            },
         })
 
         // Atualiza a sessao com o novo token
         await super.update({
             id: session.id,
             content: session.content,
-            tokenId: id
+            tokenId: id,
         })
-        
+
         return token
     }
 }

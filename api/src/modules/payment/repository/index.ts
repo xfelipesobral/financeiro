@@ -1,6 +1,5 @@
-import { Payment, Prisma } from '@prisma/client'
+import { Payment, Prisma } from '../../../../prisma/generated/client'
 import { prisma } from '../../db'
-import { uuid } from '../../../utils/uuid'
 
 interface PaymentFilterFindParams {
     initialDate?: Date
@@ -12,24 +11,24 @@ interface PaymentFilterFindParams {
 }
 
 interface PaymentUpsert {
-    id?: string
-    userId: string
+    id?: number
+    userId: number
     paymentMethodId: number
-    transactionId: string
-    cardId?: string
+    transactionId: number
+    cardId?: number
     amount: number
     description: string
     date: Date
 }
 
-export class PaymentModel {
+export class PaymentRepository {
     private prisma = prisma.payment
 
-    findById(id: string): Promise<Payment | null> {
+    findById(id: number): Promise<Payment | null> {
         return this.prisma.findUnique({
             where: {
-                id
-            }
+                id,
+            },
         })
     }
 
@@ -37,22 +36,20 @@ export class PaymentModel {
         throw new Error('Method not implemented.')
     }
 
-    async delete(id: string): Promise<void> {
+    async delete(id: number): Promise<void> {
         await this.prisma.delete({
             where: {
-                id
-            }
+                id,
+            },
         })
     }
 
     upsert({ amount, date, description, id, cardId, userId, transactionId, paymentMethodId }: PaymentUpsert): Promise<Payment> {
-        if (!id) id = uuid()
-
         const prismaAmount = new Prisma.Decimal(amount)
 
         return this.prisma.upsert({
             where: {
-                id
+                id,
             },
             update: {
                 amount: prismaAmount,
@@ -61,7 +58,7 @@ export class PaymentModel {
                 cardId,
                 userId,
                 transactionId,
-                paymentMethodId
+                paymentMethodId,
             },
             create: {
                 id,
@@ -71,30 +68,29 @@ export class PaymentModel {
                 cardId,
                 userId,
                 transactionId,
-                paymentMethodId
-            }
+                paymentMethodId,
+            },
         })
     }
 
-    findByTransactionId(transactionId: string): Promise<Payment[]> {
+    findByTransactionId(transactionId: number): Promise<Payment[]> {
         return this.prisma.findMany({
             where: {
-                transactionId
-            }
+                transactionId,
+            },
         })
     }
 
-    async totalByTransactionId(transactionId: string): Promise<number> {
+    async totalByTransactionId(transactionId: number): Promise<number> {
         const result = await this.prisma.aggregate({
             _sum: {
-                amount: true
+                amount: true,
             },
             where: {
-                transactionId
-            }
+                transactionId,
+            },
         })
 
         return Number(result._sum.amount) || 0
     }
-
 }

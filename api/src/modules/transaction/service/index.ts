@@ -1,7 +1,5 @@
+import { TransactionRepository } from '../repository'
 
-import { TransactionModel } from './prisma'
-
-export class TransactionService extends TransactionModel {
-}
+export class TransactionService extends TransactionRepository {}
 
 export const transaction = new TransactionService()

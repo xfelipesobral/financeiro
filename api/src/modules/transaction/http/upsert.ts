@@ -39,13 +39,14 @@ export async function upsert(req: Request, res: Response) {
     }
 
     // Verifica se banco existe
-    if (!(await bankAccount.findById(bankAccountId))) {
+    const bankAcc = await bankAccount.findByGuid(bankAccountId)
+    if (!bankAcc) {
         res.status(400).json({ message: 'Bank account not found' })
         return
     }
 
     if (id) {
-        if (await new TransactionService().findById(id)) {
+        if (await new TransactionService().findByGuid(id)) {
             res.status(400).json({ message: 'Transaction not found' })
             return
         }
@@ -53,9 +54,8 @@ export async function upsert(req: Request, res: Response) {
 
     try {
         const transaction = await new TransactionService().upsert({
-            id,
             amount,
-            bankAccountId,
+            bankAccountId: bankAcc.id,
             categoryId,
             date: date || new Date(),
             description,

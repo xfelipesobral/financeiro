@@ -1,7 +1,5 @@
+import { BankAccountRepository } from '../repository'
 
-import { BankAccountModel } from './prisma'
-
-export class BankAccountService extends BankAccountModel {
-}
+export class BankAccountService extends BankAccountRepository {}
 
 export const bankAccount = new BankAccountService()

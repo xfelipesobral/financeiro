@@ -1,6 +1,5 @@
-import { Session } from '@prisma/client'
+import { Session } from '../../../../prisma/generated/client'
 import { prisma } from '../../db'
-import { v4 as uuid } from 'uuid'
 
 interface UpdateSessionParams {
     id: number
@@ -8,7 +7,7 @@ interface UpdateSessionParams {
     tokenId: string
 }
 
-export class SessionModel {
+export class SessionRepository {
     private prisma = prisma.session
 
     async update({ id, content, tokenId }: UpdateSessionParams): Promise<void> {
@@ -37,17 +36,25 @@ export class SessionModel {
     }
 
     async delete(refreshToken: string): Promise<void> {
-        await this.prisma.delete({
+        await this.prisma.deleteMany({
             where: {
-                id: refreshToken,
+                tokenId: refreshToken,
             },
         })
     }
 
-    findById(refreshToken: string): Promise<Session | null> {
+    findById(id: number): Promise<Session | null> {
         return this.prisma.findUnique({
             where: {
-                id: refreshToken,
+                id,
+            },
+        })
+    }
+
+    findByRefreshToken(refreshToken: string): Promise<Session | null> {
+        return this.prisma.findFirst({
+            where: {
+                tokenId: refreshToken,
             },
         })
     }

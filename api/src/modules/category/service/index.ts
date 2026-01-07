@@ -1,7 +1,5 @@
+import { CategoryRepository } from '../repository'
 
-import { CategoryModel } from './prisma'
-
-export class CategoryService extends CategoryModel {
-}
+export class CategoryService extends CategoryRepository {}
 
 export const category = new CategoryService()

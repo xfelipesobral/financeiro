@@ -1,7 +1,5 @@
+import { BankRepository } from '../repository'
 
-import { BankModel } from './prisma'
-
-export class BankService extends BankModel {
-}
+export class BankService extends BankRepository {}
 
 export const bank = new BankService()

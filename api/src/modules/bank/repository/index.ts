@@ -1,14 +1,14 @@
-import { Bank } from '@prisma/client'
+import { Bank } from '../../../../prisma/generated/client'
 import { prisma } from '../../db'
 
-export class BankModel {
+export class BankRepository {
     private prisma = prisma.bank
 
     findById(id: number): Promise<Bank | null> {
         return this.prisma.findUnique({
             where: {
-                id
-            }
+                id,
+            },
         })
     }
 

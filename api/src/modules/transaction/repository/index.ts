@@ -1,22 +1,20 @@
-import { CategoryType, Prisma, Transaction } from '@prisma/client'
+import { CategoryType, Prisma, Transaction } from '../../../../prisma/generated/client'
 import { prisma } from '../../db'
 
-import { uuid } from '../../../utils/uuid'
-
 export interface UpsertTransactionParams {
-    id?: string
+    id?: number
     amount: number
-    bankAccountId: string
+    bankAccountId: number
     categoryId: number
     date: Date
     description: string
-    userId: string
+    userId: number
 }
 
 export interface TransactionFilterFindParams {
     initialDate?: Date
     finalDate?: Date
-    bankAccountId?: string
+    bankAccountId?: number
     categoryId?: number
     type?: CategoryType
     take?: number
@@ -29,11 +27,11 @@ export interface TransactionSum {
     debit: number
 }
 
-export class TransactionModel {
+export class TransactionRepository {
     private prisma = prisma.transaction
 
     findByUserId(
-        userId: string,
+        userId: number,
         { bankAccountId, categoryId, finalDate, initialDate, type, take, skip }: TransactionFilterFindParams
     ): Promise<Transaction[]> {
         return this.prisma.findMany({
@@ -66,7 +64,7 @@ export class TransactionModel {
         })
     }
 
-    findById(id: string): Promise<Transaction | null> {
+    findById(id: number): Promise<Transaction | null> {
         return this.prisma.findUnique({
             where: {
                 id,
@@ -78,7 +76,19 @@ export class TransactionModel {
         })
     }
 
-    async delete(id: string): Promise<void> {
+    findByGuid(guid: string): Promise<Transaction | null> {
+        return this.prisma.findFirst({
+            where: {
+                guid,
+            },
+            include: {
+                category: true,
+                bankAccount: true,
+            },
+        })
+    }
+
+    async delete(id: number): Promise<void> {
         await this.prisma.delete({
             where: {
                 id,
@@ -87,8 +97,6 @@ export class TransactionModel {
     }
 
     upsert({ id, amount, bankAccountId, userId, categoryId, date, description }: UpsertTransactionParams): Promise<Transaction> {
-        if (!id) id = uuid()
-
         const prismaAmount = new Prisma.Decimal(amount)
 
         return this.prisma.upsert({
@@ -113,7 +121,7 @@ export class TransactionModel {
         })
     }
 
-    async sumByType(userId: string, type: CategoryType, filters: TransactionFilterFindParams): Promise<number> {
+    async sumByType(userId: number, type: CategoryType, filters: TransactionFilterFindParams): Promise<number> {
         const result = await this.prisma.aggregate({
             _sum: {
                 amount: true,
@@ -136,7 +144,7 @@ export class TransactionModel {
     }
 
     async totalByUserId(
-        userId: string,
+        userId: number,
         { bankAccountId, categoryId, finalDate, initialDate, type }: TransactionFilterFindParams
     ): Promise<TransactionSum> {
         let debit = 0

@@ -14,7 +14,7 @@ export async function find(req: Request, res: Response) {
 
     try {
         if (finalId) {
-            const account = await bankAccount.findById(finalId)
+            const account = await bankAccount.findByGuid(finalId)
 
             if (!account) {
                 res.status(204).json({ message: 'Bank account not found' })

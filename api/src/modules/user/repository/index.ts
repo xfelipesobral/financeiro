@@ -2,7 +2,7 @@ import { User } from '../../../../prisma/generated/client'
 
 import { prisma } from '../../db'
 
-export default class Repository {
+export class UserRepository {
     private prisma = prisma.user
 
     findById(id: number): Promise<User | null> {

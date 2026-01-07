@@ -29,12 +29,14 @@ export async function authenticated(req: Request, res: Response, next: NextFunct
         return
     }
 
-    if (!(await new UserService().findById(userId))) {
+    const userToken = await new UserService().findByGuid(userId)
+
+    if (!userToken) {
         res.status(401).json({ message: 'User not found!' })
         return
     }
 
-    req.user = { id: userId }
+    req.user = { id: userToken.id }
 
     next()
 }

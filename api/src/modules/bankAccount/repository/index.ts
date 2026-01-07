@@ -1,8 +1,7 @@
-import { BankAccount } from '@prisma/client'
+import { BankAccount } from '../../../../prisma/generated/client'
 import { prisma } from '../../db'
-import { uuid } from '../../../utils/uuid'
 
-export class BankAccountModel {
+export class BankAccountRepository {
     private prisma = prisma.bankAccount
 
     findAll(): Promise<BankAccount[]> {
@@ -13,7 +12,7 @@ export class BankAccountModel {
         })
     }
 
-    findById(id: string): Promise<BankAccount | null> {
+    findById(id: number): Promise<BankAccount | null> {
         return this.prisma.findUnique({
             where: {
                 id,
@@ -24,10 +23,17 @@ export class BankAccountModel {
         })
     }
 
-    create(userId: string, bankId: number, accountNumber: string = '', branchCode: string = '', description = '', pixKeys: string[] = []) {
+    findByGuid(guid: string): Promise<BankAccount | null> {
+        return this.prisma.findFirst({
+            where: {
+                guid,
+            },
+        })
+    }
+
+    create(userId: number, bankId: number, accountNumber: string = '', branchCode: string = '', description = '', pixKeys: string[] = []) {
         return this.prisma.create({
             data: {
-                id: uuid(),
                 bankId,
                 description,
                 userId,

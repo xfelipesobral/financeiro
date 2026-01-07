@@ -9,7 +9,7 @@ const prisma = new PrismaClient({
     }),
 })
 
-const banks = ['Nubank', 'Sicredi', 'XP Investimentos']
+const banks = ['Nubank', 'Sicredi', 'XP Investimentos', 'Santander']
 
 const categories: { description: string; type: 'DEBIT' | 'CREDIT' }[] = [
     { description: 'Alimentação', type: 'DEBIT' },
@@ -38,9 +38,9 @@ async function main() {
         where: { email: 'contato@felipesobral.com.br' },
         update: {},
         create: {
-            id: 'felipesobral',
             email: 'contato@felipesobral.com.br',
-            name: 'Felipe V. Sobral',
+            firstName: 'Felipe',
+            lastName: 'Sobral',
             password: await passwordToHash('admin'),
         },
     })

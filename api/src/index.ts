@@ -1,9 +1,6 @@
-import { config as configDotEnv } from 'dotenv'
+import 'dotenv/config'
 
 import { startServer } from './server'
-
-// Carrega as variaveis de ambiente
-configDotEnv()
 
 // Inicia servico
 const app = startServer()

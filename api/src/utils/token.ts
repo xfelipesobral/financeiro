@@ -1,5 +1,5 @@
 import { SignOptions, sign, verify } from 'jsonwebtoken'
-import { v4 } from 'uuid'
+import { v7 } from 'uuid'
 
 interface Params {
     payload?: object
@@ -10,7 +10,7 @@ const secret = process.env.SECRET || 'segredo-muito-secreto'
 
 // Cria um JWT novo
 export function createAccessToken({ options, payload }: Params): { id: string; token: string } {
-    const id = v4()
+    const id = v7()
 
     const token = sign(payload || {}, secret, {
         ...options,

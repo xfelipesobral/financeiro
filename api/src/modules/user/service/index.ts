@@ -1,11 +1,9 @@
 import { validatePasswordHash } from '../../../utils/password'
-
 import { SessionService } from '../../session/service'
-
-import Repository from '../repository'
 import { createAccessToken } from '../../../utils/token'
+import { UserRepository } from '../repository'
 
-export class UserService extends Repository {
+export class UserService extends UserRepository {
     async authenticate(email: string, password: string, identifier?: string): Promise<{ accessToken: string; refreshToken: string }> {
         if (!password || !email) {
             throw new Error('Email and password are required')
@@ -14,18 +12,18 @@ export class UserService extends Repository {
         const user = await super.findByEmail(email)
 
         if (user && (await validatePasswordHash(password, user.password))) {
-            const { id, token } = createAccesssToken({
+            const { id, token } = createAccessToken({
                 options: {
                     subject: user.guid,
                     expiresIn: '1h',
                 },
             })
 
-            const refreshToken = await new SessionService().create(user.id, id, identifier)
+            await new SessionService().create(user.id, id, identifier)
 
             return {
                 accessToken: token,
-                refreshToken,
+                refreshToken: id,
             }
         }
 

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 
 import { TransactionService } from '../service'
-import { TransactionFilterFindParams } from '../service/prisma'
+import { TransactionFilterFindParams } from '../repository'
 
 interface Filters {
     initialDate?: string
@@ -25,7 +25,7 @@ export async function find(req: Request, res: Response) {
 
         // Busca tranasacao especifica por id
         if (id) {
-            const transaction = await new TransactionService().findById(id)
+            const transaction = await new TransactionService().findByGuid(id)
 
             if (!transaction || transaction.userId !== req.user.id) {
                 res.status(204).json({ message: 'Transaction not found' })

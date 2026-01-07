@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 
 import { TransactionService } from '../service'
-import { TransactionFilterFindParams } from '../service/prisma'
+import { TransactionFilterFindParams } from '../repository'
 
 interface Filters {
     initialDate?: string

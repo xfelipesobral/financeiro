@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { CategoryType } from '@prisma/client'
+import { CategoryType } from '../../../../prisma/generated/client'
 
 import { CategoryService } from '../service'
 
