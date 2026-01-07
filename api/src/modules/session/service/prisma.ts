@@ -2,56 +2,53 @@ import { Session } from '@prisma/client'
 import { prisma } from '../../db'
 import { v4 as uuid } from 'uuid'
 
-interface UpdateSessionParams { 
-    id: string, 
-    content: string, 
+interface UpdateSessionParams {
+    id: number
+    content: string
     tokenId: string
 }
 
-export class SessionModel  {
+export class SessionModel {
     private prisma = prisma.session
 
     async update({ id, content, tokenId }: UpdateSessionParams): Promise<void> {
         await this.prisma.update({
             where: {
-                id
+                id,
             },
             data: {
                 content,
-                tokenId
-            }
+                tokenId,
+            },
         })
     }
 
-    async create(userId: string, tokenId: string, identifier: string = 'UNKNOW'): Promise<string> {
-        const id = uuid()
-
-        await this.prisma.create({
+    async create(userId: number, tokenId: string, identifier: string = 'UNKNOW'): Promise<number> {
+        const x = await this.prisma.create({
             data: {
-                id,
                 tokenId,
                 userId,
                 content: '',
-                identifier
-            }
+                identifier,
+            },
         })
 
-        return id
+        return x.id
     }
 
     async delete(refreshToken: string): Promise<void> {
         await this.prisma.delete({
             where: {
-                id: refreshToken
-            }
+                id: refreshToken,
+            },
         })
     }
 
     findById(refreshToken: string): Promise<Session | null> {
         return this.prisma.findUnique({
             where: {
-                id: refreshToken
-            }
+                id: refreshToken,
+            },
         })
     }
 }

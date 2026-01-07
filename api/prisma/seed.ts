@@ -1,11 +1,17 @@
-import { PrismaClient } from '@prisma/client'
+import 'dotenv/config'
+import { PrismaClient } from '../prisma/generated/client'
+import { PrismaPg } from '@prisma/adapter-pg'
 import { passwordToHash } from '../src/utils/password'
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient({
+    adapter: new PrismaPg({
+        connectionString: process.env.DATABASE_URL,
+    }),
+})
 
 const banks = ['Nubank', 'Sicredi', 'XP Investimentos']
 
-const categories: { description: string, type: 'DEBIT' | 'CREDIT' }[] = [
+const categories: { description: string; type: 'DEBIT' | 'CREDIT' }[] = [
     { description: 'Alimentação', type: 'DEBIT' },
     { description: 'Assinaturas', type: 'DEBIT' },
     { description: 'Diversos', type: 'DEBIT' },
@@ -22,7 +28,7 @@ const categories: { description: string, type: 'DEBIT' | 'CREDIT' }[] = [
     { description: 'Lazer', type: 'DEBIT' },
     { description: 'Viagem', type: 'DEBIT' },
     { description: 'Presente', type: 'DEBIT' },
-    { description: 'Transferência', type: 'CREDIT' }
+    { description: 'Transferência', type: 'CREDIT' },
 ]
 
 const paymentsMethods = ['Dinheiro', 'Cartão de Crédito', 'Cartão de Débito', 'Pix', 'Transferência', 'Boleto', 'Cheque']
@@ -35,8 +41,8 @@ async function main() {
             id: 'felipesobral',
             email: 'contato@felipesobral.com.br',
             name: 'Felipe V. Sobral',
-            password: await passwordToHash('admin')
-        }
+            password: await passwordToHash('admin'),
+        },
     })
 
     let id = 0
@@ -45,7 +51,7 @@ async function main() {
         await prisma.category.upsert({
             where: { id },
             update: { description, type },
-            create: { id, description, type }
+            create: { id, description, type },
         })
     }
 
@@ -55,7 +61,7 @@ async function main() {
         await prisma.bank.upsert({
             where: { id },
             update: { name },
-            create: { id, name }
+            create: { id, name },
         })
     }
 
@@ -65,7 +71,7 @@ async function main() {
         await prisma.paymentMethod.upsert({
             where: { id },
             update: { name },
-            create: { id, name }
+            create: { id, name },
         })
     }
 
@@ -80,4 +86,3 @@ main()
         console.error(e)
         await prisma.$disconnect()
     })
-

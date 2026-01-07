@@ -1,23 +1,31 @@
-import { User } from '@prisma/client'
+import { User } from '../../../../prisma/generated/client'
 
 import { prisma } from '../../db'
 
-export class UserModel {
+export default class Repository {
     private prisma = prisma.user
 
-    findById(id: string): Promise<User | null> {
+    findById(id: number): Promise<User | null> {
         return this.prisma.findUnique({
             where: {
-                id
-            }
+                id,
+            },
+        })
+    }
+
+    findByGuid(guid: string): Promise<User | null> {
+        return this.prisma.findUnique({
+            where: {
+                guid,
+            },
         })
     }
 
     findByEmail(email: string): Promise<User | null> {
         return this.prisma.findUnique({
             where: {
-                email
-            }
+                email,
+            },
         })
     }
 
@@ -25,8 +33,8 @@ export class UserModel {
         return this.prisma.findUnique({
             where: {
                 email,
-                password
-            }
+                password,
+            },
         })
     }
 }

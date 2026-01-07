@@ -1,4 +1,4 @@
-node_modules/
+node_modules
 yarn-error.log/
 
 dist/
@@ -7,8 +7,11 @@ dist/
 
 .DS_Store
 
-backend/prisma/migrations
+api/prisma/migrations
+api/prisma/generated
 
 .vscode/
 
 .prisma/
+
+yarn.lock
