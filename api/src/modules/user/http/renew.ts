@@ -1,11 +1,12 @@
 import { Request, Response } from 'express'
 import { SessionService } from '../../session/service'
+import { ApiError } from '../../../utils/error'
 
 export async function renew(req: Request, res: Response) {
     const { refreshToken } = req.body
 
     if (!refreshToken) {
-        res.status(400).json({ message: 'Refresh token is required' })
+        res.status(400).json({ error: { code: 'REQUIRED_FIELDS_MISSING', message: 'Refresh token is required' } })
         return
     }
 
@@ -14,7 +15,17 @@ export async function renew(req: Request, res: Response) {
         res.status(200).json({ accessToken })
         return
     } catch (error) {
-        res.status(500).json({ message: (error as Error).message })
+        if (error instanceof ApiError) {
+            res.status(error.responseStatus).json({
+                error: {
+                    code: error.code,
+                    message: error.message,
+                },
+            })
+            return
+        }
+
+        res.status(500).json({ error: { code: 'INTERNAL_SERVER_ERROR', message: (error as Error).message } })
         return
     }
 }

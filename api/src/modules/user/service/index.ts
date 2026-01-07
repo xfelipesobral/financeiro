@@ -2,11 +2,12 @@ import { validatePasswordHash } from '../../../utils/password'
 import { SessionService } from '../../session/service'
 import { createAccessToken } from '../../../utils/token'
 import { UserRepository } from '../repository'
+import { ApiError } from '../../../utils/error'
 
 export class UserService extends UserRepository {
     async authenticate(email: string, password: string, identifier?: string): Promise<{ accessToken: string; refreshToken: string }> {
         if (!password || !email) {
-            throw new Error('Email and password are required')
+            throw new ApiError('REQUIRED_FIELDS_MISSING', 'Email and password are required fields', 400)
         }
 
         const user = await super.findByEmail(email)
@@ -27,7 +28,7 @@ export class UserService extends UserRepository {
             }
         }
 
-        throw new Error('Invalid email or password')
+        throw new ApiError('INVALID_CREDENTIALS', 'Invalid email or password', 401)
     }
 }
 
