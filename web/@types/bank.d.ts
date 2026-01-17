@@ -1,15 +1,21 @@
 interface Bank {
     id: number
+    guid: string
     name: string
     createdAt: string
     updatedAt: string
 }
 
 interface BankAccount {
-    id: string
-    description: string | null
+    id: number
+    guid: string
+    description: string
     bankId: number
-    userId: string
-    createdAt: Date
-    updatedAt: Date
+    userId: number
+    branchCode: string
+    accountNumber: string
+    pixKeys: string[]
+    createdAt: string
+    updatedAt: string
+    bank: Bank
 }

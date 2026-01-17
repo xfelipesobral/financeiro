@@ -17,8 +17,12 @@ interface Form {
     description: string
 }
 
-export function BankAccount() {
-    const [open, setOpen] = useState(true)
+interface Params {
+    open: boolean
+    close: () => void
+}
+
+export function BankAccount({ open, close }: Params) {
     const [loading, setLoading] = useState(false)
     const [banks, setBanks] = useState<ComboboxItem[]>([])
 
@@ -32,27 +36,33 @@ export function BankAccount() {
     }, [open])
 
     const submit = async () => {
-        setLoading(true)
         const { bank, description } = getValues()
+
+        if (!bank || !description) {
+            toast.error('Descrição e banco são obrigatórios.')
+            return
+        }
+
+        setLoading(true)
 
         const banco = await banksAccountsNew({
             bankId: Number(bank?.value || 0),
             description,
         })
 
-        if (banco) {
+        if (typeof banco === 'object') {
             toast.success('Conta de banco criada com sucesso.')
-            setOpen(false)
+            close()
         } else {
-            toast.error('Erro ao criar conta de banco.')
+            toast.error(banco)
         }
 
         setLoading(false)
     }
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogContent className="sm:max-w-[600px] w-full">
+        <Dialog open={open} onOpenChange={() => close()}>
+            <DialogContent className="sm:max-w-150 w-full">
                 <DialogHeader>
                     <DialogTitle>Nova conta de banco</DialogTitle>
                     <DialogDescription>Adicione uma nova conta de banco para registrar suas movimentações financeiras.</DialogDescription>
@@ -62,7 +72,7 @@ export function BankAccount() {
                         name="bank"
                         control={control}
                         render={({ field: { name, value, onChange } }) => (
-                            <Combobox id={name} list={banks} selected={value} onChange={onChange} title="Banco" />
+                            <Combobox id={name} list={banks} placeholder="Selecione um banco" selected={value} onChange={onChange} title="Banco" />
                         )}
                     />
 

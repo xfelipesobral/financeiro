@@ -1,7 +1,6 @@
 interface ResponseError {
-    response: {
-        data: {
-            message?: string
-        }
+    error: {
+        code: string
+        message: string
     }
 }

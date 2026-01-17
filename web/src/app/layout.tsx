@@ -7,32 +7,28 @@ import './globals.css'
 import { TooltipProvider } from '@/components/ui/tooltip'
 
 const inter = Inter({
-	subsets: ['latin'],
-	variable: '--font-sans',
+    subsets: ['latin'],
+    variable: '--font-sans',
 })
 
 export const metadata: Metadata = {
-	title: 'Financeiro',
-	description: 'Controle financeiro pessoal',
+    title: 'Financeiro',
+    description: 'Controle financeiro pessoal',
 }
 
 export default function RootLayout({
-	children,
+    children,
 }: Readonly<{
-	children: React.ReactNode
+    children: React.ReactNode
 }>) {
-
-	return (
-		<html lang='pt'>
-			<body className={cn(
-				'min-h-screen bg-background font-sans antialiased',
-				inter.variable
-			)}>
-				<TooltipProvider>
-					<main>{children}</main>
-					<Toaster position='top-center' />
-				</TooltipProvider>
-			</body>
-		</html>
-	)
+    return (
+        <html lang="pt">
+            <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
+                <TooltipProvider>
+                    <main>{children}</main>
+                    <Toaster position="top-center" />
+                </TooltipProvider>
+            </body>
+        </html>
+    )
 }

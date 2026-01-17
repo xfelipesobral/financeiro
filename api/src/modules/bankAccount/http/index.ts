@@ -7,6 +7,6 @@ const bankAccountRoutes = Router()
 
 bankAccountRoutes.get('/', find)
 bankAccountRoutes.get('/:id', find)
-bankAccountRoutes.post('/new', newBankAccount)
+bankAccountRoutes.post('/', newBankAccount)
 
 export { bankAccountRoutes }

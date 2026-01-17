@@ -4,7 +4,7 @@ import { bankAccount } from '../service'
 import { bank } from '../../bank/service'
 
 export async function newBankAccount(req: Request, res: Response) {
-    const { bankId, description, accountNumber, branchCode, pixKeys } = req.params as {
+    const { bankId, description, accountNumber, branchCode, pixKeys } = req.body as {
         bankId?: number
         description?: string
         accountNumber?: string
@@ -13,7 +13,7 @@ export async function newBankAccount(req: Request, res: Response) {
     }
 
     if (!bankId) {
-        res.send(400).json({ message: 'Bank is missing' })
+        res.status(400).json({ error: { code: 'REQUIRED_FIELDS_MISSING', message: 'Bank is missing' } })
         return
     }
 
@@ -21,7 +21,7 @@ export async function newBankAccount(req: Request, res: Response) {
     const bankSelected = await bank.findById(bankId)
 
     if (!bankSelected) {
-        res.status(404).json({ message: 'Bank not found' })
+        res.status(404).json({ error: { code: 'BANK_NOT_FOUND', message: 'Bank not found' } })
         return
     }
 
@@ -34,6 +34,6 @@ export async function newBankAccount(req: Request, res: Response) {
         return
     }
 
-    res.status(400).json({ message: 'Error to create bank account' })
+    res.status(400).json({ error: { code: 'ERROR_CREATING_BANK_ACCOUNT', message: 'Error to create bank account' } })
     return
 }

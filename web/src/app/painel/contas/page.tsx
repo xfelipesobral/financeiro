@@ -1,78 +1,77 @@
+'use client'
+
+import { banksAccountsList } from '@/api/bankAccount/list'
 import { BankAccount } from '@/components/bank/accounts/bankAccount'
 import { Button } from '@/components/ui/button'
 
 import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-
-const invoices = [
-    {
-        invoice: 'INV001',
-        paymentStatus: 'Paid',
-        totalAmount: '$250.00',
-        paymentMethod: 'Credit Card',
-    },
-    {
-        invoice: 'INV002',
-        paymentStatus: 'Pending',
-        totalAmount: '$150.00',
-        paymentMethod: 'PayPal',
-    },
-    {
-        invoice: 'INV003',
-        paymentStatus: 'Unpaid',
-        totalAmount: '$350.00',
-        paymentMethod: 'Bank Transfer',
-    },
-    {
-        invoice: 'INV004',
-        paymentStatus: 'Paid',
-        totalAmount: '$450.00',
-        paymentMethod: 'Credit Card',
-    },
-    {
-        invoice: 'INV005',
-        paymentStatus: 'Paid',
-        totalAmount: '$550.00',
-        paymentMethod: 'PayPal',
-    },
-    {
-        invoice: 'INV006',
-        paymentStatus: 'Pending',
-        totalAmount: '$200.00',
-        paymentMethod: 'Bank Transfer',
-    },
-    {
-        invoice: 'INV007',
-        paymentStatus: 'Unpaid',
-        totalAmount: '$300.00',
-        paymentMethod: 'Credit Card',
-    },
-]
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 export default function BanksAccounts() {
+    const router = useRouter()
+    const [openPopupBankAccount, setOpenPopupBankAccount] = useState(false)
+    const [accounts, setAccounts] = useState<BankAccount[]>([])
+    const [selectedAccount, setSelectedAccount] = useState<BankAccount | null>(null)
+
+    useEffect(() => {
+        banksAccountsList().then(setAccounts)
+    }, [])
+
     return (
         <div className="grid gap-4">
-            <BankAccount />
-            <div className="flex justify-between rounded-lg items-center">
-                <p className="font-semibold">Contas</p>
+            <BankAccount
+                open={openPopupBankAccount}
+                close={() => {
+                    setOpenPopupBankAccount(false)
+                    setSelectedAccount(null)
+                }}
+            />
+            <div className="flex gap-6 justify-between items-center">
+                <div>
+                    <p className="text-4xl font-bold tracking-tight text-stone-900">Contas</p>
+                    <p className="text-stone-600 text-sm mt-1">Gerencie suas contas bancárias</p>
+                </div>
 
-                <Button>Nova conta</Button>
+                <Button
+                    onClick={() => {
+                        setSelectedAccount(null)
+                        setOpenPopupBankAccount(true)
+                    }}>
+                    Nova conta
+                </Button>
             </div>
 
             <div>
                 <Table>
                     <TableHeader>
                         <TableRow>
-                            <TableHead className="w-[100px]">#</TableHead>
+                            <TableHead className="w-25">#</TableHead>
                             <TableHead>Descrição</TableHead>
                             <TableHead>Banco</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {invoices.map((invoice) => (
-                            <TableRow key={invoice.invoice}>
-                                <TableCell className="font-medium">{invoice.invoice}</TableCell>
-                                <TableCell>{invoice.paymentStatus}</TableCell>
-                                <TableCell>{invoice.paymentMethod}</TableCell>
+                        {accounts.map((account) => (
+                            <TableRow
+                                key={account.guid}
+                                className="cursor-pointer hover:bg-stone-50"
+                                onClick={() => router.push(`/painel/contas/${account.id}`)}>
+                                <TableCell className="font-medium">{account.id}</TableCell>
+                                <TableCell>{account.description}</TableCell>
+                                <TableCell>{account.bank.name}</TableCell>
+                                <TableCell className="text-right">
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={(e) => {
+                                            e.stopPropagation()
+                                            setSelectedAccount(account)
+                                            setOpenPopupBankAccount(true)
+                                        }}>
+                                        Editar
+                                    </Button>
+                                </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
