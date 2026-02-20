@@ -1,26 +1,30 @@
-import { Category, CategoryType } from '../../../../prisma/generated/client'
-import { prisma } from '../../db'
+import { CategoryType } from '../../../../prisma/generated/enums'
+import { prisma } from '../../../db'
 
 export class CategoryRepository {
-    private prisma = prisma.category
+    private category = prisma.category
 
-    findById(id: number): Promise<Category | null> {
-        return this.prisma.findUnique({
+    findById(id: number, userId?: number) {
+        return this.category.findUnique({
             where: {
                 id,
+                ...(userId ? { OR: [{ userId }, { userId: null }] } : { userId: null }),
             },
         })
     }
 
-    findByType(type: CategoryType): Promise<Category[]> {
-        return this.prisma.findMany({
+    findByType(type: CategoryType, userId?: number) {
+        return this.category.findMany({
             where: {
                 type,
+                ...(userId ? { OR: [{ userId }, { userId: null }] } : { userId: null }),
             },
         })
     }
 
-    find(): Promise<Category[]> {
-        return this.prisma.findMany()
+    find(userId: number) {
+        return this.category.findMany({
+            where: userId ? { OR: [{ userId }, { userId: null }] } : { userId: null }, // Se passou o userId, busca categorias do usuário ou categorias globais (userId null). Se não passou, busca apenas categorias globais.
+        })
     }
 }

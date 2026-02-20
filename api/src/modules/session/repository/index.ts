@@ -1,60 +1,76 @@
-import { Session } from '../../../../prisma/generated/client'
-import { prisma } from '../../db'
-
-interface UpdateSessionParams {
-    id: number
-    content: string
-    tokenId: string
-}
+import { prisma } from '../../../db'
+import { uuid } from '../../../utils/uuid'
 
 export class SessionRepository {
-    private prisma = prisma.session
+    private session = prisma.session
 
-    async update({ id, content, tokenId }: UpdateSessionParams): Promise<void> {
-        await this.prisma.update({
+    partialUpdate(id: number, properties: Partial<{ revokedAt: Date; expiresAt: Date }>) {
+        return this.session.update({
             where: {
                 id,
             },
             data: {
-                content,
-                tokenId,
+                ...properties,
             },
         })
     }
 
-    async create(userId: number, tokenId: string, identifier: string = 'UNKNOW'): Promise<number> {
-        const x = await this.prisma.create({
+    create(userId: number, refreshToken: string, expiresAt: Date, origin: string = '', userAgent: string = '', ipAddress?: string) {
+        return this.session.create({
             data: {
-                tokenId,
                 userId,
-                content: '',
-                identifier,
+                guid: uuid(),
+                refreshToken,
+                origin,
+                userAgent,
+                ipAddress,
+                expiresAt,
             },
         })
-
-        return x.id
     }
 
-    async delete(refreshToken: string): Promise<void> {
-        await this.prisma.deleteMany({
+    revokeById(id: number) {
+        return this.session.update({
             where: {
-                tokenId: refreshToken,
+                id,
+            },
+            data: {
+                revokedAt: new Date(),
             },
         })
     }
 
-    findById(id: number): Promise<Session | null> {
-        return this.prisma.findUnique({
+    revokeByRefreshToken(refreshToken: string) {
+        return this.session.updateMany({
+            where: {
+                refreshToken,
+            },
+            data: {
+                revokedAt: new Date(),
+            },
+        })
+    }
+
+    findById(id: number) {
+        return this.session.findUnique({
             where: {
                 id,
             },
         })
     }
 
-    findByRefreshToken(refreshToken: string): Promise<Session | null> {
-        return this.prisma.findFirst({
+    findByGuid(guid: string) {
+        return this.session.findUnique({
             where: {
-                tokenId: refreshToken,
+                guid,
+            },
+        })
+    }
+
+    findByRefreshToken(refreshToken: string) {
+        return this.session.findUnique({
+            where: {
+                refreshToken,
             },
         })
     }

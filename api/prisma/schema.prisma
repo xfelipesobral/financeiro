@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
     provider     = "prisma-client"
     output       = "./generated"
@@ -11,9 +8,16 @@ datasource db {
     provider = "postgresql"
 }
 
+model DatabaseInfo {
+    id        Int      @id
+    version   Int
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
 model User {
     id           Int           @id @default(autoincrement())
-    guid         String        @unique @default(uuid()) @db.Uuid
+    guid         String        @unique @db.Uuid
     email        String        @unique
     firstName    String
     lastName     String
@@ -24,36 +28,42 @@ model User {
     transactions Transaction[]
     sessions     Session[]
     bankAccounts BankAccount[]
+    categories   Category[]
 }
 
 model Session {
-    id         Int      @id @default(autoincrement())
-    userId     Int
-    tokenId    String
-    content    String
-    identifier String
-    createdAt  DateTime @default(now())
-    updatedAt  DateTime @updatedAt
-    user       User     @relation(fields: [userId], references: [id])
+    id           Int       @id @default(autoincrement())
+    guid         String    @unique @db.Uuid
+    userId       Int
+    refreshToken String    @unique
+    origin       String // Origem do login (ex: "web")
+    userAgent    String // User agent do dispositivo
+    ipAddress    String?
+    createdAt    DateTime  @default(now())
+    updatedAt    DateTime  @updatedAt
+    revokedAt    DateTime? // Data de revogação do token, se aplicável
+    expiresAt    DateTime // Data de expiração do token
+    user         User      @relation(fields: [userId], references: [id])
 
+    @@index([expiresAt])
     @@index([userId])
 }
 
 model Transaction {
-    id            Int         @id @default(autoincrement())
-    guid          String      @unique @default(uuid()) @db.Uuid
-    userId        Int
-    bankAccountId Int
-    categoryId    Int
-    amount        Decimal
-    description   String
-    date          DateTime    @default(now())
-    createdAt     DateTime    @default(now())
-    updatedAt     DateTime    @updatedAt
-    user          User        @relation(fields: [userId], references: [id])
-    bankAccount   BankAccount @relation(fields: [bankAccountId], references: [id])
-    category      Category    @relation(fields: [categoryId], references: [id])
-    payments      Payment[]
+    id               Int         @id @default(autoincrement())
+    guid             String      @unique @db.Uuid
+    userId           Int
+    bankAccountId    Int
+    categoryId       Int
+    totalAmount      Decimal
+    description      String
+    installmentTotal Int?
+    createdAt        DateTime    @default(now())
+    updatedAt        DateTime    @updatedAt
+    user             User        @relation(fields: [userId], references: [id])
+    bankAccount      BankAccount @relation(fields: [bankAccountId], references: [id])
+    category         Category    @relation(fields: [categoryId], references: [id])
+    payments         Payment[]
 
     @@index([userId])
     @@index([bankAccountId])
@@ -62,7 +72,7 @@ model Transaction {
 
 model Bank {
     id           Int           @id @default(autoincrement())
-    guid         String        @unique @default(uuid()) @db.Uuid
+    guid         String        @unique @db.Uuid
     name         String
     createdAt    DateTime      @default(now())
     updatedAt    DateTime      @updatedAt
@@ -70,32 +80,50 @@ model Bank {
 }
 
 model BankAccount {
-    id            Int           @id @default(autoincrement())
-    guid          String        @unique @default(uuid()) @db.Uuid
+    id            Int              @id @default(autoincrement())
+    guid          String           @unique @db.Uuid
     description   String?
     bankId        Int
     userId        Int
     branchCode    String
     accountNumber String
-    pixKeys       String[]
-    createdAt     DateTime      @default(now())
-    updatedAt     DateTime      @updatedAt
-    bank          Bank          @relation(fields: [bankId], references: [id])
-    user          User          @relation(fields: [userId], references: [id])
+    createdAt     DateTime         @default(now())
+    updatedAt     DateTime         @updatedAt
+    bank          Bank             @relation(fields: [bankId], references: [id])
+    user          User             @relation(fields: [userId], references: [id])
     transactions  Transaction[]
     cards         Card[]
+    pixs          BankAccountPix[]
 
     @@index([bankId])
     @@index([userId])
 }
 
+model BankAccountPix {
+    id            Int    @id @default(autoincrement())
+    bankAccountId Int
+    type          String
+    value         String @unique
+
+    bankAccount BankAccount @relation(fields: [bankAccountId], references: [id])
+}
+
 model Category {
     id           Int           @id @default(autoincrement())
     description  String
+    parentId     Int?
+    userId       Int?
     type         CategoryType  @default(CREDIT)
     createdAt    DateTime      @default(now())
     updatedAt    DateTime      @updatedAt
     transactions Transaction[]
+
+    parent Category? @relation("CategoryHierarchy", fields: [parentId], references: [id]) // Auto-relacionamento para categorias hierárquicas
+    user   User?     @relation(fields: [userId], references: [id])
+
+    children Category[] @relation("CategoryHierarchy") // Relação inversa para acessar subcategorias
+
+    @@index([parentId])
 }
 
 model PaymentMethod {
@@ -107,32 +135,37 @@ model PaymentMethod {
 }
 
 model Payment {
-    id              Int           @id @default(autoincrement())
-    guid            String        @unique @default(uuid()) @db.Uuid
-    userId          Int
-    paymentMethodId Int
-    transactionId   Int
-    cardId          Int?
-    amount          Decimal
-    description     String
-    date            DateTime      @default(now())
-    createdAt       DateTime      @default(now())
-    updatedAt       DateTime      @updatedAt
-    card            Card?         @relation(fields: [cardId], references: [id])
-    user            User          @relation(fields: [userId], references: [id])
-    transaction     Transaction   @relation(fields: [transactionId], references: [id])
-    paymentMethod   PaymentMethod @relation(fields: [paymentMethodId], references: [id])
+    id                Int           @id @default(autoincrement())
+    guid              String        @unique @db.Uuid
+    userId            Int
+    paymentMethodId   Int
+    transactionId     Int
+    cardId            Int?
+    amount            Decimal
+    installmentNumber Int?
+    description       String?
+    status            PaymentStatus
+    dueDate           DateTime
+    paidAt            DateTime?
+    createdAt         DateTime      @default(now())
+    updatedAt         DateTime      @updatedAt
+    card              Card?         @relation(fields: [cardId], references: [id])
+    user              User          @relation(fields: [userId], references: [id])
+    transaction       Transaction   @relation(fields: [transactionId], references: [id])
+    paymentMethod     PaymentMethod @relation(fields: [paymentMethodId], references: [id])
 
     @@index([userId])
     @@index([transactionId])
     @@index([paymentMethodId])
+    @@index([dueDate])
+    @@index([status])
 }
 
 model Card {
     id            Int         @id @default(autoincrement())
-    guid          String      @unique @default(uuid()) @db.Uuid
+    guid          String      @unique @db.Uuid
     name          String
-    closingDay    DateTime
+    closingDay    Int
     type          CardType
     description   String
     limit         Decimal
@@ -154,4 +187,11 @@ enum CardType {
     CREDIT
     DEBIT
     CREDIT_AND_DEBIT
+}
+
+enum PaymentStatus {
+    PENDING
+    PAID
+    OVERDUE
+    CANCELED
 }

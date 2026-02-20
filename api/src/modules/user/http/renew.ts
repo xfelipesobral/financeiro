@@ -1,31 +1,22 @@
-import { Request, Response } from 'express'
-import { SessionService } from '../../session/service'
-import { ApiError } from '../../../utils/error'
+import { session } from '../../session/service'
+import { ApiError, handleApiError } from '../../../utils/error'
+import { FastifyReply, FastifyRequest } from 'fastify'
+import { extractInfosFromRequest } from '../../../utils/requestInfos'
 
-export async function renew(req: Request, res: Response) {
-    const { refreshToken } = req.body
+export async function renew(request: FastifyRequest, reply: FastifyReply) {
+    const { refreshToken } = request.body as { refreshToken?: string }
 
     if (!refreshToken) {
-        res.status(400).json({ error: { code: 'REQUIRED_FIELDS_MISSING', message: 'Refresh token is required' } })
-        return
+        throw new ApiError('REQUIRED_FIELDS_MISSING', 'Refresh token is a required field.', 400)
     }
 
     try {
-        const accessToken = await new SessionService().renew(refreshToken, req.headers['user-agent'] || 'unknown')
-        res.status(200).json({ accessToken })
+        const { origin, userAgent } = extractInfosFromRequest(request)
+
+        const accessToken = await session.renew(refreshToken, origin, userAgent)
+        reply.status(200).send({ accessToken })
         return
     } catch (error) {
-        if (error instanceof ApiError) {
-            res.status(error.responseStatus).json({
-                error: {
-                    code: error.code,
-                    message: error.message,
-                },
-            })
-            return
-        }
-
-        res.status(500).json({ error: { code: 'INTERNAL_SERVER_ERROR', message: (error as Error).message } })
-        return
+        handleApiError(error, reply)
     }
 }

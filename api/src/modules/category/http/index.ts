@@ -1,10 +1,17 @@
-import { Router } from 'express'
-
+import { FastifyInstance } from 'fastify'
 import { find } from './find'
 
-const categoryRoutes = Router()
+export async function userRoutes(app: FastifyInstance) {
+    app.get('/', find)
+}
 
-categoryRoutes.get('/', find)
-categoryRoutes.get('/:id', find)
+// import { Router } from 'express'
 
-export { categoryRoutes }
+// import { find } from './find'
+
+// const categoryRoutes = Router()
+
+// categoryRoutes.get('/', find)
+// categoryRoutes.get('/:id', find)
+
+// export { categoryRoutes }

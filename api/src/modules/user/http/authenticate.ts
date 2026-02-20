@@ -1,12 +1,13 @@
-import { Request, Response } from 'express'
-import { UserService } from '../service'
-import { ApiError } from '../../../utils/error'
+import { user } from '../service'
+import { handleApiError } from '../../../utils/error'
+import { FastifyReply, FastifyRequest } from 'fastify'
+import { extractInfosFromRequest } from '../../../utils/requestInfos'
 
-export async function authenticate(req: Request, res: Response) {
-    const { email, password } = req.body
+export async function authenticate(request: FastifyRequest, reply: FastifyReply) {
+    const { email, password } = request.body as { email?: string; password?: string }
 
     if (!email || !password) {
-        res.status(400).json({
+        reply.status(400).send({
             error: {
                 code: 'REQUIRED_FIELDS_MISSING',
                 message: 'Email and password are required fields.',
@@ -16,27 +17,16 @@ export async function authenticate(req: Request, res: Response) {
     }
 
     try {
-        const auth = await new UserService().authenticate(email, password, req.headers['user-agent'] || 'unknown')
+        const { ip, origin, userAgent } = extractInfosFromRequest(request)
 
-        res.status(200).json(auth)
-        return
-    } catch (error) {
-        if (error instanceof ApiError) {
-            res.status(error.responseStatus).json({
-                error: {
-                    code: error.code,
-                    message: error.message,
-                },
-            })
-            return
-        }
+        const { accessToken, refreshToken } = await user.authenticate(email, password, origin, userAgent, ip)
 
-        res.status(500).json({
-            error: {
-                code: 'INTERNAL_SERVER_ERROR',
-                message: (error as Error).message,
-            },
+        reply.status(200).send({
+            accessToken,
+            refreshToken,
         })
         return
+    } catch (error) {
+        handleApiError(error, reply)
     }
 }

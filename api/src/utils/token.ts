@@ -1,5 +1,5 @@
 import { SignOptions, sign, verify } from 'jsonwebtoken'
-import { v7 } from 'uuid'
+import { uuid } from './uuid'
 
 interface Params {
     payload?: object
@@ -10,17 +10,17 @@ const secret = process.env.SECRET || 'segredo-muito-secreto'
 
 // Cria um JWT novo
 export function createAccessToken({ options, payload }: Params): { id: string; token: string } {
-    const id = v7()
+    const id = options?.jwtid || uuid()
 
     const token = sign(payload || {}, secret, {
         ...options,
-        issuer: 'financeiro.felipesobral.com.br',
+        issuer: 'financeiro-api',
         jwtid: id,
     })
 
     return { id, token }
 }
 
-export function verifyAcessToken(token: string) {
+export function verifyAccessToken(token: string) {
     return verify(token, secret) // Verifica se e um jwt valido
 }

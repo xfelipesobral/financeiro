@@ -1,12 +1,11 @@
 import { User } from '../../../../prisma/generated/client'
-
-import { prisma } from '../../db'
+import { prisma } from '../../../db'
 
 export class UserRepository {
-    private prisma = prisma.user
+    private user = prisma.user
 
     findById(id: number): Promise<User | null> {
-        return this.prisma.findUnique({
+        return this.user.findUnique({
             where: {
                 id,
             },
@@ -14,7 +13,7 @@ export class UserRepository {
     }
 
     findByGuid(guid: string): Promise<User | null> {
-        return this.prisma.findUnique({
+        return this.user.findUnique({
             where: {
                 guid,
             },
@@ -22,7 +21,7 @@ export class UserRepository {
     }
 
     findByEmail(email: string): Promise<User | null> {
-        return this.prisma.findUnique({
+        return this.user.findUnique({
             where: {
                 email,
             },
@@ -30,7 +29,7 @@ export class UserRepository {
     }
 
     findByEmailWithPassword(email: string, password: string): Promise<User | null> {
-        return this.prisma.findUnique({
+        return this.user.findUnique({
             where: {
                 email,
                 password,

@@ -1,29 +1,31 @@
 import { Request, Response } from 'express'
 import { CategoryType } from '../../../../prisma/generated/client'
 
-import { CategoryService } from '../service'
+import { category, CategoryService } from '../service'
+import { FastifyReply, FastifyRequest } from 'fastify'
+import { handleApiError } from '../../../utils/error'
 
 interface Filters {
     id?: string
     type?: string
 }
 
-export async function find(req: Request, res: Response) {
-    const { id } = req.params as { id: string | undefined }
-    const querys = req.query as Filters
+export async function find(request: FastifyRequest, reply: FastifyReply) {
+    const { id } = request.params as { id?: string }
+    const querys = request.query as Filters
 
     const finalId = id || querys.id
 
     try {
         if (finalId) {
-            const category = await new CategoryService().findById(Number(finalId))
+            const categoryFinded = category.findById(Number(finalId))
 
             if (!category) {
-                res.status(204).json({ message: 'Category not found' })
+                reply.status(204).send({ message: 'Category not found' })
                 return
             }
 
-            res.status(200).json(category)
+            reply.status(200).send(category)
             return
         }
 
@@ -39,7 +41,6 @@ export async function find(req: Request, res: Response) {
         res.status(200).json(categories)
         return
     } catch (e) {
-        res.status(500).json({ message: (e as Error).message })
-        return
+        handleApiError(e, reply)
     }
 }
