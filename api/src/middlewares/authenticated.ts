@@ -1,42 +1,73 @@
-import { NextFunction, Request, Response } from 'express'
+import { FastifyReply, FastifyRequest } from 'fastify'
+import { verifyAccessToken } from '../utils/token'
+import { ApiError, handleApiError } from '../utils/error'
+import { session, SessionJwtPayload } from '../modules/session'
 
-import { UserService } from '../modules/user/service'
+export async function middlewareAuthenticated(request: FastifyRequest, reply: FastifyReply) {
+    const accessToken = request.headers['authorization'] as string | undefined
 
-import { verifyAcessToken } from '../utils/token'
-
-export async function authenticated(req: Request, res: Response, next: NextFunction) {
-    const bearerToken = req.headers.authorization
-
-    if (!bearerToken) {
-        res.status(401).json({ message: 'Token missing!' })
+    if (!accessToken || !accessToken.startsWith('Bearer')) {
+        reply.status(400).send({
+            error: {
+                code: 'INVALID_AUTHORIZATION_HEADER',
+                message: 'Authorization header is missing or invalid.',
+            },
+        })
         return
     }
 
-    // Remove o comeco do bearer token
-    const token = bearerToken.replace('Bearer ', '')
+    const token = accessToken.slice(7).trim() // 'Bearer '.length === 7
 
-    let userId: undefined | string
+    if (!token) {
+        reply.status(400).send({
+            error: {
+                code: 'INVALID_AUTHORIZATION_HEADER',
+                message: 'Authorization header is missing or invalid.',
+            },
+        })
+        return
+    }
 
     try {
-        const { sub } = verifyAcessToken(token)
+        let tokenPayload: SessionJwtPayload | null = null
 
-        if (!sub) throw new Error('Token invalid')
-        if (typeof sub !== 'string') throw new Error('Token invalid')
+        try {
+            tokenPayload = verifyAccessToken(token) as SessionJwtPayload
+        } catch (e) {
+            throw new ApiError('INVALID_TOKEN', 'The token is invalid.', 401)
+        }
 
-        userId = sub
-    } catch {
-        res.status(401).json({ message: 'Token invalid!' })
+        if (!tokenPayload || typeof tokenPayload !== 'object') {
+            throw new ApiError('INVALID_TOKEN', 'The token payload is invalid.', 401)
+        }
+
+        const userId = Number(tokenPayload.sub)
+
+        if (isNaN(userId)) {
+            throw new ApiError('INVALID_USER_ID', 'The user ID in the token is invalid.', 401)
+        }
+
+        if (!tokenPayload.jti) {
+            throw new ApiError('INVALID_TOKEN', 'Token is missing JTI claim.', 401)
+        }
+
+        const tokenInfo = await session.findByGuid(tokenPayload.jti)
+
+        if (!tokenInfo) {
+            throw new ApiError('INVALID_TOKEN', 'The token is invalid.', 401)
+        }
+
+        if (tokenInfo.userId !== userId) {
+            throw new ApiError('INVALID_TOKEN', 'Token does not match session owner.', 401)
+        }
+
+        if (tokenInfo.revokedAt) {
+            throw new ApiError('TOKEN_REVOKED', 'The token has been revoked.', 401)
+        }
+
+        request.user = { id: userId }
+    } catch (e) {
+        handleApiError(e, reply)
         return
     }
-
-    const userToken = await new UserService().findByGuid(userId)
-
-    if (!userToken) {
-        res.status(401).json({ message: 'User not found!' })
-        return
-    }
-
-    req.user = { id: userToken.id }
-
-    next()
 }

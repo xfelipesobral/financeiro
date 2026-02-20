@@ -1,9 +1,9 @@
-import { generateHashSha256, validateHash } from '../../../utils/hash'
 import { session } from '../../session/service'
 import { createAccessToken } from '../../../utils/token'
 import { UserRepository } from '../repository'
 import { ApiError } from '../../../utils/error'
 import { uuid } from '../../../utils/uuid'
+import { validateHash } from '../../../utils/hash'
 
 export class UserService extends UserRepository {
     async authenticate(

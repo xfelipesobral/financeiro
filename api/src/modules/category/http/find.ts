@@ -10,7 +10,8 @@ interface Filters {
     type?: string
 }
 
-export async function find(request: FastifyRequest, reply: FastifyReply) {
+export async function find(request: AuthenticatedRequest, reply: FastifyReply) {
+    const userId = request.user!.id
     const { id } = request.params as { id?: string }
     const querys = request.query as Filters
 

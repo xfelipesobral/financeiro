@@ -16,19 +16,20 @@ model DatabaseInfo {
 }
 
 model User {
-    id           Int           @id @default(autoincrement())
-    guid         String        @unique @db.Uuid
-    email        String        @unique
-    firstName    String
-    lastName     String
-    password     String
-    createdAt    DateTime      @default(now())
-    updatedAt    DateTime      @updatedAt
-    payments     Payment[]
-    transactions Transaction[]
-    sessions     Session[]
-    bankAccounts BankAccount[]
-    categories   Category[]
+    id                  Int                  @id @default(autoincrement())
+    guid                String               @unique @db.Uuid
+    email               String               @unique
+    firstName           String
+    lastName            String
+    password            String
+    createdAt           DateTime             @default(now())
+    updatedAt           DateTime             @updatedAt
+    payments            Payment[]
+    transactions        Transaction[]
+    sessions            Session[]
+    bankAccounts        BankAccount[]
+    categories          Category[]
+    steamInventoryItems SteamInventoryItem[]
 }
 
 model Session {
@@ -176,6 +177,73 @@ model Card {
     payments      Payment[]
 
     @@index([bankAccountId])
+}
+
+model SteamInventoryItem {
+    id           Int                              @id @default(autoincrement())
+    guid         String                           @unique @db.Uuid
+    userId       Int
+    steamId      String
+    name         String
+    description  String
+    paidPrice    Decimal
+    soldPrice    Decimal?
+    marketUrl    String?
+    inspectUrl   String?
+    imageUrl     String?
+    quantity     Int
+    tradedAt     DateTime?
+    type         SteamInventoryItemType           @default(OTHER)
+    createdAt    DateTime                         @default(now())
+    updatedAt    DateTime                         @updatedAt
+    user         User                             @relation(fields: [userId], references: [id])
+    priceHistory SteamInventoryItemPriceHistory[]
+
+    @@index([userId])
+}
+
+model SteamInventoryItemPriceHistory {
+    id                   Int                @id @default(autoincrement())
+    steamInventoryItemId Int
+    priceSteam           Decimal            @default(0)
+    priceTradeIt         Decimal            @default(0)
+    recordedAt           DateTime           @default(now())
+    steamInventoryItem   SteamInventoryItem @relation(fields: [steamInventoryItemId], references: [id])
+
+    @@index([steamInventoryItemId])
+}
+
+enum SteamInventoryItemType {
+    AK47
+    M4A4
+    AWP
+    M4A1
+    DEAGLE
+    USP
+    GLOCK
+    P250
+    FIVESEVEN
+    GALILAR
+    FAMAS
+    UMP45
+    MP7
+    MP9
+    P90
+    BIZON
+    MAC10
+    XM1014
+    AUG
+    SSG08
+    KEYCHAIN
+    GRAFFITI
+    MUSICKIT
+    CASE
+    STICKER
+    PATCH
+    GLOVE
+    KNIFE
+    AGENT
+    OTHER
 }
 
 enum CategoryType {

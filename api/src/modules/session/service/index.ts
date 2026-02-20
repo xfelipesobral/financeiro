@@ -13,7 +13,7 @@ export class SessionService extends SessionRepository {
         return expiresAt
     }
 
-    async validate(guid: string): Promise<boolean> {
+    async validate(guid: string) {
         const session = await super.findByGuid(guid)
 
         if (!session || session.revokedAt) {
