@@ -9,6 +9,42 @@
 * 🟢 You can import this file directly.
 */
 
+export const SteamInventoryItemType = {
+  AK47: 'AK47',
+  M4A4: 'M4A4',
+  AWP: 'AWP',
+  M4A1: 'M4A1',
+  DEAGLE: 'DEAGLE',
+  USP: 'USP',
+  GLOCK: 'GLOCK',
+  P250: 'P250',
+  FIVESEVEN: 'FIVESEVEN',
+  GALILAR: 'GALILAR',
+  FAMAS: 'FAMAS',
+  UMP45: 'UMP45',
+  MP7: 'MP7',
+  MP9: 'MP9',
+  P90: 'P90',
+  BIZON: 'BIZON',
+  MAC10: 'MAC10',
+  XM1014: 'XM1014',
+  AUG: 'AUG',
+  SSG08: 'SSG08',
+  KEYCHAIN: 'KEYCHAIN',
+  GRAFFITI: 'GRAFFITI',
+  MUSICKIT: 'MUSICKIT',
+  CASE: 'CASE',
+  STICKER: 'STICKER',
+  PATCH: 'PATCH',
+  GLOVE: 'GLOVE',
+  KNIFE: 'KNIFE',
+  AGENT: 'AGENT',
+  OTHER: 'OTHER'
+} as const
+
+export type SteamInventoryItemType = (typeof SteamInventoryItemType)[keyof typeof SteamInventoryItemType]
+
+
 export const CategoryType = {
   DEBIT: 'DEBIT',
   CREDIT: 'CREDIT'

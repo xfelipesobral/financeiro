@@ -8,7 +8,7 @@ export async function reorgDatabase() {
     let dbVersion = await databaseInfo.lastVersion()
 
     console.log(`Verifying if database needs migrations... Current version: ${dbVersion}, Last version: ${lastVersion}`)
-    if (lastVersion >= dbVersion) {
+    if (dbVersion >= lastVersion) {
         return
     }
 

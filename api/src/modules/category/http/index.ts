@@ -1,17 +1,11 @@
 import { FastifyInstance } from 'fastify'
 import { find } from './find'
+import { middlewareAuthenticated } from '../../../middlewares/authenticated'
 
-export async function userRoutes(app: FastifyInstance) {
-    app.get('/', find)
+export async function categoryRoutes(app: FastifyInstance) {
+    await app.register(async (instancia) => {
+        instancia.addHook('preHandler', middlewareAuthenticated)
+
+        instancia.get('/', find)
+    })
 }
-
-// import { Router } from 'express'
-
-// import { find } from './find'
-
-// const categoryRoutes = Router()
-
-// categoryRoutes.get('/', find)
-// categoryRoutes.get('/:id', find)
-
-// export { categoryRoutes }

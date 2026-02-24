@@ -17,8 +17,8 @@
 
 import * as runtime from "@prisma/client/runtime/index-browser"
 
-export type * from '../models'
-export type * from './prismaNamespace'
+export type * from '../models.js'
+export type * from './prismaNamespace.js'
 
 export const Decimal = runtime.Decimal
 
@@ -61,7 +61,9 @@ export const ModelName = {
   Category: 'Category',
   PaymentMethod: 'PaymentMethod',
   Payment: 'Payment',
-  Card: 'Card'
+  Card: 'Card',
+  SteamInventoryItem: 'SteamInventoryItem',
+  SteamInventoryItemPriceHistory: 'SteamInventoryItemPriceHistory'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -70,12 +72,12 @@ export type ModelName = (typeof ModelName)[keyof typeof ModelName]
  * Enums
  */
 
-export const TransactionIsolationLevel = {
+export const TransactionIsolationLevel = runtime.makeStrictEnum({
   ReadUncommitted: 'ReadUncommitted',
   ReadCommitted: 'ReadCommitted',
   RepeatableRead: 'RepeatableRead',
   Serializable: 'Serializable'
-} as const
+} as const)
 
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
@@ -230,6 +232,39 @@ export const CardScalarFieldEnum = {
 } as const
 
 export type CardScalarFieldEnum = (typeof CardScalarFieldEnum)[keyof typeof CardScalarFieldEnum]
+
+
+export const SteamInventoryItemScalarFieldEnum = {
+  id: 'id',
+  guid: 'guid',
+  userId: 'userId',
+  steamId: 'steamId',
+  name: 'name',
+  description: 'description',
+  paidPrice: 'paidPrice',
+  soldPrice: 'soldPrice',
+  marketUrl: 'marketUrl',
+  inspectUrl: 'inspectUrl',
+  imageUrl: 'imageUrl',
+  quantity: 'quantity',
+  tradedAt: 'tradedAt',
+  type: 'type',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SteamInventoryItemScalarFieldEnum = (typeof SteamInventoryItemScalarFieldEnum)[keyof typeof SteamInventoryItemScalarFieldEnum]
+
+
+export const SteamInventoryItemPriceHistoryScalarFieldEnum = {
+  id: 'id',
+  steamInventoryItemId: 'steamInventoryItemId',
+  priceSteam: 'priceSteam',
+  priceTradeIt: 'priceTradeIt',
+  recordedAt: 'recordedAt'
+} as const
+
+export type SteamInventoryItemPriceHistoryScalarFieldEnum = (typeof SteamInventoryItemPriceHistoryScalarFieldEnum)[keyof typeof SteamInventoryItemPriceHistoryScalarFieldEnum]
 
 
 export const SortOrder = {

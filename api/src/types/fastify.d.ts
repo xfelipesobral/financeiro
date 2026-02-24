@@ -7,7 +7,3 @@ declare module 'fastify' {
         }
     }
 }
-
-type AuthenticatedRequest = FastifyRequest & {
-    user: { id: number }
-}

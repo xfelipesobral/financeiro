@@ -2,6 +2,7 @@
     "CREATE TYPE \"CategoryType\" AS ENUM ('DEBIT', 'CREDIT');",
     "CREATE TYPE \"CardType\" AS ENUM ('CREDIT', 'DEBIT', 'CREDIT_AND_DEBIT');",
     "CREATE TYPE \"PaymentStatus\" AS ENUM ('PENDING', 'PAID', 'OVERDUE', 'CANCELED');",
+    "CREATE TYPE \"SteamInventoryItemType\" AS ENUM ('AK47', 'M4A4', 'AWP', 'M4A1', 'DEAGLE', 'USP', 'GLOCK', 'P250', 'FIVESEVEN', 'GALILAR', 'FAMAS', 'UMP45', 'MP7', 'MP9', 'P90', 'BIZON', 'MAC10', 'XM1014', 'AUG', 'SSG08', 'KEYCHAIN', 'GRAFFITI', 'MUSICKIT', 'CASE', 'STICKER', 'PATCH', 'GLOVE', 'KNIFE', 'AGENT', 'OTHER');",
     "CREATE TABLE \"DatabaseInfo\" (\"id\" INTEGER NOT NULL, \"version\" INTEGER NOT NULL, \"createdAt\" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP, \"updatedAt\" TIMESTAMP(3) NOT NULL, CONSTRAINT \"Database_pkey\" PRIMARY KEY (\"id\"));",
     "CREATE TABLE \"User\" (\"id\" SERIAL NOT NULL, \"guid\" UUID NOT NULL, \"email\" TEXT NOT NULL, \"firstName\" TEXT NOT NULL, \"lastName\" TEXT NOT NULL, \"password\" TEXT NOT NULL, \"createdAt\" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP, \"updatedAt\" TIMESTAMP(3) NOT NULL, CONSTRAINT \"User_pkey\" PRIMARY KEY (\"id\"));",
     "CREATE TABLE \"Session\" (\"id\" SERIAL NOT NULL, \"guid\" UUID NOT NULL, \"userId\" INTEGER NOT NULL, \"refreshToken\" TEXT NOT NULL, \"origin\" TEXT NOT NULL, \"userAgent\" TEXT NOT NULL, \"ipAddress\" TEXT, \"createdAt\" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP, \"updatedAt\" TIMESTAMP(3) NOT NULL, \"revokedAt\" TIMESTAMP(3), \"expiresAt\" TIMESTAMP(3) NOT NULL, CONSTRAINT \"Session_pkey\" PRIMARY KEY (\"id\"));",
@@ -13,8 +14,11 @@
     "CREATE TABLE \"PaymentMethod\" (\"id\" SERIAL NOT NULL, \"name\" TEXT NOT NULL, \"createdAt\" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP, \"updatedAt\" TIMESTAMP(3) NOT NULL, CONSTRAINT \"PaymentMethod_pkey\" PRIMARY KEY (\"id\"));",
     "CREATE TABLE \"Payment\" (\"id\" SERIAL NOT NULL, \"guid\" UUID NOT NULL, \"userId\" INTEGER NOT NULL, \"paymentMethodId\" INTEGER NOT NULL, \"transactionId\" INTEGER NOT NULL, \"cardId\" INTEGER, \"amount\" DECIMAL(65,30) NOT NULL, \"installmentNumber\" INTEGER, \"description\" TEXT, \"status\" \"PaymentStatus\" NOT NULL, \"dueDate\" TIMESTAMP(3) NOT NULL, \"paidAt\" TIMESTAMP(3), \"createdAt\" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP, \"updatedAt\" TIMESTAMP(3) NOT NULL, CONSTRAINT \"Payment_pkey\" PRIMARY KEY (\"id\"));",
     "CREATE TABLE \"Card\" (\"id\" SERIAL NOT NULL, \"guid\" UUID NOT NULL, \"name\" TEXT NOT NULL, \"closingDay\" INTEGER NOT NULL, \"type\" \"CardType\" NOT NULL, \"description\" TEXT NOT NULL, \"limit\" DECIMAL(65,30) NOT NULL, \"bankAccountId\" INTEGER NOT NULL, \"createdAt\" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP, \"updatedAt\" TIMESTAMP(3) NOT NULL, CONSTRAINT \"Card_pkey\" PRIMARY KEY (\"id\"));",
+    "CREATE TABLE \"SteamInventoryItem\" (\"id\" SERIAL NOT NULL, \"guid\" UUID NOT NULL, \"userId\" INTEGER NOT NULL, \"steamId\" TEXT NOT NULL, \"name\" TEXT NOT NULL, \"description\" TEXT NOT NULL, \"paidPrice\" DECIMAL(65,30) NOT NULL, \"soldPrice\" DECIMAL(65,30), \"marketUrl\" TEXT, \"inspectUrl\" TEXT, \"imageUrl\" TEXT, \"quantity\" INTEGER NOT NULL, \"tradedAt\" TIMESTAMP(3), \"type\" \"SteamInventoryItemType\" NOT NULL DEFAULT 'OTHER', \"createdAt\" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP, \"updatedAt\" TIMESTAMP(3) NOT NULL, CONSTRAINT \"SteamInventoryItem_pkey\" PRIMARY KEY (\"id\"));",
+    "CREATE TABLE \"SteamInventoryItemPriceHistory\" (\"id\" SERIAL NOT NULL, \"steamInventoryItemId\" INTEGER NOT NULL, \"priceSteam\" DECIMAL(65,30) NOT NULL DEFAULT 0, \"priceTradeIt\" DECIMAL(65,30) NOT NULL DEFAULT 0, \"recordedAt\" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP, CONSTRAINT \"SteamInventoryItemPriceHistory_pkey\" PRIMARY KEY (\"id\"));",
     "CREATE UNIQUE INDEX \"User_guid_key\" ON \"User\"(\"guid\");",
     "CREATE UNIQUE INDEX \"User_email_key\" ON \"User\"(\"email\");",
+    "CREATE UNIQUE INDEX \"Session_guid_key\" ON \"Session\"(\"guid\");",
     "CREATE UNIQUE INDEX \"Session_refreshToken_key\" ON \"Session\"(\"refreshToken\");",
     "CREATE INDEX \"Session_expiresAt_idx\" ON \"Session\"(\"expiresAt\");",
     "CREATE INDEX \"Session_userId_idx\" ON \"Session\"(\"userId\");",
@@ -36,6 +40,9 @@
     "CREATE INDEX \"Payment_status_idx\" ON \"Payment\"(\"status\");",
     "CREATE UNIQUE INDEX \"Card_guid_key\" ON \"Card\"(\"guid\");",
     "CREATE INDEX \"Card_bankAccountId_idx\" ON \"Card\"(\"bankAccountId\");",
+    "CREATE UNIQUE INDEX \"SteamInventoryItem_guid_key\" ON \"SteamInventoryItem\"(\"guid\");",
+    "CREATE INDEX \"SteamInventoryItem_userId_idx\" ON \"SteamInventoryItem\"(\"userId\");",
+    "CREATE INDEX \"SteamInventoryItemPriceHistory_steamInventoryItemId_idx\" ON \"SteamInventoryItemPriceHistory\"(\"steamInventoryItemId\");",
     "ALTER TABLE \"Session\" ADD CONSTRAINT \"Session_userId_fkey\" FOREIGN KEY (\"userId\") REFERENCES \"User\"(\"id\") ON DELETE RESTRICT ON UPDATE CASCADE;",
     "ALTER TABLE \"Transaction\" ADD CONSTRAINT \"Transaction_userId_fkey\" FOREIGN KEY (\"userId\") REFERENCES \"User\"(\"id\") ON DELETE RESTRICT ON UPDATE CASCADE;",
     "ALTER TABLE \"Transaction\" ADD CONSTRAINT \"Transaction_bankAccountId_fkey\" FOREIGN KEY (\"bankAccountId\") REFERENCES \"BankAccount\"(\"id\") ON DELETE RESTRICT ON UPDATE CASCADE;",
@@ -50,5 +57,6 @@
     "ALTER TABLE \"Payment\" ADD CONSTRAINT \"Payment_transactionId_fkey\" FOREIGN KEY (\"transactionId\") REFERENCES \"Transaction\"(\"id\") ON DELETE RESTRICT ON UPDATE CASCADE;",
     "ALTER TABLE \"Payment\" ADD CONSTRAINT \"Payment_paymentMethodId_fkey\" FOREIGN KEY (\"paymentMethodId\") REFERENCES \"PaymentMethod\"(\"id\") ON DELETE RESTRICT ON UPDATE CASCADE;",
     "ALTER TABLE \"Card\" ADD CONSTRAINT \"Card_bankAccountId_fkey\" FOREIGN KEY (\"bankAccountId\") REFERENCES \"BankAccount\"(\"id\") ON DELETE RESTRICT ON UPDATE CASCADE;",
-    "CREATE UNIQUE INDEX \"Session_guid_key\" ON \"Session\"(\"guid\");"
+    "ALTER TABLE \"SteamInventoryItem\" ADD CONSTRAINT \"SteamInventoryItem_userId_fkey\" FOREIGN KEY (\"userId\") REFERENCES \"User\"(\"id\") ON DELETE RESTRICT ON UPDATE CASCADE;",
+    "ALTER TABLE \"SteamInventoryItemPriceHistory\" ADD CONSTRAINT \"SteamInventoryItemPriceHistory_steamInventoryItemId_fkey\" FOREIGN KEY (\"steamInventoryItemId\") REFERENCES \"SteamInventoryItem\"(\"id\") ON DELETE RESTRICT ON UPDATE CASCADE;"
 ]

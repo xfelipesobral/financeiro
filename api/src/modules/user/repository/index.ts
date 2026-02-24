@@ -36,4 +36,16 @@ export class UserRepository {
             },
         })
     }
+
+    create(guid: string, email: string, firstName: string, lastName: string, password: string) {
+        return this.user.create({
+            data: {
+                guid,
+                email,
+                firstName,
+                lastName,
+                password,
+            },
+        })
+    }
 }
