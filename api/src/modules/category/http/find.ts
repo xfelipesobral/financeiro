@@ -22,8 +22,7 @@ export async function find(request: FastifyRequest, reply: FastifyReply) {
             const categoryFinded = category.findById(Number(finalId), userId)
 
             if (!categoryFinded) {
-                throw new ApiError('CATEGORY_NOT_FOUND', 'Categoria não encontrada', 404)
-                return
+                throw new ApiError('CATEGORY_NOT_FOUND', 'Category not found', 404)
             }
 
             reply.status(200).send(categoryFinded)
