@@ -1,0 +1,22 @@
+meta {
+  name: steam-cs2-price
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{url}}/steam/cs2-item-price
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "steamId": "76561198131228650"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

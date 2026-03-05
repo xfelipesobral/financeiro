@@ -396,6 +396,7 @@ export const ModelName = {
   Payment: 'Payment',
   Card: 'Card',
   SteamInventoryItem: 'SteamInventoryItem',
+  SteamInventoryItemTransaction: 'SteamInventoryItemTransaction',
   SteamInventoryItemPriceHistory: 'SteamInventoryItemPriceHistory'
 } as const
 
@@ -412,7 +413,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "databaseInfo" | "user" | "session" | "transaction" | "bank" | "bankAccount" | "bankAccountPix" | "category" | "paymentMethod" | "payment" | "card" | "steamInventoryItem" | "steamInventoryItemPriceHistory"
+    modelProps: "databaseInfo" | "user" | "session" | "transaction" | "bank" | "bankAccount" | "bankAccountPix" | "category" | "paymentMethod" | "payment" | "card" | "steamInventoryItem" | "steamInventoryItemTransaction" | "steamInventoryItemPriceHistory"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1304,6 +1305,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    SteamInventoryItemTransaction: {
+      payload: Prisma.$SteamInventoryItemTransactionPayload<ExtArgs>
+      fields: Prisma.SteamInventoryItemTransactionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SteamInventoryItemTransactionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SteamInventoryItemTransactionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SteamInventoryItemTransactionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SteamInventoryItemTransactionPayload>
+        }
+        findFirst: {
+          args: Prisma.SteamInventoryItemTransactionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SteamInventoryItemTransactionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SteamInventoryItemTransactionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SteamInventoryItemTransactionPayload>
+        }
+        findMany: {
+          args: Prisma.SteamInventoryItemTransactionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SteamInventoryItemTransactionPayload>[]
+        }
+        create: {
+          args: Prisma.SteamInventoryItemTransactionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SteamInventoryItemTransactionPayload>
+        }
+        createMany: {
+          args: Prisma.SteamInventoryItemTransactionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SteamInventoryItemTransactionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SteamInventoryItemTransactionPayload>[]
+        }
+        delete: {
+          args: Prisma.SteamInventoryItemTransactionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SteamInventoryItemTransactionPayload>
+        }
+        update: {
+          args: Prisma.SteamInventoryItemTransactionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SteamInventoryItemTransactionPayload>
+        }
+        deleteMany: {
+          args: Prisma.SteamInventoryItemTransactionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SteamInventoryItemTransactionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SteamInventoryItemTransactionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SteamInventoryItemTransactionPayload>[]
+        }
+        upsert: {
+          args: Prisma.SteamInventoryItemTransactionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SteamInventoryItemTransactionPayload>
+        }
+        aggregate: {
+          args: Prisma.SteamInventoryItemTransactionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSteamInventoryItemTransaction>
+        }
+        groupBy: {
+          args: Prisma.SteamInventoryItemTransactionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SteamInventoryItemTransactionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SteamInventoryItemTransactionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SteamInventoryItemTransactionCountAggregateOutputType> | number
+        }
+      }
+    }
     SteamInventoryItemPriceHistory: {
       payload: Prisma.$SteamInventoryItemPriceHistoryPayload<ExtArgs>
       fields: Prisma.SteamInventoryItemPriceHistoryFieldRefs
@@ -1576,14 +1651,12 @@ export const SteamInventoryItemScalarFieldEnum = {
   steamId: 'steamId',
   name: 'name',
   description: 'description',
-  paidPrice: 'paidPrice',
-  soldPrice: 'soldPrice',
+  lastPaidPrice: 'lastPaidPrice',
+  lastSoldPrice: 'lastSoldPrice',
   marketUrl: 'marketUrl',
-  inspectUrl: 'inspectUrl',
   imageUrl: 'imageUrl',
+  color: 'color',
   quantity: 'quantity',
-  tradedAt: 'tradedAt',
-  type: 'type',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1591,9 +1664,24 @@ export const SteamInventoryItemScalarFieldEnum = {
 export type SteamInventoryItemScalarFieldEnum = (typeof SteamInventoryItemScalarFieldEnum)[keyof typeof SteamInventoryItemScalarFieldEnum]
 
 
-export const SteamInventoryItemPriceHistoryScalarFieldEnum = {
+export const SteamInventoryItemTransactionScalarFieldEnum = {
   id: 'id',
   steamInventoryItemId: 'steamInventoryItemId',
+  observation: 'observation',
+  unitPrice: 'unitPrice',
+  quantity: 'quantity',
+  totalAmount: 'totalAmount',
+  categoryId: 'categoryId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SteamInventoryItemTransactionScalarFieldEnum = (typeof SteamInventoryItemTransactionScalarFieldEnum)[keyof typeof SteamInventoryItemTransactionScalarFieldEnum]
+
+
+export const SteamInventoryItemPriceHistoryScalarFieldEnum = {
+  id: 'id',
+  marketUrl: 'marketUrl',
   priceSteam: 'priceSteam',
   priceTradeIt: 'priceTradeIt',
   recordedAt: 'recordedAt'
@@ -1731,20 +1819,6 @@ export type ListEnumCardTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$Pri
 
 
 /**
- * Reference to a field of type 'SteamInventoryItemType'
- */
-export type EnumSteamInventoryItemTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SteamInventoryItemType'>
-    
-
-
-/**
- * Reference to a field of type 'SteamInventoryItemType[]'
- */
-export type ListEnumSteamInventoryItemTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SteamInventoryItemType[]'>
-    
-
-
-/**
  * Reference to a field of type 'Float'
  */
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -1864,6 +1938,7 @@ export type GlobalOmitConfig = {
   payment?: Prisma.PaymentOmit
   card?: Prisma.CardOmit
   steamInventoryItem?: Prisma.SteamInventoryItemOmit
+  steamInventoryItemTransaction?: Prisma.SteamInventoryItemTransactionOmit
   steamInventoryItemPriceHistory?: Prisma.SteamInventoryItemPriceHistoryOmit
 }
 

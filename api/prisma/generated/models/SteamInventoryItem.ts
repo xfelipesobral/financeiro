@@ -29,16 +29,16 @@ export type AggregateSteamInventoryItem = {
 export type SteamInventoryItemAvgAggregateOutputType = {
   id: number | null
   userId: number | null
-  paidPrice: runtime.Decimal | null
-  soldPrice: runtime.Decimal | null
+  lastPaidPrice: runtime.Decimal | null
+  lastSoldPrice: runtime.Decimal | null
   quantity: number | null
 }
 
 export type SteamInventoryItemSumAggregateOutputType = {
   id: number | null
   userId: number | null
-  paidPrice: runtime.Decimal | null
-  soldPrice: runtime.Decimal | null
+  lastPaidPrice: runtime.Decimal | null
+  lastSoldPrice: runtime.Decimal | null
   quantity: number | null
 }
 
@@ -49,14 +49,12 @@ export type SteamInventoryItemMinAggregateOutputType = {
   steamId: string | null
   name: string | null
   description: string | null
-  paidPrice: runtime.Decimal | null
-  soldPrice: runtime.Decimal | null
+  lastPaidPrice: runtime.Decimal | null
+  lastSoldPrice: runtime.Decimal | null
   marketUrl: string | null
-  inspectUrl: string | null
   imageUrl: string | null
+  color: string | null
   quantity: number | null
-  tradedAt: Date | null
-  type: $Enums.SteamInventoryItemType | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -68,14 +66,12 @@ export type SteamInventoryItemMaxAggregateOutputType = {
   steamId: string | null
   name: string | null
   description: string | null
-  paidPrice: runtime.Decimal | null
-  soldPrice: runtime.Decimal | null
+  lastPaidPrice: runtime.Decimal | null
+  lastSoldPrice: runtime.Decimal | null
   marketUrl: string | null
-  inspectUrl: string | null
   imageUrl: string | null
+  color: string | null
   quantity: number | null
-  tradedAt: Date | null
-  type: $Enums.SteamInventoryItemType | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -87,14 +83,12 @@ export type SteamInventoryItemCountAggregateOutputType = {
   steamId: number
   name: number
   description: number
-  paidPrice: number
-  soldPrice: number
+  lastPaidPrice: number
+  lastSoldPrice: number
   marketUrl: number
-  inspectUrl: number
   imageUrl: number
+  color: number
   quantity: number
-  tradedAt: number
-  type: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -104,16 +98,16 @@ export type SteamInventoryItemCountAggregateOutputType = {
 export type SteamInventoryItemAvgAggregateInputType = {
   id?: true
   userId?: true
-  paidPrice?: true
-  soldPrice?: true
+  lastPaidPrice?: true
+  lastSoldPrice?: true
   quantity?: true
 }
 
 export type SteamInventoryItemSumAggregateInputType = {
   id?: true
   userId?: true
-  paidPrice?: true
-  soldPrice?: true
+  lastPaidPrice?: true
+  lastSoldPrice?: true
   quantity?: true
 }
 
@@ -124,14 +118,12 @@ export type SteamInventoryItemMinAggregateInputType = {
   steamId?: true
   name?: true
   description?: true
-  paidPrice?: true
-  soldPrice?: true
+  lastPaidPrice?: true
+  lastSoldPrice?: true
   marketUrl?: true
-  inspectUrl?: true
   imageUrl?: true
+  color?: true
   quantity?: true
-  tradedAt?: true
-  type?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -143,14 +135,12 @@ export type SteamInventoryItemMaxAggregateInputType = {
   steamId?: true
   name?: true
   description?: true
-  paidPrice?: true
-  soldPrice?: true
+  lastPaidPrice?: true
+  lastSoldPrice?: true
   marketUrl?: true
-  inspectUrl?: true
   imageUrl?: true
+  color?: true
   quantity?: true
-  tradedAt?: true
-  type?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -162,14 +152,12 @@ export type SteamInventoryItemCountAggregateInputType = {
   steamId?: true
   name?: true
   description?: true
-  paidPrice?: true
-  soldPrice?: true
+  lastPaidPrice?: true
+  lastSoldPrice?: true
   marketUrl?: true
-  inspectUrl?: true
   imageUrl?: true
+  color?: true
   quantity?: true
-  tradedAt?: true
-  type?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -268,14 +256,12 @@ export type SteamInventoryItemGroupByOutputType = {
   steamId: string
   name: string
   description: string
-  paidPrice: runtime.Decimal
-  soldPrice: runtime.Decimal | null
+  lastPaidPrice: runtime.Decimal | null
+  lastSoldPrice: runtime.Decimal | null
   marketUrl: string | null
-  inspectUrl: string | null
   imageUrl: string | null
+  color: string | null
   quantity: number
-  tradedAt: Date | null
-  type: $Enums.SteamInventoryItemType
   createdAt: Date
   updatedAt: Date
   _count: SteamInventoryItemCountAggregateOutputType | null
@@ -305,23 +291,21 @@ export type SteamInventoryItemWhereInput = {
   OR?: Prisma.SteamInventoryItemWhereInput[]
   NOT?: Prisma.SteamInventoryItemWhereInput | Prisma.SteamInventoryItemWhereInput[]
   id?: Prisma.IntFilter<"SteamInventoryItem"> | number
-  guid?: Prisma.UuidFilter<"SteamInventoryItem"> | string
+  guid?: Prisma.StringFilter<"SteamInventoryItem"> | string
   userId?: Prisma.IntFilter<"SteamInventoryItem"> | number
   steamId?: Prisma.StringFilter<"SteamInventoryItem"> | string
   name?: Prisma.StringFilter<"SteamInventoryItem"> | string
   description?: Prisma.StringFilter<"SteamInventoryItem"> | string
-  paidPrice?: Prisma.DecimalFilter<"SteamInventoryItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  soldPrice?: Prisma.DecimalNullableFilter<"SteamInventoryItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  lastPaidPrice?: Prisma.DecimalNullableFilter<"SteamInventoryItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  lastSoldPrice?: Prisma.DecimalNullableFilter<"SteamInventoryItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   marketUrl?: Prisma.StringNullableFilter<"SteamInventoryItem"> | string | null
-  inspectUrl?: Prisma.StringNullableFilter<"SteamInventoryItem"> | string | null
   imageUrl?: Prisma.StringNullableFilter<"SteamInventoryItem"> | string | null
+  color?: Prisma.StringNullableFilter<"SteamInventoryItem"> | string | null
   quantity?: Prisma.IntFilter<"SteamInventoryItem"> | number
-  tradedAt?: Prisma.DateTimeNullableFilter<"SteamInventoryItem"> | Date | string | null
-  type?: Prisma.EnumSteamInventoryItemTypeFilter<"SteamInventoryItem"> | $Enums.SteamInventoryItemType
   createdAt?: Prisma.DateTimeFilter<"SteamInventoryItem"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"SteamInventoryItem"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  priceHistory?: Prisma.SteamInventoryItemPriceHistoryListRelationFilter
+  steamInventoryItemTransactions?: Prisma.SteamInventoryItemTransactionListRelationFilter
 }
 
 export type SteamInventoryItemOrderByWithRelationInput = {
@@ -331,18 +315,16 @@ export type SteamInventoryItemOrderByWithRelationInput = {
   steamId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
-  paidPrice?: Prisma.SortOrder
-  soldPrice?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastPaidPrice?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastSoldPrice?: Prisma.SortOrderInput | Prisma.SortOrder
   marketUrl?: Prisma.SortOrderInput | Prisma.SortOrder
-  inspectUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  color?: Prisma.SortOrderInput | Prisma.SortOrder
   quantity?: Prisma.SortOrder
-  tradedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  type?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
-  priceHistory?: Prisma.SteamInventoryItemPriceHistoryOrderByRelationAggregateInput
+  steamInventoryItemTransactions?: Prisma.SteamInventoryItemTransactionOrderByRelationAggregateInput
 }
 
 export type SteamInventoryItemWhereUniqueInput = Prisma.AtLeast<{
@@ -355,18 +337,16 @@ export type SteamInventoryItemWhereUniqueInput = Prisma.AtLeast<{
   steamId?: Prisma.StringFilter<"SteamInventoryItem"> | string
   name?: Prisma.StringFilter<"SteamInventoryItem"> | string
   description?: Prisma.StringFilter<"SteamInventoryItem"> | string
-  paidPrice?: Prisma.DecimalFilter<"SteamInventoryItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  soldPrice?: Prisma.DecimalNullableFilter<"SteamInventoryItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  lastPaidPrice?: Prisma.DecimalNullableFilter<"SteamInventoryItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  lastSoldPrice?: Prisma.DecimalNullableFilter<"SteamInventoryItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   marketUrl?: Prisma.StringNullableFilter<"SteamInventoryItem"> | string | null
-  inspectUrl?: Prisma.StringNullableFilter<"SteamInventoryItem"> | string | null
   imageUrl?: Prisma.StringNullableFilter<"SteamInventoryItem"> | string | null
+  color?: Prisma.StringNullableFilter<"SteamInventoryItem"> | string | null
   quantity?: Prisma.IntFilter<"SteamInventoryItem"> | number
-  tradedAt?: Prisma.DateTimeNullableFilter<"SteamInventoryItem"> | Date | string | null
-  type?: Prisma.EnumSteamInventoryItemTypeFilter<"SteamInventoryItem"> | $Enums.SteamInventoryItemType
   createdAt?: Prisma.DateTimeFilter<"SteamInventoryItem"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"SteamInventoryItem"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  priceHistory?: Prisma.SteamInventoryItemPriceHistoryListRelationFilter
+  steamInventoryItemTransactions?: Prisma.SteamInventoryItemTransactionListRelationFilter
 }, "id" | "guid">
 
 export type SteamInventoryItemOrderByWithAggregationInput = {
@@ -376,14 +356,12 @@ export type SteamInventoryItemOrderByWithAggregationInput = {
   steamId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
-  paidPrice?: Prisma.SortOrder
-  soldPrice?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastPaidPrice?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastSoldPrice?: Prisma.SortOrderInput | Prisma.SortOrder
   marketUrl?: Prisma.SortOrderInput | Prisma.SortOrder
-  inspectUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  color?: Prisma.SortOrderInput | Prisma.SortOrder
   quantity?: Prisma.SortOrder
-  tradedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  type?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.SteamInventoryItemCountOrderByAggregateInput
@@ -398,19 +376,17 @@ export type SteamInventoryItemScalarWhereWithAggregatesInput = {
   OR?: Prisma.SteamInventoryItemScalarWhereWithAggregatesInput[]
   NOT?: Prisma.SteamInventoryItemScalarWhereWithAggregatesInput | Prisma.SteamInventoryItemScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"SteamInventoryItem"> | number
-  guid?: Prisma.UuidWithAggregatesFilter<"SteamInventoryItem"> | string
+  guid?: Prisma.StringWithAggregatesFilter<"SteamInventoryItem"> | string
   userId?: Prisma.IntWithAggregatesFilter<"SteamInventoryItem"> | number
   steamId?: Prisma.StringWithAggregatesFilter<"SteamInventoryItem"> | string
   name?: Prisma.StringWithAggregatesFilter<"SteamInventoryItem"> | string
   description?: Prisma.StringWithAggregatesFilter<"SteamInventoryItem"> | string
-  paidPrice?: Prisma.DecimalWithAggregatesFilter<"SteamInventoryItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  soldPrice?: Prisma.DecimalNullableWithAggregatesFilter<"SteamInventoryItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  lastPaidPrice?: Prisma.DecimalNullableWithAggregatesFilter<"SteamInventoryItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  lastSoldPrice?: Prisma.DecimalNullableWithAggregatesFilter<"SteamInventoryItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   marketUrl?: Prisma.StringNullableWithAggregatesFilter<"SteamInventoryItem"> | string | null
-  inspectUrl?: Prisma.StringNullableWithAggregatesFilter<"SteamInventoryItem"> | string | null
   imageUrl?: Prisma.StringNullableWithAggregatesFilter<"SteamInventoryItem"> | string | null
+  color?: Prisma.StringNullableWithAggregatesFilter<"SteamInventoryItem"> | string | null
   quantity?: Prisma.IntWithAggregatesFilter<"SteamInventoryItem"> | number
-  tradedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"SteamInventoryItem"> | Date | string | null
-  type?: Prisma.EnumSteamInventoryItemTypeWithAggregatesFilter<"SteamInventoryItem"> | $Enums.SteamInventoryItemType
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"SteamInventoryItem"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"SteamInventoryItem"> | Date | string
 }
@@ -420,18 +396,16 @@ export type SteamInventoryItemCreateInput = {
   steamId: string
   name: string
   description: string
-  paidPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
-  soldPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  lastPaidPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  lastSoldPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   marketUrl?: string | null
-  inspectUrl?: string | null
   imageUrl?: string | null
-  quantity: number
-  tradedAt?: Date | string | null
-  type?: $Enums.SteamInventoryItemType
+  color?: string | null
+  quantity?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutSteamInventoryItemsInput
-  priceHistory?: Prisma.SteamInventoryItemPriceHistoryCreateNestedManyWithoutSteamInventoryItemInput
+  steamInventoryItemTransactions?: Prisma.SteamInventoryItemTransactionCreateNestedManyWithoutSteamInventoryItemInput
 }
 
 export type SteamInventoryItemUncheckedCreateInput = {
@@ -441,17 +415,15 @@ export type SteamInventoryItemUncheckedCreateInput = {
   steamId: string
   name: string
   description: string
-  paidPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
-  soldPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  lastPaidPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  lastSoldPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   marketUrl?: string | null
-  inspectUrl?: string | null
   imageUrl?: string | null
-  quantity: number
-  tradedAt?: Date | string | null
-  type?: $Enums.SteamInventoryItemType
+  color?: string | null
+  quantity?: number
   createdAt?: Date | string
   updatedAt?: Date | string
-  priceHistory?: Prisma.SteamInventoryItemPriceHistoryUncheckedCreateNestedManyWithoutSteamInventoryItemInput
+  steamInventoryItemTransactions?: Prisma.SteamInventoryItemTransactionUncheckedCreateNestedManyWithoutSteamInventoryItemInput
 }
 
 export type SteamInventoryItemUpdateInput = {
@@ -459,18 +431,16 @@ export type SteamInventoryItemUpdateInput = {
   steamId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  paidPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  soldPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  lastPaidPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  lastSoldPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   marketUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  inspectUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  tradedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  type?: Prisma.EnumSteamInventoryItemTypeFieldUpdateOperationsInput | $Enums.SteamInventoryItemType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutSteamInventoryItemsNestedInput
-  priceHistory?: Prisma.SteamInventoryItemPriceHistoryUpdateManyWithoutSteamInventoryItemNestedInput
+  steamInventoryItemTransactions?: Prisma.SteamInventoryItemTransactionUpdateManyWithoutSteamInventoryItemNestedInput
 }
 
 export type SteamInventoryItemUncheckedUpdateInput = {
@@ -480,17 +450,15 @@ export type SteamInventoryItemUncheckedUpdateInput = {
   steamId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  paidPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  soldPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  lastPaidPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  lastSoldPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   marketUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  inspectUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  tradedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  type?: Prisma.EnumSteamInventoryItemTypeFieldUpdateOperationsInput | $Enums.SteamInventoryItemType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  priceHistory?: Prisma.SteamInventoryItemPriceHistoryUncheckedUpdateManyWithoutSteamInventoryItemNestedInput
+  steamInventoryItemTransactions?: Prisma.SteamInventoryItemTransactionUncheckedUpdateManyWithoutSteamInventoryItemNestedInput
 }
 
 export type SteamInventoryItemCreateManyInput = {
@@ -500,14 +468,12 @@ export type SteamInventoryItemCreateManyInput = {
   steamId: string
   name: string
   description: string
-  paidPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
-  soldPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  lastPaidPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  lastSoldPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   marketUrl?: string | null
-  inspectUrl?: string | null
   imageUrl?: string | null
-  quantity: number
-  tradedAt?: Date | string | null
-  type?: $Enums.SteamInventoryItemType
+  color?: string | null
+  quantity?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -517,14 +483,12 @@ export type SteamInventoryItemUpdateManyMutationInput = {
   steamId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  paidPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  soldPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  lastPaidPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  lastSoldPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   marketUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  inspectUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  tradedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  type?: Prisma.EnumSteamInventoryItemTypeFieldUpdateOperationsInput | $Enums.SteamInventoryItemType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -536,14 +500,12 @@ export type SteamInventoryItemUncheckedUpdateManyInput = {
   steamId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  paidPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  soldPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  lastPaidPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  lastSoldPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   marketUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  inspectUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  tradedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  type?: Prisma.EnumSteamInventoryItemTypeFieldUpdateOperationsInput | $Enums.SteamInventoryItemType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -565,14 +527,12 @@ export type SteamInventoryItemCountOrderByAggregateInput = {
   steamId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
-  paidPrice?: Prisma.SortOrder
-  soldPrice?: Prisma.SortOrder
+  lastPaidPrice?: Prisma.SortOrder
+  lastSoldPrice?: Prisma.SortOrder
   marketUrl?: Prisma.SortOrder
-  inspectUrl?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
+  color?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
-  tradedAt?: Prisma.SortOrder
-  type?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -580,8 +540,8 @@ export type SteamInventoryItemCountOrderByAggregateInput = {
 export type SteamInventoryItemAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  paidPrice?: Prisma.SortOrder
-  soldPrice?: Prisma.SortOrder
+  lastPaidPrice?: Prisma.SortOrder
+  lastSoldPrice?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
 }
 
@@ -592,14 +552,12 @@ export type SteamInventoryItemMaxOrderByAggregateInput = {
   steamId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
-  paidPrice?: Prisma.SortOrder
-  soldPrice?: Prisma.SortOrder
+  lastPaidPrice?: Prisma.SortOrder
+  lastSoldPrice?: Prisma.SortOrder
   marketUrl?: Prisma.SortOrder
-  inspectUrl?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
+  color?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
-  tradedAt?: Prisma.SortOrder
-  type?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -611,14 +569,12 @@ export type SteamInventoryItemMinOrderByAggregateInput = {
   steamId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
-  paidPrice?: Prisma.SortOrder
-  soldPrice?: Prisma.SortOrder
+  lastPaidPrice?: Prisma.SortOrder
+  lastSoldPrice?: Prisma.SortOrder
   marketUrl?: Prisma.SortOrder
-  inspectUrl?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
+  color?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
-  tradedAt?: Prisma.SortOrder
-  type?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -626,8 +582,8 @@ export type SteamInventoryItemMinOrderByAggregateInput = {
 export type SteamInventoryItemSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  paidPrice?: Prisma.SortOrder
-  soldPrice?: Prisma.SortOrder
+  lastPaidPrice?: Prisma.SortOrder
+  lastSoldPrice?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
 }
 
@@ -686,22 +642,18 @@ export type NullableDecimalFieldUpdateOperationsInput = {
   divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
-export type EnumSteamInventoryItemTypeFieldUpdateOperationsInput = {
-  set?: $Enums.SteamInventoryItemType
-}
-
-export type SteamInventoryItemCreateNestedOneWithoutPriceHistoryInput = {
-  create?: Prisma.XOR<Prisma.SteamInventoryItemCreateWithoutPriceHistoryInput, Prisma.SteamInventoryItemUncheckedCreateWithoutPriceHistoryInput>
-  connectOrCreate?: Prisma.SteamInventoryItemCreateOrConnectWithoutPriceHistoryInput
+export type SteamInventoryItemCreateNestedOneWithoutSteamInventoryItemTransactionsInput = {
+  create?: Prisma.XOR<Prisma.SteamInventoryItemCreateWithoutSteamInventoryItemTransactionsInput, Prisma.SteamInventoryItemUncheckedCreateWithoutSteamInventoryItemTransactionsInput>
+  connectOrCreate?: Prisma.SteamInventoryItemCreateOrConnectWithoutSteamInventoryItemTransactionsInput
   connect?: Prisma.SteamInventoryItemWhereUniqueInput
 }
 
-export type SteamInventoryItemUpdateOneRequiredWithoutPriceHistoryNestedInput = {
-  create?: Prisma.XOR<Prisma.SteamInventoryItemCreateWithoutPriceHistoryInput, Prisma.SteamInventoryItemUncheckedCreateWithoutPriceHistoryInput>
-  connectOrCreate?: Prisma.SteamInventoryItemCreateOrConnectWithoutPriceHistoryInput
-  upsert?: Prisma.SteamInventoryItemUpsertWithoutPriceHistoryInput
+export type SteamInventoryItemUpdateOneRequiredWithoutSteamInventoryItemTransactionsNestedInput = {
+  create?: Prisma.XOR<Prisma.SteamInventoryItemCreateWithoutSteamInventoryItemTransactionsInput, Prisma.SteamInventoryItemUncheckedCreateWithoutSteamInventoryItemTransactionsInput>
+  connectOrCreate?: Prisma.SteamInventoryItemCreateOrConnectWithoutSteamInventoryItemTransactionsInput
+  upsert?: Prisma.SteamInventoryItemUpsertWithoutSteamInventoryItemTransactionsInput
   connect?: Prisma.SteamInventoryItemWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.SteamInventoryItemUpdateToOneWithWhereWithoutPriceHistoryInput, Prisma.SteamInventoryItemUpdateWithoutPriceHistoryInput>, Prisma.SteamInventoryItemUncheckedUpdateWithoutPriceHistoryInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.SteamInventoryItemUpdateToOneWithWhereWithoutSteamInventoryItemTransactionsInput, Prisma.SteamInventoryItemUpdateWithoutSteamInventoryItemTransactionsInput>, Prisma.SteamInventoryItemUncheckedUpdateWithoutSteamInventoryItemTransactionsInput>
 }
 
 export type SteamInventoryItemCreateWithoutUserInput = {
@@ -709,17 +661,15 @@ export type SteamInventoryItemCreateWithoutUserInput = {
   steamId: string
   name: string
   description: string
-  paidPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
-  soldPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  lastPaidPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  lastSoldPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   marketUrl?: string | null
-  inspectUrl?: string | null
   imageUrl?: string | null
-  quantity: number
-  tradedAt?: Date | string | null
-  type?: $Enums.SteamInventoryItemType
+  color?: string | null
+  quantity?: number
   createdAt?: Date | string
   updatedAt?: Date | string
-  priceHistory?: Prisma.SteamInventoryItemPriceHistoryCreateNestedManyWithoutSteamInventoryItemInput
+  steamInventoryItemTransactions?: Prisma.SteamInventoryItemTransactionCreateNestedManyWithoutSteamInventoryItemInput
 }
 
 export type SteamInventoryItemUncheckedCreateWithoutUserInput = {
@@ -728,17 +678,15 @@ export type SteamInventoryItemUncheckedCreateWithoutUserInput = {
   steamId: string
   name: string
   description: string
-  paidPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
-  soldPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  lastPaidPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  lastSoldPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   marketUrl?: string | null
-  inspectUrl?: string | null
   imageUrl?: string | null
-  quantity: number
-  tradedAt?: Date | string | null
-  type?: $Enums.SteamInventoryItemType
+  color?: string | null
+  quantity?: number
   createdAt?: Date | string
   updatedAt?: Date | string
-  priceHistory?: Prisma.SteamInventoryItemPriceHistoryUncheckedCreateNestedManyWithoutSteamInventoryItemInput
+  steamInventoryItemTransactions?: Prisma.SteamInventoryItemTransactionUncheckedCreateNestedManyWithoutSteamInventoryItemInput
 }
 
 export type SteamInventoryItemCreateOrConnectWithoutUserInput = {
@@ -772,109 +720,99 @@ export type SteamInventoryItemScalarWhereInput = {
   OR?: Prisma.SteamInventoryItemScalarWhereInput[]
   NOT?: Prisma.SteamInventoryItemScalarWhereInput | Prisma.SteamInventoryItemScalarWhereInput[]
   id?: Prisma.IntFilter<"SteamInventoryItem"> | number
-  guid?: Prisma.UuidFilter<"SteamInventoryItem"> | string
+  guid?: Prisma.StringFilter<"SteamInventoryItem"> | string
   userId?: Prisma.IntFilter<"SteamInventoryItem"> | number
   steamId?: Prisma.StringFilter<"SteamInventoryItem"> | string
   name?: Prisma.StringFilter<"SteamInventoryItem"> | string
   description?: Prisma.StringFilter<"SteamInventoryItem"> | string
-  paidPrice?: Prisma.DecimalFilter<"SteamInventoryItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  soldPrice?: Prisma.DecimalNullableFilter<"SteamInventoryItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  lastPaidPrice?: Prisma.DecimalNullableFilter<"SteamInventoryItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  lastSoldPrice?: Prisma.DecimalNullableFilter<"SteamInventoryItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   marketUrl?: Prisma.StringNullableFilter<"SteamInventoryItem"> | string | null
-  inspectUrl?: Prisma.StringNullableFilter<"SteamInventoryItem"> | string | null
   imageUrl?: Prisma.StringNullableFilter<"SteamInventoryItem"> | string | null
+  color?: Prisma.StringNullableFilter<"SteamInventoryItem"> | string | null
   quantity?: Prisma.IntFilter<"SteamInventoryItem"> | number
-  tradedAt?: Prisma.DateTimeNullableFilter<"SteamInventoryItem"> | Date | string | null
-  type?: Prisma.EnumSteamInventoryItemTypeFilter<"SteamInventoryItem"> | $Enums.SteamInventoryItemType
   createdAt?: Prisma.DateTimeFilter<"SteamInventoryItem"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"SteamInventoryItem"> | Date | string
 }
 
-export type SteamInventoryItemCreateWithoutPriceHistoryInput = {
+export type SteamInventoryItemCreateWithoutSteamInventoryItemTransactionsInput = {
   guid: string
   steamId: string
   name: string
   description: string
-  paidPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
-  soldPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  lastPaidPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  lastSoldPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   marketUrl?: string | null
-  inspectUrl?: string | null
   imageUrl?: string | null
-  quantity: number
-  tradedAt?: Date | string | null
-  type?: $Enums.SteamInventoryItemType
+  color?: string | null
+  quantity?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutSteamInventoryItemsInput
 }
 
-export type SteamInventoryItemUncheckedCreateWithoutPriceHistoryInput = {
+export type SteamInventoryItemUncheckedCreateWithoutSteamInventoryItemTransactionsInput = {
   id?: number
   guid: string
   userId: number
   steamId: string
   name: string
   description: string
-  paidPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
-  soldPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  lastPaidPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  lastSoldPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   marketUrl?: string | null
-  inspectUrl?: string | null
   imageUrl?: string | null
-  quantity: number
-  tradedAt?: Date | string | null
-  type?: $Enums.SteamInventoryItemType
+  color?: string | null
+  quantity?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
-export type SteamInventoryItemCreateOrConnectWithoutPriceHistoryInput = {
+export type SteamInventoryItemCreateOrConnectWithoutSteamInventoryItemTransactionsInput = {
   where: Prisma.SteamInventoryItemWhereUniqueInput
-  create: Prisma.XOR<Prisma.SteamInventoryItemCreateWithoutPriceHistoryInput, Prisma.SteamInventoryItemUncheckedCreateWithoutPriceHistoryInput>
+  create: Prisma.XOR<Prisma.SteamInventoryItemCreateWithoutSteamInventoryItemTransactionsInput, Prisma.SteamInventoryItemUncheckedCreateWithoutSteamInventoryItemTransactionsInput>
 }
 
-export type SteamInventoryItemUpsertWithoutPriceHistoryInput = {
-  update: Prisma.XOR<Prisma.SteamInventoryItemUpdateWithoutPriceHistoryInput, Prisma.SteamInventoryItemUncheckedUpdateWithoutPriceHistoryInput>
-  create: Prisma.XOR<Prisma.SteamInventoryItemCreateWithoutPriceHistoryInput, Prisma.SteamInventoryItemUncheckedCreateWithoutPriceHistoryInput>
+export type SteamInventoryItemUpsertWithoutSteamInventoryItemTransactionsInput = {
+  update: Prisma.XOR<Prisma.SteamInventoryItemUpdateWithoutSteamInventoryItemTransactionsInput, Prisma.SteamInventoryItemUncheckedUpdateWithoutSteamInventoryItemTransactionsInput>
+  create: Prisma.XOR<Prisma.SteamInventoryItemCreateWithoutSteamInventoryItemTransactionsInput, Prisma.SteamInventoryItemUncheckedCreateWithoutSteamInventoryItemTransactionsInput>
   where?: Prisma.SteamInventoryItemWhereInput
 }
 
-export type SteamInventoryItemUpdateToOneWithWhereWithoutPriceHistoryInput = {
+export type SteamInventoryItemUpdateToOneWithWhereWithoutSteamInventoryItemTransactionsInput = {
   where?: Prisma.SteamInventoryItemWhereInput
-  data: Prisma.XOR<Prisma.SteamInventoryItemUpdateWithoutPriceHistoryInput, Prisma.SteamInventoryItemUncheckedUpdateWithoutPriceHistoryInput>
+  data: Prisma.XOR<Prisma.SteamInventoryItemUpdateWithoutSteamInventoryItemTransactionsInput, Prisma.SteamInventoryItemUncheckedUpdateWithoutSteamInventoryItemTransactionsInput>
 }
 
-export type SteamInventoryItemUpdateWithoutPriceHistoryInput = {
+export type SteamInventoryItemUpdateWithoutSteamInventoryItemTransactionsInput = {
   guid?: Prisma.StringFieldUpdateOperationsInput | string
   steamId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  paidPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  soldPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  lastPaidPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  lastSoldPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   marketUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  inspectUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  tradedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  type?: Prisma.EnumSteamInventoryItemTypeFieldUpdateOperationsInput | $Enums.SteamInventoryItemType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutSteamInventoryItemsNestedInput
 }
 
-export type SteamInventoryItemUncheckedUpdateWithoutPriceHistoryInput = {
+export type SteamInventoryItemUncheckedUpdateWithoutSteamInventoryItemTransactionsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   guid?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   steamId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  paidPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  soldPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  lastPaidPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  lastSoldPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   marketUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  inspectUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  tradedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  type?: Prisma.EnumSteamInventoryItemTypeFieldUpdateOperationsInput | $Enums.SteamInventoryItemType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -885,14 +823,12 @@ export type SteamInventoryItemCreateManyUserInput = {
   steamId: string
   name: string
   description: string
-  paidPrice: runtime.Decimal | runtime.DecimalJsLike | number | string
-  soldPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  lastPaidPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  lastSoldPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   marketUrl?: string | null
-  inspectUrl?: string | null
   imageUrl?: string | null
-  quantity: number
-  tradedAt?: Date | string | null
-  type?: $Enums.SteamInventoryItemType
+  color?: string | null
+  quantity?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -902,17 +838,15 @@ export type SteamInventoryItemUpdateWithoutUserInput = {
   steamId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  paidPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  soldPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  lastPaidPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  lastSoldPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   marketUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  inspectUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  tradedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  type?: Prisma.EnumSteamInventoryItemTypeFieldUpdateOperationsInput | $Enums.SteamInventoryItemType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  priceHistory?: Prisma.SteamInventoryItemPriceHistoryUpdateManyWithoutSteamInventoryItemNestedInput
+  steamInventoryItemTransactions?: Prisma.SteamInventoryItemTransactionUpdateManyWithoutSteamInventoryItemNestedInput
 }
 
 export type SteamInventoryItemUncheckedUpdateWithoutUserInput = {
@@ -921,17 +855,15 @@ export type SteamInventoryItemUncheckedUpdateWithoutUserInput = {
   steamId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  paidPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  soldPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  lastPaidPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  lastSoldPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   marketUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  inspectUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  tradedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  type?: Prisma.EnumSteamInventoryItemTypeFieldUpdateOperationsInput | $Enums.SteamInventoryItemType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  priceHistory?: Prisma.SteamInventoryItemPriceHistoryUncheckedUpdateManyWithoutSteamInventoryItemNestedInput
+  steamInventoryItemTransactions?: Prisma.SteamInventoryItemTransactionUncheckedUpdateManyWithoutSteamInventoryItemNestedInput
 }
 
 export type SteamInventoryItemUncheckedUpdateManyWithoutUserInput = {
@@ -940,14 +872,12 @@ export type SteamInventoryItemUncheckedUpdateManyWithoutUserInput = {
   steamId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  paidPrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  soldPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  lastPaidPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  lastSoldPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   marketUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  inspectUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  tradedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  type?: Prisma.EnumSteamInventoryItemTypeFieldUpdateOperationsInput | $Enums.SteamInventoryItemType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -958,11 +888,11 @@ export type SteamInventoryItemUncheckedUpdateManyWithoutUserInput = {
  */
 
 export type SteamInventoryItemCountOutputType = {
-  priceHistory: number
+  steamInventoryItemTransactions: number
 }
 
 export type SteamInventoryItemCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  priceHistory?: boolean | SteamInventoryItemCountOutputTypeCountPriceHistoryArgs
+  steamInventoryItemTransactions?: boolean | SteamInventoryItemCountOutputTypeCountSteamInventoryItemTransactionsArgs
 }
 
 /**
@@ -978,8 +908,8 @@ export type SteamInventoryItemCountOutputTypeDefaultArgs<ExtArgs extends runtime
 /**
  * SteamInventoryItemCountOutputType without action
  */
-export type SteamInventoryItemCountOutputTypeCountPriceHistoryArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.SteamInventoryItemPriceHistoryWhereInput
+export type SteamInventoryItemCountOutputTypeCountSteamInventoryItemTransactionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SteamInventoryItemTransactionWhereInput
 }
 
 
@@ -990,18 +920,16 @@ export type SteamInventoryItemSelect<ExtArgs extends runtime.Types.Extensions.In
   steamId?: boolean
   name?: boolean
   description?: boolean
-  paidPrice?: boolean
-  soldPrice?: boolean
+  lastPaidPrice?: boolean
+  lastSoldPrice?: boolean
   marketUrl?: boolean
-  inspectUrl?: boolean
   imageUrl?: boolean
+  color?: boolean
   quantity?: boolean
-  tradedAt?: boolean
-  type?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  priceHistory?: boolean | Prisma.SteamInventoryItem$priceHistoryArgs<ExtArgs>
+  steamInventoryItemTransactions?: boolean | Prisma.SteamInventoryItem$steamInventoryItemTransactionsArgs<ExtArgs>
   _count?: boolean | Prisma.SteamInventoryItemCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["steamInventoryItem"]>
 
@@ -1012,14 +940,12 @@ export type SteamInventoryItemSelectCreateManyAndReturn<ExtArgs extends runtime.
   steamId?: boolean
   name?: boolean
   description?: boolean
-  paidPrice?: boolean
-  soldPrice?: boolean
+  lastPaidPrice?: boolean
+  lastSoldPrice?: boolean
   marketUrl?: boolean
-  inspectUrl?: boolean
   imageUrl?: boolean
+  color?: boolean
   quantity?: boolean
-  tradedAt?: boolean
-  type?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1032,14 +958,12 @@ export type SteamInventoryItemSelectUpdateManyAndReturn<ExtArgs extends runtime.
   steamId?: boolean
   name?: boolean
   description?: boolean
-  paidPrice?: boolean
-  soldPrice?: boolean
+  lastPaidPrice?: boolean
+  lastSoldPrice?: boolean
   marketUrl?: boolean
-  inspectUrl?: boolean
   imageUrl?: boolean
+  color?: boolean
   quantity?: boolean
-  tradedAt?: boolean
-  type?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1052,22 +976,20 @@ export type SteamInventoryItemSelectScalar = {
   steamId?: boolean
   name?: boolean
   description?: boolean
-  paidPrice?: boolean
-  soldPrice?: boolean
+  lastPaidPrice?: boolean
+  lastSoldPrice?: boolean
   marketUrl?: boolean
-  inspectUrl?: boolean
   imageUrl?: boolean
+  color?: boolean
   quantity?: boolean
-  tradedAt?: boolean
-  type?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type SteamInventoryItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "guid" | "userId" | "steamId" | "name" | "description" | "paidPrice" | "soldPrice" | "marketUrl" | "inspectUrl" | "imageUrl" | "quantity" | "tradedAt" | "type" | "createdAt" | "updatedAt", ExtArgs["result"]["steamInventoryItem"]>
+export type SteamInventoryItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "guid" | "userId" | "steamId" | "name" | "description" | "lastPaidPrice" | "lastSoldPrice" | "marketUrl" | "imageUrl" | "color" | "quantity" | "createdAt" | "updatedAt", ExtArgs["result"]["steamInventoryItem"]>
 export type SteamInventoryItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  priceHistory?: boolean | Prisma.SteamInventoryItem$priceHistoryArgs<ExtArgs>
+  steamInventoryItemTransactions?: boolean | Prisma.SteamInventoryItem$steamInventoryItemTransactionsArgs<ExtArgs>
   _count?: boolean | Prisma.SteamInventoryItemCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type SteamInventoryItemIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1081,7 +1003,7 @@ export type $SteamInventoryItemPayload<ExtArgs extends runtime.Types.Extensions.
   name: "SteamInventoryItem"
   objects: {
     user: Prisma.$UserPayload<ExtArgs>
-    priceHistory: Prisma.$SteamInventoryItemPriceHistoryPayload<ExtArgs>[]
+    steamInventoryItemTransactions: Prisma.$SteamInventoryItemTransactionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1090,14 +1012,12 @@ export type $SteamInventoryItemPayload<ExtArgs extends runtime.Types.Extensions.
     steamId: string
     name: string
     description: string
-    paidPrice: runtime.Decimal
-    soldPrice: runtime.Decimal | null
+    lastPaidPrice: runtime.Decimal | null
+    lastSoldPrice: runtime.Decimal | null
     marketUrl: string | null
-    inspectUrl: string | null
     imageUrl: string | null
+    color: string | null
     quantity: number
-    tradedAt: Date | null
-    type: $Enums.SteamInventoryItemType
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["steamInventoryItem"]>
@@ -1495,7 +1415,7 @@ readonly fields: SteamInventoryItemFieldRefs;
 export interface Prisma__SteamInventoryItemClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  priceHistory<T extends Prisma.SteamInventoryItem$priceHistoryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SteamInventoryItem$priceHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SteamInventoryItemPriceHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  steamInventoryItemTransactions<T extends Prisma.SteamInventoryItem$steamInventoryItemTransactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SteamInventoryItem$steamInventoryItemTransactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SteamInventoryItemTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1531,14 +1451,12 @@ export interface SteamInventoryItemFieldRefs {
   readonly steamId: Prisma.FieldRef<"SteamInventoryItem", 'String'>
   readonly name: Prisma.FieldRef<"SteamInventoryItem", 'String'>
   readonly description: Prisma.FieldRef<"SteamInventoryItem", 'String'>
-  readonly paidPrice: Prisma.FieldRef<"SteamInventoryItem", 'Decimal'>
-  readonly soldPrice: Prisma.FieldRef<"SteamInventoryItem", 'Decimal'>
+  readonly lastPaidPrice: Prisma.FieldRef<"SteamInventoryItem", 'Decimal'>
+  readonly lastSoldPrice: Prisma.FieldRef<"SteamInventoryItem", 'Decimal'>
   readonly marketUrl: Prisma.FieldRef<"SteamInventoryItem", 'String'>
-  readonly inspectUrl: Prisma.FieldRef<"SteamInventoryItem", 'String'>
   readonly imageUrl: Prisma.FieldRef<"SteamInventoryItem", 'String'>
+  readonly color: Prisma.FieldRef<"SteamInventoryItem", 'String'>
   readonly quantity: Prisma.FieldRef<"SteamInventoryItem", 'Int'>
-  readonly tradedAt: Prisma.FieldRef<"SteamInventoryItem", 'DateTime'>
-  readonly type: Prisma.FieldRef<"SteamInventoryItem", 'SteamInventoryItemType'>
   readonly createdAt: Prisma.FieldRef<"SteamInventoryItem", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"SteamInventoryItem", 'DateTime'>
 }
@@ -1937,27 +1855,27 @@ export type SteamInventoryItemDeleteManyArgs<ExtArgs extends runtime.Types.Exten
 }
 
 /**
- * SteamInventoryItem.priceHistory
+ * SteamInventoryItem.steamInventoryItemTransactions
  */
-export type SteamInventoryItem$priceHistoryArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type SteamInventoryItem$steamInventoryItemTransactionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the SteamInventoryItemPriceHistory
+   * Select specific fields to fetch from the SteamInventoryItemTransaction
    */
-  select?: Prisma.SteamInventoryItemPriceHistorySelect<ExtArgs> | null
+  select?: Prisma.SteamInventoryItemTransactionSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the SteamInventoryItemPriceHistory
+   * Omit specific fields from the SteamInventoryItemTransaction
    */
-  omit?: Prisma.SteamInventoryItemPriceHistoryOmit<ExtArgs> | null
+  omit?: Prisma.SteamInventoryItemTransactionOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.SteamInventoryItemPriceHistoryInclude<ExtArgs> | null
-  where?: Prisma.SteamInventoryItemPriceHistoryWhereInput
-  orderBy?: Prisma.SteamInventoryItemPriceHistoryOrderByWithRelationInput | Prisma.SteamInventoryItemPriceHistoryOrderByWithRelationInput[]
-  cursor?: Prisma.SteamInventoryItemPriceHistoryWhereUniqueInput
+  include?: Prisma.SteamInventoryItemTransactionInclude<ExtArgs> | null
+  where?: Prisma.SteamInventoryItemTransactionWhereInput
+  orderBy?: Prisma.SteamInventoryItemTransactionOrderByWithRelationInput | Prisma.SteamInventoryItemTransactionOrderByWithRelationInput[]
+  cursor?: Prisma.SteamInventoryItemTransactionWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.SteamInventoryItemPriceHistoryScalarFieldEnum | Prisma.SteamInventoryItemPriceHistoryScalarFieldEnum[]
+  distinct?: Prisma.SteamInventoryItemTransactionScalarFieldEnum | Prisma.SteamInventoryItemTransactionScalarFieldEnum[]
 }
 
 /**

@@ -20,23 +20,24 @@ export class UserService extends UserRepository {
         const user = await super.findByEmail(email)
 
         if (user && (await validateHash(password, user.password))) {
-            const { id, token } = createAccessToken({
-                options: {
-                    subject: user.guid,
-                    expiresIn: '1h',
-                },
-            })
-
             let ipAddressHash = ipAddress
             // if (ipAddress) { // Ainda nao para teste
             //     ipAddressHash = generateHashSha256(ipAddress)
             // }
 
-            await session.create(user.id, uuid(), session.generateExpiresAt(), origin, userAgent, ipAddressHash)
+            const sessionCreated = await session.create(user.id, uuid(), session.generateExpiresAt(), origin, userAgent, ipAddressHash)
+
+            const { token } = createAccessToken({
+                options: {
+                    subject: user.id.toString(),
+                    expiresIn: '1h',
+                    jwtid: sessionCreated.guid,
+                },
+            })
 
             return {
                 accessToken: token,
-                refreshToken: id,
+                refreshToken: sessionCreated.refreshToken,
             }
         }
 

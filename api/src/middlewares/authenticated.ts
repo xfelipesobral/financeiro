@@ -65,7 +65,7 @@ export async function middlewareAuthenticated(request: FastifyRequest, reply: Fa
             throw new ApiError('TOKEN_REVOKED', 'The token has been revoked.', 401)
         }
 
-        request.user = { id: userId }
+        request.authenticated = { userId: userId, tokenId: tokenInfo.id }
     } catch (e) {
         handleApiError(e, reply)
         return

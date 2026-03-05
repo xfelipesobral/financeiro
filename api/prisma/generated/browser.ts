@@ -78,6 +78,11 @@ export type Card = Prisma.CardModel
  */
 export type SteamInventoryItem = Prisma.SteamInventoryItemModel
 /**
+ * Model SteamInventoryItemTransaction
+ * 
+ */
+export type SteamInventoryItemTransaction = Prisma.SteamInventoryItemTransactionModel
+/**
  * Model SteamInventoryItemPriceHistory
  * 
  */

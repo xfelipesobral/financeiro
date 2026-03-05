@@ -63,6 +63,7 @@ export const ModelName = {
   Payment: 'Payment',
   Card: 'Card',
   SteamInventoryItem: 'SteamInventoryItem',
+  SteamInventoryItemTransaction: 'SteamInventoryItemTransaction',
   SteamInventoryItemPriceHistory: 'SteamInventoryItemPriceHistory'
 } as const
 
@@ -241,14 +242,12 @@ export const SteamInventoryItemScalarFieldEnum = {
   steamId: 'steamId',
   name: 'name',
   description: 'description',
-  paidPrice: 'paidPrice',
-  soldPrice: 'soldPrice',
+  lastPaidPrice: 'lastPaidPrice',
+  lastSoldPrice: 'lastSoldPrice',
   marketUrl: 'marketUrl',
-  inspectUrl: 'inspectUrl',
   imageUrl: 'imageUrl',
+  color: 'color',
   quantity: 'quantity',
-  tradedAt: 'tradedAt',
-  type: 'type',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -256,9 +255,24 @@ export const SteamInventoryItemScalarFieldEnum = {
 export type SteamInventoryItemScalarFieldEnum = (typeof SteamInventoryItemScalarFieldEnum)[keyof typeof SteamInventoryItemScalarFieldEnum]
 
 
-export const SteamInventoryItemPriceHistoryScalarFieldEnum = {
+export const SteamInventoryItemTransactionScalarFieldEnum = {
   id: 'id',
   steamInventoryItemId: 'steamInventoryItemId',
+  observation: 'observation',
+  unitPrice: 'unitPrice',
+  quantity: 'quantity',
+  totalAmount: 'totalAmount',
+  categoryId: 'categoryId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SteamInventoryItemTransactionScalarFieldEnum = (typeof SteamInventoryItemTransactionScalarFieldEnum)[keyof typeof SteamInventoryItemTransactionScalarFieldEnum]
+
+
+export const SteamInventoryItemPriceHistoryScalarFieldEnum = {
+  id: 'id',
+  marketUrl: 'marketUrl',
   priceSteam: 'priceSteam',
   priceTradeIt: 'priceTradeIt',
   recordedAt: 'recordedAt'

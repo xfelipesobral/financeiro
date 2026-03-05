@@ -1,0 +1,22 @@
+meta {
+  name: importCs2Inventory
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{url}}/steam/inventory-import
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "steamId": "76561198131228650"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

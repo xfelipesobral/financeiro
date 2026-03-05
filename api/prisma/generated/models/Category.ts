@@ -241,6 +241,7 @@ export type CategoryWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Category"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Category"> | Date | string
   transactions?: Prisma.TransactionListRelationFilter
+  steamInventoryItemTransactions?: Prisma.SteamInventoryItemTransactionListRelationFilter
   parent?: Prisma.XOR<Prisma.CategoryNullableScalarRelationFilter, Prisma.CategoryWhereInput> | null
   user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   children?: Prisma.CategoryListRelationFilter
@@ -255,6 +256,7 @@ export type CategoryOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   transactions?: Prisma.TransactionOrderByRelationAggregateInput
+  steamInventoryItemTransactions?: Prisma.SteamInventoryItemTransactionOrderByRelationAggregateInput
   parent?: Prisma.CategoryOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
   children?: Prisma.CategoryOrderByRelationAggregateInput
@@ -272,6 +274,7 @@ export type CategoryWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Category"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Category"> | Date | string
   transactions?: Prisma.TransactionListRelationFilter
+  steamInventoryItemTransactions?: Prisma.SteamInventoryItemTransactionListRelationFilter
   parent?: Prisma.XOR<Prisma.CategoryNullableScalarRelationFilter, Prisma.CategoryWhereInput> | null
   user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   children?: Prisma.CategoryListRelationFilter
@@ -311,6 +314,7 @@ export type CategoryCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   transactions?: Prisma.TransactionCreateNestedManyWithoutCategoryInput
+  steamInventoryItemTransactions?: Prisma.SteamInventoryItemTransactionCreateNestedManyWithoutCategoryInput
   parent?: Prisma.CategoryCreateNestedOneWithoutChildrenInput
   user?: Prisma.UserCreateNestedOneWithoutCategoriesInput
   children?: Prisma.CategoryCreateNestedManyWithoutParentInput
@@ -325,6 +329,7 @@ export type CategoryUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutCategoryInput
+  steamInventoryItemTransactions?: Prisma.SteamInventoryItemTransactionUncheckedCreateNestedManyWithoutCategoryInput
   children?: Prisma.CategoryUncheckedCreateNestedManyWithoutParentInput
 }
 
@@ -334,6 +339,7 @@ export type CategoryUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   transactions?: Prisma.TransactionUpdateManyWithoutCategoryNestedInput
+  steamInventoryItemTransactions?: Prisma.SteamInventoryItemTransactionUpdateManyWithoutCategoryNestedInput
   parent?: Prisma.CategoryUpdateOneWithoutChildrenNestedInput
   user?: Prisma.UserUpdateOneWithoutCategoriesNestedInput
   children?: Prisma.CategoryUpdateManyWithoutParentNestedInput
@@ -348,6 +354,7 @@ export type CategoryUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   transactions?: Prisma.TransactionUncheckedUpdateManyWithoutCategoryNestedInput
+  steamInventoryItemTransactions?: Prisma.SteamInventoryItemTransactionUncheckedUpdateManyWithoutCategoryNestedInput
   children?: Prisma.CategoryUncheckedUpdateManyWithoutParentNestedInput
 }
 
@@ -558,12 +565,27 @@ export type CategoryUncheckedUpdateManyWithoutParentNestedInput = {
   deleteMany?: Prisma.CategoryScalarWhereInput | Prisma.CategoryScalarWhereInput[]
 }
 
+export type CategoryCreateNestedOneWithoutSteamInventoryItemTransactionsInput = {
+  create?: Prisma.XOR<Prisma.CategoryCreateWithoutSteamInventoryItemTransactionsInput, Prisma.CategoryUncheckedCreateWithoutSteamInventoryItemTransactionsInput>
+  connectOrCreate?: Prisma.CategoryCreateOrConnectWithoutSteamInventoryItemTransactionsInput
+  connect?: Prisma.CategoryWhereUniqueInput
+}
+
+export type CategoryUpdateOneRequiredWithoutSteamInventoryItemTransactionsNestedInput = {
+  create?: Prisma.XOR<Prisma.CategoryCreateWithoutSteamInventoryItemTransactionsInput, Prisma.CategoryUncheckedCreateWithoutSteamInventoryItemTransactionsInput>
+  connectOrCreate?: Prisma.CategoryCreateOrConnectWithoutSteamInventoryItemTransactionsInput
+  upsert?: Prisma.CategoryUpsertWithoutSteamInventoryItemTransactionsInput
+  connect?: Prisma.CategoryWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CategoryUpdateToOneWithWhereWithoutSteamInventoryItemTransactionsInput, Prisma.CategoryUpdateWithoutSteamInventoryItemTransactionsInput>, Prisma.CategoryUncheckedUpdateWithoutSteamInventoryItemTransactionsInput>
+}
+
 export type CategoryCreateWithoutUserInput = {
   description: string
   type?: $Enums.CategoryType
   createdAt?: Date | string
   updatedAt?: Date | string
   transactions?: Prisma.TransactionCreateNestedManyWithoutCategoryInput
+  steamInventoryItemTransactions?: Prisma.SteamInventoryItemTransactionCreateNestedManyWithoutCategoryInput
   parent?: Prisma.CategoryCreateNestedOneWithoutChildrenInput
   children?: Prisma.CategoryCreateNestedManyWithoutParentInput
 }
@@ -576,6 +598,7 @@ export type CategoryUncheckedCreateWithoutUserInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutCategoryInput
+  steamInventoryItemTransactions?: Prisma.SteamInventoryItemTransactionUncheckedCreateNestedManyWithoutCategoryInput
   children?: Prisma.CategoryUncheckedCreateNestedManyWithoutParentInput
 }
 
@@ -623,6 +646,7 @@ export type CategoryCreateWithoutTransactionsInput = {
   type?: $Enums.CategoryType
   createdAt?: Date | string
   updatedAt?: Date | string
+  steamInventoryItemTransactions?: Prisma.SteamInventoryItemTransactionCreateNestedManyWithoutCategoryInput
   parent?: Prisma.CategoryCreateNestedOneWithoutChildrenInput
   user?: Prisma.UserCreateNestedOneWithoutCategoriesInput
   children?: Prisma.CategoryCreateNestedManyWithoutParentInput
@@ -636,6 +660,7 @@ export type CategoryUncheckedCreateWithoutTransactionsInput = {
   type?: $Enums.CategoryType
   createdAt?: Date | string
   updatedAt?: Date | string
+  steamInventoryItemTransactions?: Prisma.SteamInventoryItemTransactionUncheckedCreateNestedManyWithoutCategoryInput
   children?: Prisma.CategoryUncheckedCreateNestedManyWithoutParentInput
 }
 
@@ -660,6 +685,7 @@ export type CategoryUpdateWithoutTransactionsInput = {
   type?: Prisma.EnumCategoryTypeFieldUpdateOperationsInput | $Enums.CategoryType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  steamInventoryItemTransactions?: Prisma.SteamInventoryItemTransactionUpdateManyWithoutCategoryNestedInput
   parent?: Prisma.CategoryUpdateOneWithoutChildrenNestedInput
   user?: Prisma.UserUpdateOneWithoutCategoriesNestedInput
   children?: Prisma.CategoryUpdateManyWithoutParentNestedInput
@@ -673,6 +699,7 @@ export type CategoryUncheckedUpdateWithoutTransactionsInput = {
   type?: Prisma.EnumCategoryTypeFieldUpdateOperationsInput | $Enums.CategoryType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  steamInventoryItemTransactions?: Prisma.SteamInventoryItemTransactionUncheckedUpdateManyWithoutCategoryNestedInput
   children?: Prisma.CategoryUncheckedUpdateManyWithoutParentNestedInput
 }
 
@@ -682,6 +709,7 @@ export type CategoryCreateWithoutChildrenInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   transactions?: Prisma.TransactionCreateNestedManyWithoutCategoryInput
+  steamInventoryItemTransactions?: Prisma.SteamInventoryItemTransactionCreateNestedManyWithoutCategoryInput
   parent?: Prisma.CategoryCreateNestedOneWithoutChildrenInput
   user?: Prisma.UserCreateNestedOneWithoutCategoriesInput
 }
@@ -695,6 +723,7 @@ export type CategoryUncheckedCreateWithoutChildrenInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutCategoryInput
+  steamInventoryItemTransactions?: Prisma.SteamInventoryItemTransactionUncheckedCreateNestedManyWithoutCategoryInput
 }
 
 export type CategoryCreateOrConnectWithoutChildrenInput = {
@@ -708,6 +737,7 @@ export type CategoryCreateWithoutParentInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   transactions?: Prisma.TransactionCreateNestedManyWithoutCategoryInput
+  steamInventoryItemTransactions?: Prisma.SteamInventoryItemTransactionCreateNestedManyWithoutCategoryInput
   user?: Prisma.UserCreateNestedOneWithoutCategoriesInput
   children?: Prisma.CategoryCreateNestedManyWithoutParentInput
 }
@@ -720,6 +750,7 @@ export type CategoryUncheckedCreateWithoutParentInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutCategoryInput
+  steamInventoryItemTransactions?: Prisma.SteamInventoryItemTransactionUncheckedCreateNestedManyWithoutCategoryInput
   children?: Prisma.CategoryUncheckedCreateNestedManyWithoutParentInput
 }
 
@@ -750,6 +781,7 @@ export type CategoryUpdateWithoutChildrenInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   transactions?: Prisma.TransactionUpdateManyWithoutCategoryNestedInput
+  steamInventoryItemTransactions?: Prisma.SteamInventoryItemTransactionUpdateManyWithoutCategoryNestedInput
   parent?: Prisma.CategoryUpdateOneWithoutChildrenNestedInput
   user?: Prisma.UserUpdateOneWithoutCategoriesNestedInput
 }
@@ -763,6 +795,7 @@ export type CategoryUncheckedUpdateWithoutChildrenInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   transactions?: Prisma.TransactionUncheckedUpdateManyWithoutCategoryNestedInput
+  steamInventoryItemTransactions?: Prisma.SteamInventoryItemTransactionUncheckedUpdateManyWithoutCategoryNestedInput
 }
 
 export type CategoryUpsertWithWhereUniqueWithoutParentInput = {
@@ -781,6 +814,68 @@ export type CategoryUpdateManyWithWhereWithoutParentInput = {
   data: Prisma.XOR<Prisma.CategoryUpdateManyMutationInput, Prisma.CategoryUncheckedUpdateManyWithoutParentInput>
 }
 
+export type CategoryCreateWithoutSteamInventoryItemTransactionsInput = {
+  description: string
+  type?: $Enums.CategoryType
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  transactions?: Prisma.TransactionCreateNestedManyWithoutCategoryInput
+  parent?: Prisma.CategoryCreateNestedOneWithoutChildrenInput
+  user?: Prisma.UserCreateNestedOneWithoutCategoriesInput
+  children?: Prisma.CategoryCreateNestedManyWithoutParentInput
+}
+
+export type CategoryUncheckedCreateWithoutSteamInventoryItemTransactionsInput = {
+  id?: number
+  description: string
+  parentId?: number | null
+  userId?: number | null
+  type?: $Enums.CategoryType
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutCategoryInput
+  children?: Prisma.CategoryUncheckedCreateNestedManyWithoutParentInput
+}
+
+export type CategoryCreateOrConnectWithoutSteamInventoryItemTransactionsInput = {
+  where: Prisma.CategoryWhereUniqueInput
+  create: Prisma.XOR<Prisma.CategoryCreateWithoutSteamInventoryItemTransactionsInput, Prisma.CategoryUncheckedCreateWithoutSteamInventoryItemTransactionsInput>
+}
+
+export type CategoryUpsertWithoutSteamInventoryItemTransactionsInput = {
+  update: Prisma.XOR<Prisma.CategoryUpdateWithoutSteamInventoryItemTransactionsInput, Prisma.CategoryUncheckedUpdateWithoutSteamInventoryItemTransactionsInput>
+  create: Prisma.XOR<Prisma.CategoryCreateWithoutSteamInventoryItemTransactionsInput, Prisma.CategoryUncheckedCreateWithoutSteamInventoryItemTransactionsInput>
+  where?: Prisma.CategoryWhereInput
+}
+
+export type CategoryUpdateToOneWithWhereWithoutSteamInventoryItemTransactionsInput = {
+  where?: Prisma.CategoryWhereInput
+  data: Prisma.XOR<Prisma.CategoryUpdateWithoutSteamInventoryItemTransactionsInput, Prisma.CategoryUncheckedUpdateWithoutSteamInventoryItemTransactionsInput>
+}
+
+export type CategoryUpdateWithoutSteamInventoryItemTransactionsInput = {
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumCategoryTypeFieldUpdateOperationsInput | $Enums.CategoryType
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  transactions?: Prisma.TransactionUpdateManyWithoutCategoryNestedInput
+  parent?: Prisma.CategoryUpdateOneWithoutChildrenNestedInput
+  user?: Prisma.UserUpdateOneWithoutCategoriesNestedInput
+  children?: Prisma.CategoryUpdateManyWithoutParentNestedInput
+}
+
+export type CategoryUncheckedUpdateWithoutSteamInventoryItemTransactionsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  parentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  type?: Prisma.EnumCategoryTypeFieldUpdateOperationsInput | $Enums.CategoryType
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  transactions?: Prisma.TransactionUncheckedUpdateManyWithoutCategoryNestedInput
+  children?: Prisma.CategoryUncheckedUpdateManyWithoutParentNestedInput
+}
+
 export type CategoryCreateManyUserInput = {
   id?: number
   description: string
@@ -796,6 +891,7 @@ export type CategoryUpdateWithoutUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   transactions?: Prisma.TransactionUpdateManyWithoutCategoryNestedInput
+  steamInventoryItemTransactions?: Prisma.SteamInventoryItemTransactionUpdateManyWithoutCategoryNestedInput
   parent?: Prisma.CategoryUpdateOneWithoutChildrenNestedInput
   children?: Prisma.CategoryUpdateManyWithoutParentNestedInput
 }
@@ -808,6 +904,7 @@ export type CategoryUncheckedUpdateWithoutUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   transactions?: Prisma.TransactionUncheckedUpdateManyWithoutCategoryNestedInput
+  steamInventoryItemTransactions?: Prisma.SteamInventoryItemTransactionUncheckedUpdateManyWithoutCategoryNestedInput
   children?: Prisma.CategoryUncheckedUpdateManyWithoutParentNestedInput
 }
 
@@ -835,6 +932,7 @@ export type CategoryUpdateWithoutParentInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   transactions?: Prisma.TransactionUpdateManyWithoutCategoryNestedInput
+  steamInventoryItemTransactions?: Prisma.SteamInventoryItemTransactionUpdateManyWithoutCategoryNestedInput
   user?: Prisma.UserUpdateOneWithoutCategoriesNestedInput
   children?: Prisma.CategoryUpdateManyWithoutParentNestedInput
 }
@@ -847,6 +945,7 @@ export type CategoryUncheckedUpdateWithoutParentInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   transactions?: Prisma.TransactionUncheckedUpdateManyWithoutCategoryNestedInput
+  steamInventoryItemTransactions?: Prisma.SteamInventoryItemTransactionUncheckedUpdateManyWithoutCategoryNestedInput
   children?: Prisma.CategoryUncheckedUpdateManyWithoutParentNestedInput
 }
 
@@ -866,11 +965,13 @@ export type CategoryUncheckedUpdateManyWithoutParentInput = {
 
 export type CategoryCountOutputType = {
   transactions: number
+  steamInventoryItemTransactions: number
   children: number
 }
 
 export type CategoryCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   transactions?: boolean | CategoryCountOutputTypeCountTransactionsArgs
+  steamInventoryItemTransactions?: boolean | CategoryCountOutputTypeCountSteamInventoryItemTransactionsArgs
   children?: boolean | CategoryCountOutputTypeCountChildrenArgs
 }
 
@@ -894,6 +995,13 @@ export type CategoryCountOutputTypeCountTransactionsArgs<ExtArgs extends runtime
 /**
  * CategoryCountOutputType without action
  */
+export type CategoryCountOutputTypeCountSteamInventoryItemTransactionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SteamInventoryItemTransactionWhereInput
+}
+
+/**
+ * CategoryCountOutputType without action
+ */
 export type CategoryCountOutputTypeCountChildrenArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.CategoryWhereInput
 }
@@ -908,6 +1016,7 @@ export type CategorySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   createdAt?: boolean
   updatedAt?: boolean
   transactions?: boolean | Prisma.Category$transactionsArgs<ExtArgs>
+  steamInventoryItemTransactions?: boolean | Prisma.Category$steamInventoryItemTransactionsArgs<ExtArgs>
   parent?: boolean | Prisma.Category$parentArgs<ExtArgs>
   user?: boolean | Prisma.Category$userArgs<ExtArgs>
   children?: boolean | Prisma.Category$childrenArgs<ExtArgs>
@@ -951,6 +1060,7 @@ export type CategorySelectScalar = {
 export type CategoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "description" | "parentId" | "userId" | "type" | "createdAt" | "updatedAt", ExtArgs["result"]["category"]>
 export type CategoryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   transactions?: boolean | Prisma.Category$transactionsArgs<ExtArgs>
+  steamInventoryItemTransactions?: boolean | Prisma.Category$steamInventoryItemTransactionsArgs<ExtArgs>
   parent?: boolean | Prisma.Category$parentArgs<ExtArgs>
   user?: boolean | Prisma.Category$userArgs<ExtArgs>
   children?: boolean | Prisma.Category$childrenArgs<ExtArgs>
@@ -969,6 +1079,7 @@ export type $CategoryPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   name: "Category"
   objects: {
     transactions: Prisma.$TransactionPayload<ExtArgs>[]
+    steamInventoryItemTransactions: Prisma.$SteamInventoryItemTransactionPayload<ExtArgs>[]
     parent: Prisma.$CategoryPayload<ExtArgs> | null
     user: Prisma.$UserPayload<ExtArgs> | null
     children: Prisma.$CategoryPayload<ExtArgs>[]
@@ -1376,6 +1487,7 @@ readonly fields: CategoryFieldRefs;
 export interface Prisma__CategoryClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   transactions<T extends Prisma.Category$transactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Category$transactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  steamInventoryItemTransactions<T extends Prisma.Category$steamInventoryItemTransactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Category$steamInventoryItemTransactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SteamInventoryItemTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   parent<T extends Prisma.Category$parentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Category$parentArgs<ExtArgs>>): Prisma.Prisma__CategoryClient<runtime.Types.Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   user<T extends Prisma.Category$userArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Category$userArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   children<T extends Prisma.Category$childrenArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Category$childrenArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -1832,6 +1944,30 @@ export type Category$transactionsArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   distinct?: Prisma.TransactionScalarFieldEnum | Prisma.TransactionScalarFieldEnum[]
+}
+
+/**
+ * Category.steamInventoryItemTransactions
+ */
+export type Category$steamInventoryItemTransactionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SteamInventoryItemTransaction
+   */
+  select?: Prisma.SteamInventoryItemTransactionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SteamInventoryItemTransaction
+   */
+  omit?: Prisma.SteamInventoryItemTransactionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SteamInventoryItemTransactionInclude<ExtArgs> | null
+  where?: Prisma.SteamInventoryItemTransactionWhereInput
+  orderBy?: Prisma.SteamInventoryItemTransactionOrderByWithRelationInput | Prisma.SteamInventoryItemTransactionOrderByWithRelationInput[]
+  cursor?: Prisma.SteamInventoryItemTransactionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SteamInventoryItemTransactionScalarFieldEnum | Prisma.SteamInventoryItemTransactionScalarFieldEnum[]
 }
 
 /**

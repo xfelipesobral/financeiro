@@ -28,21 +28,19 @@ export type AggregateSteamInventoryItemPriceHistory = {
 
 export type SteamInventoryItemPriceHistoryAvgAggregateOutputType = {
   id: number | null
-  steamInventoryItemId: number | null
   priceSteam: runtime.Decimal | null
   priceTradeIt: runtime.Decimal | null
 }
 
 export type SteamInventoryItemPriceHistorySumAggregateOutputType = {
   id: number | null
-  steamInventoryItemId: number | null
   priceSteam: runtime.Decimal | null
   priceTradeIt: runtime.Decimal | null
 }
 
 export type SteamInventoryItemPriceHistoryMinAggregateOutputType = {
   id: number | null
-  steamInventoryItemId: number | null
+  marketUrl: string | null
   priceSteam: runtime.Decimal | null
   priceTradeIt: runtime.Decimal | null
   recordedAt: Date | null
@@ -50,7 +48,7 @@ export type SteamInventoryItemPriceHistoryMinAggregateOutputType = {
 
 export type SteamInventoryItemPriceHistoryMaxAggregateOutputType = {
   id: number | null
-  steamInventoryItemId: number | null
+  marketUrl: string | null
   priceSteam: runtime.Decimal | null
   priceTradeIt: runtime.Decimal | null
   recordedAt: Date | null
@@ -58,7 +56,7 @@ export type SteamInventoryItemPriceHistoryMaxAggregateOutputType = {
 
 export type SteamInventoryItemPriceHistoryCountAggregateOutputType = {
   id: number
-  steamInventoryItemId: number
+  marketUrl: number
   priceSteam: number
   priceTradeIt: number
   recordedAt: number
@@ -68,21 +66,19 @@ export type SteamInventoryItemPriceHistoryCountAggregateOutputType = {
 
 export type SteamInventoryItemPriceHistoryAvgAggregateInputType = {
   id?: true
-  steamInventoryItemId?: true
   priceSteam?: true
   priceTradeIt?: true
 }
 
 export type SteamInventoryItemPriceHistorySumAggregateInputType = {
   id?: true
-  steamInventoryItemId?: true
   priceSteam?: true
   priceTradeIt?: true
 }
 
 export type SteamInventoryItemPriceHistoryMinAggregateInputType = {
   id?: true
-  steamInventoryItemId?: true
+  marketUrl?: true
   priceSteam?: true
   priceTradeIt?: true
   recordedAt?: true
@@ -90,7 +86,7 @@ export type SteamInventoryItemPriceHistoryMinAggregateInputType = {
 
 export type SteamInventoryItemPriceHistoryMaxAggregateInputType = {
   id?: true
-  steamInventoryItemId?: true
+  marketUrl?: true
   priceSteam?: true
   priceTradeIt?: true
   recordedAt?: true
@@ -98,7 +94,7 @@ export type SteamInventoryItemPriceHistoryMaxAggregateInputType = {
 
 export type SteamInventoryItemPriceHistoryCountAggregateInputType = {
   id?: true
-  steamInventoryItemId?: true
+  marketUrl?: true
   priceSteam?: true
   priceTradeIt?: true
   recordedAt?: true
@@ -193,7 +189,7 @@ export type SteamInventoryItemPriceHistoryGroupByArgs<ExtArgs extends runtime.Ty
 
 export type SteamInventoryItemPriceHistoryGroupByOutputType = {
   id: number
-  steamInventoryItemId: number
+  marketUrl: string
   priceSteam: runtime.Decimal
   priceTradeIt: runtime.Decimal
   recordedAt: Date
@@ -224,20 +220,18 @@ export type SteamInventoryItemPriceHistoryWhereInput = {
   OR?: Prisma.SteamInventoryItemPriceHistoryWhereInput[]
   NOT?: Prisma.SteamInventoryItemPriceHistoryWhereInput | Prisma.SteamInventoryItemPriceHistoryWhereInput[]
   id?: Prisma.IntFilter<"SteamInventoryItemPriceHistory"> | number
-  steamInventoryItemId?: Prisma.IntFilter<"SteamInventoryItemPriceHistory"> | number
+  marketUrl?: Prisma.StringFilter<"SteamInventoryItemPriceHistory"> | string
   priceSteam?: Prisma.DecimalFilter<"SteamInventoryItemPriceHistory"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   priceTradeIt?: Prisma.DecimalFilter<"SteamInventoryItemPriceHistory"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   recordedAt?: Prisma.DateTimeFilter<"SteamInventoryItemPriceHistory"> | Date | string
-  steamInventoryItem?: Prisma.XOR<Prisma.SteamInventoryItemScalarRelationFilter, Prisma.SteamInventoryItemWhereInput>
 }
 
 export type SteamInventoryItemPriceHistoryOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  steamInventoryItemId?: Prisma.SortOrder
+  marketUrl?: Prisma.SortOrder
   priceSteam?: Prisma.SortOrder
   priceTradeIt?: Prisma.SortOrder
   recordedAt?: Prisma.SortOrder
-  steamInventoryItem?: Prisma.SteamInventoryItemOrderByWithRelationInput
 }
 
 export type SteamInventoryItemPriceHistoryWhereUniqueInput = Prisma.AtLeast<{
@@ -245,16 +239,15 @@ export type SteamInventoryItemPriceHistoryWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.SteamInventoryItemPriceHistoryWhereInput | Prisma.SteamInventoryItemPriceHistoryWhereInput[]
   OR?: Prisma.SteamInventoryItemPriceHistoryWhereInput[]
   NOT?: Prisma.SteamInventoryItemPriceHistoryWhereInput | Prisma.SteamInventoryItemPriceHistoryWhereInput[]
-  steamInventoryItemId?: Prisma.IntFilter<"SteamInventoryItemPriceHistory"> | number
+  marketUrl?: Prisma.StringFilter<"SteamInventoryItemPriceHistory"> | string
   priceSteam?: Prisma.DecimalFilter<"SteamInventoryItemPriceHistory"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   priceTradeIt?: Prisma.DecimalFilter<"SteamInventoryItemPriceHistory"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   recordedAt?: Prisma.DateTimeFilter<"SteamInventoryItemPriceHistory"> | Date | string
-  steamInventoryItem?: Prisma.XOR<Prisma.SteamInventoryItemScalarRelationFilter, Prisma.SteamInventoryItemWhereInput>
 }, "id">
 
 export type SteamInventoryItemPriceHistoryOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  steamInventoryItemId?: Prisma.SortOrder
+  marketUrl?: Prisma.SortOrder
   priceSteam?: Prisma.SortOrder
   priceTradeIt?: Prisma.SortOrder
   recordedAt?: Prisma.SortOrder
@@ -270,37 +263,37 @@ export type SteamInventoryItemPriceHistoryScalarWhereWithAggregatesInput = {
   OR?: Prisma.SteamInventoryItemPriceHistoryScalarWhereWithAggregatesInput[]
   NOT?: Prisma.SteamInventoryItemPriceHistoryScalarWhereWithAggregatesInput | Prisma.SteamInventoryItemPriceHistoryScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"SteamInventoryItemPriceHistory"> | number
-  steamInventoryItemId?: Prisma.IntWithAggregatesFilter<"SteamInventoryItemPriceHistory"> | number
+  marketUrl?: Prisma.StringWithAggregatesFilter<"SteamInventoryItemPriceHistory"> | string
   priceSteam?: Prisma.DecimalWithAggregatesFilter<"SteamInventoryItemPriceHistory"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   priceTradeIt?: Prisma.DecimalWithAggregatesFilter<"SteamInventoryItemPriceHistory"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   recordedAt?: Prisma.DateTimeWithAggregatesFilter<"SteamInventoryItemPriceHistory"> | Date | string
 }
 
 export type SteamInventoryItemPriceHistoryCreateInput = {
+  marketUrl: string
   priceSteam?: runtime.Decimal | runtime.DecimalJsLike | number | string
   priceTradeIt?: runtime.Decimal | runtime.DecimalJsLike | number | string
   recordedAt?: Date | string
-  steamInventoryItem: Prisma.SteamInventoryItemCreateNestedOneWithoutPriceHistoryInput
 }
 
 export type SteamInventoryItemPriceHistoryUncheckedCreateInput = {
   id?: number
-  steamInventoryItemId: number
+  marketUrl: string
   priceSteam?: runtime.Decimal | runtime.DecimalJsLike | number | string
   priceTradeIt?: runtime.Decimal | runtime.DecimalJsLike | number | string
   recordedAt?: Date | string
 }
 
 export type SteamInventoryItemPriceHistoryUpdateInput = {
+  marketUrl?: Prisma.StringFieldUpdateOperationsInput | string
   priceSteam?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   priceTradeIt?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  steamInventoryItem?: Prisma.SteamInventoryItemUpdateOneRequiredWithoutPriceHistoryNestedInput
 }
 
 export type SteamInventoryItemPriceHistoryUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  steamInventoryItemId?: Prisma.IntFieldUpdateOperationsInput | number
+  marketUrl?: Prisma.StringFieldUpdateOperationsInput | string
   priceSteam?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   priceTradeIt?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -308,13 +301,14 @@ export type SteamInventoryItemPriceHistoryUncheckedUpdateInput = {
 
 export type SteamInventoryItemPriceHistoryCreateManyInput = {
   id?: number
-  steamInventoryItemId: number
+  marketUrl: string
   priceSteam?: runtime.Decimal | runtime.DecimalJsLike | number | string
   priceTradeIt?: runtime.Decimal | runtime.DecimalJsLike | number | string
   recordedAt?: Date | string
 }
 
 export type SteamInventoryItemPriceHistoryUpdateManyMutationInput = {
+  marketUrl?: Prisma.StringFieldUpdateOperationsInput | string
   priceSteam?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   priceTradeIt?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -322,25 +316,15 @@ export type SteamInventoryItemPriceHistoryUpdateManyMutationInput = {
 
 export type SteamInventoryItemPriceHistoryUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  steamInventoryItemId?: Prisma.IntFieldUpdateOperationsInput | number
+  marketUrl?: Prisma.StringFieldUpdateOperationsInput | string
   priceSteam?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   priceTradeIt?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type SteamInventoryItemPriceHistoryListRelationFilter = {
-  every?: Prisma.SteamInventoryItemPriceHistoryWhereInput
-  some?: Prisma.SteamInventoryItemPriceHistoryWhereInput
-  none?: Prisma.SteamInventoryItemPriceHistoryWhereInput
-}
-
-export type SteamInventoryItemPriceHistoryOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
-}
-
 export type SteamInventoryItemPriceHistoryCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  steamInventoryItemId?: Prisma.SortOrder
+  marketUrl?: Prisma.SortOrder
   priceSteam?: Prisma.SortOrder
   priceTradeIt?: Prisma.SortOrder
   recordedAt?: Prisma.SortOrder
@@ -348,14 +332,13 @@ export type SteamInventoryItemPriceHistoryCountOrderByAggregateInput = {
 
 export type SteamInventoryItemPriceHistoryAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  steamInventoryItemId?: Prisma.SortOrder
   priceSteam?: Prisma.SortOrder
   priceTradeIt?: Prisma.SortOrder
 }
 
 export type SteamInventoryItemPriceHistoryMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  steamInventoryItemId?: Prisma.SortOrder
+  marketUrl?: Prisma.SortOrder
   priceSteam?: Prisma.SortOrder
   priceTradeIt?: Prisma.SortOrder
   recordedAt?: Prisma.SortOrder
@@ -363,7 +346,7 @@ export type SteamInventoryItemPriceHistoryMaxOrderByAggregateInput = {
 
 export type SteamInventoryItemPriceHistoryMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  steamInventoryItemId?: Prisma.SortOrder
+  marketUrl?: Prisma.SortOrder
   priceSteam?: Prisma.SortOrder
   priceTradeIt?: Prisma.SortOrder
   recordedAt?: Prisma.SortOrder
@@ -371,186 +354,52 @@ export type SteamInventoryItemPriceHistoryMinOrderByAggregateInput = {
 
 export type SteamInventoryItemPriceHistorySumOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  steamInventoryItemId?: Prisma.SortOrder
   priceSteam?: Prisma.SortOrder
   priceTradeIt?: Prisma.SortOrder
-}
-
-export type SteamInventoryItemPriceHistoryCreateNestedManyWithoutSteamInventoryItemInput = {
-  create?: Prisma.XOR<Prisma.SteamInventoryItemPriceHistoryCreateWithoutSteamInventoryItemInput, Prisma.SteamInventoryItemPriceHistoryUncheckedCreateWithoutSteamInventoryItemInput> | Prisma.SteamInventoryItemPriceHistoryCreateWithoutSteamInventoryItemInput[] | Prisma.SteamInventoryItemPriceHistoryUncheckedCreateWithoutSteamInventoryItemInput[]
-  connectOrCreate?: Prisma.SteamInventoryItemPriceHistoryCreateOrConnectWithoutSteamInventoryItemInput | Prisma.SteamInventoryItemPriceHistoryCreateOrConnectWithoutSteamInventoryItemInput[]
-  createMany?: Prisma.SteamInventoryItemPriceHistoryCreateManySteamInventoryItemInputEnvelope
-  connect?: Prisma.SteamInventoryItemPriceHistoryWhereUniqueInput | Prisma.SteamInventoryItemPriceHistoryWhereUniqueInput[]
-}
-
-export type SteamInventoryItemPriceHistoryUncheckedCreateNestedManyWithoutSteamInventoryItemInput = {
-  create?: Prisma.XOR<Prisma.SteamInventoryItemPriceHistoryCreateWithoutSteamInventoryItemInput, Prisma.SteamInventoryItemPriceHistoryUncheckedCreateWithoutSteamInventoryItemInput> | Prisma.SteamInventoryItemPriceHistoryCreateWithoutSteamInventoryItemInput[] | Prisma.SteamInventoryItemPriceHistoryUncheckedCreateWithoutSteamInventoryItemInput[]
-  connectOrCreate?: Prisma.SteamInventoryItemPriceHistoryCreateOrConnectWithoutSteamInventoryItemInput | Prisma.SteamInventoryItemPriceHistoryCreateOrConnectWithoutSteamInventoryItemInput[]
-  createMany?: Prisma.SteamInventoryItemPriceHistoryCreateManySteamInventoryItemInputEnvelope
-  connect?: Prisma.SteamInventoryItemPriceHistoryWhereUniqueInput | Prisma.SteamInventoryItemPriceHistoryWhereUniqueInput[]
-}
-
-export type SteamInventoryItemPriceHistoryUpdateManyWithoutSteamInventoryItemNestedInput = {
-  create?: Prisma.XOR<Prisma.SteamInventoryItemPriceHistoryCreateWithoutSteamInventoryItemInput, Prisma.SteamInventoryItemPriceHistoryUncheckedCreateWithoutSteamInventoryItemInput> | Prisma.SteamInventoryItemPriceHistoryCreateWithoutSteamInventoryItemInput[] | Prisma.SteamInventoryItemPriceHistoryUncheckedCreateWithoutSteamInventoryItemInput[]
-  connectOrCreate?: Prisma.SteamInventoryItemPriceHistoryCreateOrConnectWithoutSteamInventoryItemInput | Prisma.SteamInventoryItemPriceHistoryCreateOrConnectWithoutSteamInventoryItemInput[]
-  upsert?: Prisma.SteamInventoryItemPriceHistoryUpsertWithWhereUniqueWithoutSteamInventoryItemInput | Prisma.SteamInventoryItemPriceHistoryUpsertWithWhereUniqueWithoutSteamInventoryItemInput[]
-  createMany?: Prisma.SteamInventoryItemPriceHistoryCreateManySteamInventoryItemInputEnvelope
-  set?: Prisma.SteamInventoryItemPriceHistoryWhereUniqueInput | Prisma.SteamInventoryItemPriceHistoryWhereUniqueInput[]
-  disconnect?: Prisma.SteamInventoryItemPriceHistoryWhereUniqueInput | Prisma.SteamInventoryItemPriceHistoryWhereUniqueInput[]
-  delete?: Prisma.SteamInventoryItemPriceHistoryWhereUniqueInput | Prisma.SteamInventoryItemPriceHistoryWhereUniqueInput[]
-  connect?: Prisma.SteamInventoryItemPriceHistoryWhereUniqueInput | Prisma.SteamInventoryItemPriceHistoryWhereUniqueInput[]
-  update?: Prisma.SteamInventoryItemPriceHistoryUpdateWithWhereUniqueWithoutSteamInventoryItemInput | Prisma.SteamInventoryItemPriceHistoryUpdateWithWhereUniqueWithoutSteamInventoryItemInput[]
-  updateMany?: Prisma.SteamInventoryItemPriceHistoryUpdateManyWithWhereWithoutSteamInventoryItemInput | Prisma.SteamInventoryItemPriceHistoryUpdateManyWithWhereWithoutSteamInventoryItemInput[]
-  deleteMany?: Prisma.SteamInventoryItemPriceHistoryScalarWhereInput | Prisma.SteamInventoryItemPriceHistoryScalarWhereInput[]
-}
-
-export type SteamInventoryItemPriceHistoryUncheckedUpdateManyWithoutSteamInventoryItemNestedInput = {
-  create?: Prisma.XOR<Prisma.SteamInventoryItemPriceHistoryCreateWithoutSteamInventoryItemInput, Prisma.SteamInventoryItemPriceHistoryUncheckedCreateWithoutSteamInventoryItemInput> | Prisma.SteamInventoryItemPriceHistoryCreateWithoutSteamInventoryItemInput[] | Prisma.SteamInventoryItemPriceHistoryUncheckedCreateWithoutSteamInventoryItemInput[]
-  connectOrCreate?: Prisma.SteamInventoryItemPriceHistoryCreateOrConnectWithoutSteamInventoryItemInput | Prisma.SteamInventoryItemPriceHistoryCreateOrConnectWithoutSteamInventoryItemInput[]
-  upsert?: Prisma.SteamInventoryItemPriceHistoryUpsertWithWhereUniqueWithoutSteamInventoryItemInput | Prisma.SteamInventoryItemPriceHistoryUpsertWithWhereUniqueWithoutSteamInventoryItemInput[]
-  createMany?: Prisma.SteamInventoryItemPriceHistoryCreateManySteamInventoryItemInputEnvelope
-  set?: Prisma.SteamInventoryItemPriceHistoryWhereUniqueInput | Prisma.SteamInventoryItemPriceHistoryWhereUniqueInput[]
-  disconnect?: Prisma.SteamInventoryItemPriceHistoryWhereUniqueInput | Prisma.SteamInventoryItemPriceHistoryWhereUniqueInput[]
-  delete?: Prisma.SteamInventoryItemPriceHistoryWhereUniqueInput | Prisma.SteamInventoryItemPriceHistoryWhereUniqueInput[]
-  connect?: Prisma.SteamInventoryItemPriceHistoryWhereUniqueInput | Prisma.SteamInventoryItemPriceHistoryWhereUniqueInput[]
-  update?: Prisma.SteamInventoryItemPriceHistoryUpdateWithWhereUniqueWithoutSteamInventoryItemInput | Prisma.SteamInventoryItemPriceHistoryUpdateWithWhereUniqueWithoutSteamInventoryItemInput[]
-  updateMany?: Prisma.SteamInventoryItemPriceHistoryUpdateManyWithWhereWithoutSteamInventoryItemInput | Prisma.SteamInventoryItemPriceHistoryUpdateManyWithWhereWithoutSteamInventoryItemInput[]
-  deleteMany?: Prisma.SteamInventoryItemPriceHistoryScalarWhereInput | Prisma.SteamInventoryItemPriceHistoryScalarWhereInput[]
-}
-
-export type SteamInventoryItemPriceHistoryCreateWithoutSteamInventoryItemInput = {
-  priceSteam?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  priceTradeIt?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  recordedAt?: Date | string
-}
-
-export type SteamInventoryItemPriceHistoryUncheckedCreateWithoutSteamInventoryItemInput = {
-  id?: number
-  priceSteam?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  priceTradeIt?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  recordedAt?: Date | string
-}
-
-export type SteamInventoryItemPriceHistoryCreateOrConnectWithoutSteamInventoryItemInput = {
-  where: Prisma.SteamInventoryItemPriceHistoryWhereUniqueInput
-  create: Prisma.XOR<Prisma.SteamInventoryItemPriceHistoryCreateWithoutSteamInventoryItemInput, Prisma.SteamInventoryItemPriceHistoryUncheckedCreateWithoutSteamInventoryItemInput>
-}
-
-export type SteamInventoryItemPriceHistoryCreateManySteamInventoryItemInputEnvelope = {
-  data: Prisma.SteamInventoryItemPriceHistoryCreateManySteamInventoryItemInput | Prisma.SteamInventoryItemPriceHistoryCreateManySteamInventoryItemInput[]
-  skipDuplicates?: boolean
-}
-
-export type SteamInventoryItemPriceHistoryUpsertWithWhereUniqueWithoutSteamInventoryItemInput = {
-  where: Prisma.SteamInventoryItemPriceHistoryWhereUniqueInput
-  update: Prisma.XOR<Prisma.SteamInventoryItemPriceHistoryUpdateWithoutSteamInventoryItemInput, Prisma.SteamInventoryItemPriceHistoryUncheckedUpdateWithoutSteamInventoryItemInput>
-  create: Prisma.XOR<Prisma.SteamInventoryItemPriceHistoryCreateWithoutSteamInventoryItemInput, Prisma.SteamInventoryItemPriceHistoryUncheckedCreateWithoutSteamInventoryItemInput>
-}
-
-export type SteamInventoryItemPriceHistoryUpdateWithWhereUniqueWithoutSteamInventoryItemInput = {
-  where: Prisma.SteamInventoryItemPriceHistoryWhereUniqueInput
-  data: Prisma.XOR<Prisma.SteamInventoryItemPriceHistoryUpdateWithoutSteamInventoryItemInput, Prisma.SteamInventoryItemPriceHistoryUncheckedUpdateWithoutSteamInventoryItemInput>
-}
-
-export type SteamInventoryItemPriceHistoryUpdateManyWithWhereWithoutSteamInventoryItemInput = {
-  where: Prisma.SteamInventoryItemPriceHistoryScalarWhereInput
-  data: Prisma.XOR<Prisma.SteamInventoryItemPriceHistoryUpdateManyMutationInput, Prisma.SteamInventoryItemPriceHistoryUncheckedUpdateManyWithoutSteamInventoryItemInput>
-}
-
-export type SteamInventoryItemPriceHistoryScalarWhereInput = {
-  AND?: Prisma.SteamInventoryItemPriceHistoryScalarWhereInput | Prisma.SteamInventoryItemPriceHistoryScalarWhereInput[]
-  OR?: Prisma.SteamInventoryItemPriceHistoryScalarWhereInput[]
-  NOT?: Prisma.SteamInventoryItemPriceHistoryScalarWhereInput | Prisma.SteamInventoryItemPriceHistoryScalarWhereInput[]
-  id?: Prisma.IntFilter<"SteamInventoryItemPriceHistory"> | number
-  steamInventoryItemId?: Prisma.IntFilter<"SteamInventoryItemPriceHistory"> | number
-  priceSteam?: Prisma.DecimalFilter<"SteamInventoryItemPriceHistory"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  priceTradeIt?: Prisma.DecimalFilter<"SteamInventoryItemPriceHistory"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  recordedAt?: Prisma.DateTimeFilter<"SteamInventoryItemPriceHistory"> | Date | string
-}
-
-export type SteamInventoryItemPriceHistoryCreateManySteamInventoryItemInput = {
-  id?: number
-  priceSteam?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  priceTradeIt?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  recordedAt?: Date | string
-}
-
-export type SteamInventoryItemPriceHistoryUpdateWithoutSteamInventoryItemInput = {
-  priceSteam?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  priceTradeIt?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type SteamInventoryItemPriceHistoryUncheckedUpdateWithoutSteamInventoryItemInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  priceSteam?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  priceTradeIt?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type SteamInventoryItemPriceHistoryUncheckedUpdateManyWithoutSteamInventoryItemInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  priceSteam?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  priceTradeIt?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
 
 export type SteamInventoryItemPriceHistorySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  steamInventoryItemId?: boolean
+  marketUrl?: boolean
   priceSteam?: boolean
   priceTradeIt?: boolean
   recordedAt?: boolean
-  steamInventoryItem?: boolean | Prisma.SteamInventoryItemDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["steamInventoryItemPriceHistory"]>
 
 export type SteamInventoryItemPriceHistorySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  steamInventoryItemId?: boolean
+  marketUrl?: boolean
   priceSteam?: boolean
   priceTradeIt?: boolean
   recordedAt?: boolean
-  steamInventoryItem?: boolean | Prisma.SteamInventoryItemDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["steamInventoryItemPriceHistory"]>
 
 export type SteamInventoryItemPriceHistorySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  steamInventoryItemId?: boolean
+  marketUrl?: boolean
   priceSteam?: boolean
   priceTradeIt?: boolean
   recordedAt?: boolean
-  steamInventoryItem?: boolean | Prisma.SteamInventoryItemDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["steamInventoryItemPriceHistory"]>
 
 export type SteamInventoryItemPriceHistorySelectScalar = {
   id?: boolean
-  steamInventoryItemId?: boolean
+  marketUrl?: boolean
   priceSteam?: boolean
   priceTradeIt?: boolean
   recordedAt?: boolean
 }
 
-export type SteamInventoryItemPriceHistoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "steamInventoryItemId" | "priceSteam" | "priceTradeIt" | "recordedAt", ExtArgs["result"]["steamInventoryItemPriceHistory"]>
-export type SteamInventoryItemPriceHistoryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  steamInventoryItem?: boolean | Prisma.SteamInventoryItemDefaultArgs<ExtArgs>
-}
-export type SteamInventoryItemPriceHistoryIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  steamInventoryItem?: boolean | Prisma.SteamInventoryItemDefaultArgs<ExtArgs>
-}
-export type SteamInventoryItemPriceHistoryIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  steamInventoryItem?: boolean | Prisma.SteamInventoryItemDefaultArgs<ExtArgs>
-}
+export type SteamInventoryItemPriceHistoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "marketUrl" | "priceSteam" | "priceTradeIt" | "recordedAt", ExtArgs["result"]["steamInventoryItemPriceHistory"]>
 
 export type $SteamInventoryItemPriceHistoryPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "SteamInventoryItemPriceHistory"
-  objects: {
-    steamInventoryItem: Prisma.$SteamInventoryItemPayload<ExtArgs>
-  }
+  objects: {}
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
-    steamInventoryItemId: number
+    marketUrl: string
     priceSteam: runtime.Decimal
     priceTradeIt: runtime.Decimal
     recordedAt: Date
@@ -948,7 +797,6 @@ readonly fields: SteamInventoryItemPriceHistoryFieldRefs;
  */
 export interface Prisma__SteamInventoryItemPriceHistoryClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  steamInventoryItem<T extends Prisma.SteamInventoryItemDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SteamInventoryItemDefaultArgs<ExtArgs>>): Prisma.Prisma__SteamInventoryItemClient<runtime.Types.Result.GetResult<Prisma.$SteamInventoryItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -979,7 +827,7 @@ export interface Prisma__SteamInventoryItemPriceHistoryClient<T, Null = never, E
  */
 export interface SteamInventoryItemPriceHistoryFieldRefs {
   readonly id: Prisma.FieldRef<"SteamInventoryItemPriceHistory", 'Int'>
-  readonly steamInventoryItemId: Prisma.FieldRef<"SteamInventoryItemPriceHistory", 'Int'>
+  readonly marketUrl: Prisma.FieldRef<"SteamInventoryItemPriceHistory", 'String'>
   readonly priceSteam: Prisma.FieldRef<"SteamInventoryItemPriceHistory", 'Decimal'>
   readonly priceTradeIt: Prisma.FieldRef<"SteamInventoryItemPriceHistory", 'Decimal'>
   readonly recordedAt: Prisma.FieldRef<"SteamInventoryItemPriceHistory", 'DateTime'>
@@ -1000,10 +848,6 @@ export type SteamInventoryItemPriceHistoryFindUniqueArgs<ExtArgs extends runtime
    */
   omit?: Prisma.SteamInventoryItemPriceHistoryOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.SteamInventoryItemPriceHistoryInclude<ExtArgs> | null
-  /**
    * Filter, which SteamInventoryItemPriceHistory to fetch.
    */
   where: Prisma.SteamInventoryItemPriceHistoryWhereUniqueInput
@@ -1022,10 +866,6 @@ export type SteamInventoryItemPriceHistoryFindUniqueOrThrowArgs<ExtArgs extends 
    */
   omit?: Prisma.SteamInventoryItemPriceHistoryOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.SteamInventoryItemPriceHistoryInclude<ExtArgs> | null
-  /**
    * Filter, which SteamInventoryItemPriceHistory to fetch.
    */
   where: Prisma.SteamInventoryItemPriceHistoryWhereUniqueInput
@@ -1043,10 +883,6 @@ export type SteamInventoryItemPriceHistoryFindFirstArgs<ExtArgs extends runtime.
    * Omit specific fields from the SteamInventoryItemPriceHistory
    */
   omit?: Prisma.SteamInventoryItemPriceHistoryOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.SteamInventoryItemPriceHistoryInclude<ExtArgs> | null
   /**
    * Filter, which SteamInventoryItemPriceHistory to fetch.
    */
@@ -1096,10 +932,6 @@ export type SteamInventoryItemPriceHistoryFindFirstOrThrowArgs<ExtArgs extends r
    */
   omit?: Prisma.SteamInventoryItemPriceHistoryOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.SteamInventoryItemPriceHistoryInclude<ExtArgs> | null
-  /**
    * Filter, which SteamInventoryItemPriceHistory to fetch.
    */
   where?: Prisma.SteamInventoryItemPriceHistoryWhereInput
@@ -1148,10 +980,6 @@ export type SteamInventoryItemPriceHistoryFindManyArgs<ExtArgs extends runtime.T
    */
   omit?: Prisma.SteamInventoryItemPriceHistoryOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.SteamInventoryItemPriceHistoryInclude<ExtArgs> | null
-  /**
    * Filter, which SteamInventoryItemPriceHistories to fetch.
    */
   where?: Prisma.SteamInventoryItemPriceHistoryWhereInput
@@ -1195,10 +1023,6 @@ export type SteamInventoryItemPriceHistoryCreateArgs<ExtArgs extends runtime.Typ
    */
   omit?: Prisma.SteamInventoryItemPriceHistoryOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.SteamInventoryItemPriceHistoryInclude<ExtArgs> | null
-  /**
    * The data needed to create a SteamInventoryItemPriceHistory.
    */
   data: Prisma.XOR<Prisma.SteamInventoryItemPriceHistoryCreateInput, Prisma.SteamInventoryItemPriceHistoryUncheckedCreateInput>
@@ -1232,10 +1056,6 @@ export type SteamInventoryItemPriceHistoryCreateManyAndReturnArgs<ExtArgs extend
    */
   data: Prisma.SteamInventoryItemPriceHistoryCreateManyInput | Prisma.SteamInventoryItemPriceHistoryCreateManyInput[]
   skipDuplicates?: boolean
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.SteamInventoryItemPriceHistoryIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1250,10 +1070,6 @@ export type SteamInventoryItemPriceHistoryUpdateArgs<ExtArgs extends runtime.Typ
    * Omit specific fields from the SteamInventoryItemPriceHistory
    */
   omit?: Prisma.SteamInventoryItemPriceHistoryOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.SteamInventoryItemPriceHistoryInclude<ExtArgs> | null
   /**
    * The data needed to update a SteamInventoryItemPriceHistory.
    */
@@ -1306,10 +1122,6 @@ export type SteamInventoryItemPriceHistoryUpdateManyAndReturnArgs<ExtArgs extend
    * Limit how many SteamInventoryItemPriceHistories to update.
    */
   limit?: number
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.SteamInventoryItemPriceHistoryIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1324,10 +1136,6 @@ export type SteamInventoryItemPriceHistoryUpsertArgs<ExtArgs extends runtime.Typ
    * Omit specific fields from the SteamInventoryItemPriceHistory
    */
   omit?: Prisma.SteamInventoryItemPriceHistoryOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.SteamInventoryItemPriceHistoryInclude<ExtArgs> | null
   /**
    * The filter to search for the SteamInventoryItemPriceHistory to update in case it exists.
    */
@@ -1354,10 +1162,6 @@ export type SteamInventoryItemPriceHistoryDeleteArgs<ExtArgs extends runtime.Typ
    * Omit specific fields from the SteamInventoryItemPriceHistory
    */
   omit?: Prisma.SteamInventoryItemPriceHistoryOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.SteamInventoryItemPriceHistoryInclude<ExtArgs> | null
   /**
    * Filter which SteamInventoryItemPriceHistory to delete.
    */
@@ -1390,8 +1194,4 @@ export type SteamInventoryItemPriceHistoryDefaultArgs<ExtArgs extends runtime.Ty
    * Omit specific fields from the SteamInventoryItemPriceHistory
    */
   omit?: Prisma.SteamInventoryItemPriceHistoryOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.SteamInventoryItemPriceHistoryInclude<ExtArgs> | null
 }

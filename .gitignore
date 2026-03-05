@@ -17,3 +17,8 @@ web/out
 web/build
 web/next-env.d.ts
 web/package-lock.json
+
+docs/.obsidian/workspace
+docs/.obsidian/workspace.json
+docs/.obsidian/cache
+docs/.obsidian/plugins

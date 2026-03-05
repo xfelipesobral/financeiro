@@ -110,14 +110,15 @@ model BankAccountPix {
 }
 
 model Category {
-    id           Int           @id @default(autoincrement())
-    description  String
-    parentId     Int?
-    userId       Int?
-    type         CategoryType  @default(CREDIT)
-    createdAt    DateTime      @default(now())
-    updatedAt    DateTime      @updatedAt
-    transactions Transaction[]
+    id                             Int                             @id @default(autoincrement())
+    description                    String
+    parentId                       Int?
+    userId                         Int?
+    type                           CategoryType                    @default(CREDIT)
+    createdAt                      DateTime                        @default(now())
+    updatedAt                      DateTime                        @updatedAt
+    transactions                   Transaction[]
+    steamInventoryItemTransactions SteamInventoryItemTransaction[]
 
     parent Category? @relation("CategoryHierarchy", fields: [parentId], references: [id]) // Auto-relacionamento para categorias hierárquicas
     user   User?     @relation(fields: [userId], references: [id])
@@ -180,70 +181,51 @@ model Card {
 }
 
 model SteamInventoryItem {
-    id           Int                              @id @default(autoincrement())
-    guid         String                           @unique @db.Uuid
-    userId       Int
-    steamId      String
-    name         String
-    description  String
-    paidPrice    Decimal
-    soldPrice    Decimal?
-    marketUrl    String?
-    inspectUrl   String?
-    imageUrl     String?
-    quantity     Int
-    tradedAt     DateTime?
-    type         SteamInventoryItemType           @default(OTHER)
-    createdAt    DateTime                         @default(now())
-    updatedAt    DateTime                         @updatedAt
-    user         User                             @relation(fields: [userId], references: [id])
-    priceHistory SteamInventoryItemPriceHistory[]
+    id                             Int                             @id @default(autoincrement())
+    guid                           String                          @unique
+    userId                         Int
+    steamId                        String
+    name                           String
+    description                    String
+    lastPaidPrice                  Decimal?
+    lastSoldPrice                  Decimal?
+    marketUrl                      String?
+    imageUrl                       String?
+    color                          String?
+    quantity                       Int                             @default(0)
+    createdAt                      DateTime                        @default(now())
+    updatedAt                      DateTime                        @updatedAt
+    user                           User                            @relation(fields: [userId], references: [id])
+    steamInventoryItemTransactions SteamInventoryItemTransaction[]
 
     @@index([userId])
+    @@index([steamId])
 }
 
-model SteamInventoryItemPriceHistory {
+model SteamInventoryItemTransaction {
     id                   Int                @id @default(autoincrement())
     steamInventoryItemId Int
-    priceSteam           Decimal            @default(0)
-    priceTradeIt         Decimal            @default(0)
-    recordedAt           DateTime           @default(now())
+    observation          String?
+    unitPrice            Decimal
+    quantity             Int
+    totalAmount          Decimal
+    categoryId           Int
+    createdAt            DateTime           @default(now())
+    updatedAt            DateTime           @updatedAt
+    category             Category           @relation(fields: [categoryId], references: [id])
     steamInventoryItem   SteamInventoryItem @relation(fields: [steamInventoryItemId], references: [id])
 
     @@index([steamInventoryItemId])
 }
 
-enum SteamInventoryItemType {
-    AK47
-    M4A4
-    AWP
-    M4A1
-    DEAGLE
-    USP
-    GLOCK
-    P250
-    FIVESEVEN
-    GALILAR
-    FAMAS
-    UMP45
-    MP7
-    MP9
-    P90
-    BIZON
-    MAC10
-    XM1014
-    AUG
-    SSG08
-    KEYCHAIN
-    GRAFFITI
-    MUSICKIT
-    CASE
-    STICKER
-    PATCH
-    GLOVE
-    KNIFE
-    AGENT
-    OTHER
+model SteamInventoryItemPriceHistory {
+    id           Int      @id @default(autoincrement())
+    marketUrl    String
+    priceSteam   Decimal  @default(0)
+    priceTradeIt Decimal  @default(0)
+    recordedAt   DateTime @default(now())
+
+    @@index([marketUrl])
 }
 
 enum CategoryType {

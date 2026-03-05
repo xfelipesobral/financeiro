@@ -2,8 +2,9 @@ import 'fastify'
 
 declare module 'fastify' {
     interface FastifyRequest {
-        user?: {
-            id: number
+        authenticated?: {
+            userId: number
+            tokenId: number
         }
     }
 }

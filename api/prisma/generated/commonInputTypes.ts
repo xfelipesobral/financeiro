@@ -305,13 +305,6 @@ export type DecimalNullableFilter<$PrismaModel = never> = {
   not?: Prisma.NestedDecimalNullableFilter<$PrismaModel> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
-export type EnumSteamInventoryItemTypeFilter<$PrismaModel = never> = {
-  equals?: $Enums.SteamInventoryItemType | Prisma.EnumSteamInventoryItemTypeFieldRefInput<$PrismaModel>
-  in?: $Enums.SteamInventoryItemType[] | Prisma.ListEnumSteamInventoryItemTypeFieldRefInput<$PrismaModel>
-  notIn?: $Enums.SteamInventoryItemType[] | Prisma.ListEnumSteamInventoryItemTypeFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumSteamInventoryItemTypeFilter<$PrismaModel> | $Enums.SteamInventoryItemType
-}
-
 export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
   equals?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel> | null
   in?: runtime.Decimal[] | runtime.DecimalJsLike[] | number[] | string[] | Prisma.ListDecimalFieldRefInput<$PrismaModel> | null
@@ -326,16 +319,6 @@ export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
   _sum?: Prisma.NestedDecimalNullableFilter<$PrismaModel>
   _min?: Prisma.NestedDecimalNullableFilter<$PrismaModel>
   _max?: Prisma.NestedDecimalNullableFilter<$PrismaModel>
-}
-
-export type EnumSteamInventoryItemTypeWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.SteamInventoryItemType | Prisma.EnumSteamInventoryItemTypeFieldRefInput<$PrismaModel>
-  in?: $Enums.SteamInventoryItemType[] | Prisma.ListEnumSteamInventoryItemTypeFieldRefInput<$PrismaModel>
-  notIn?: $Enums.SteamInventoryItemType[] | Prisma.ListEnumSteamInventoryItemTypeFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumSteamInventoryItemTypeWithAggregatesFilter<$PrismaModel> | $Enums.SteamInventoryItemType
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumSteamInventoryItemTypeFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumSteamInventoryItemTypeFilter<$PrismaModel>
 }
 
 export type NestedIntFilter<$PrismaModel = never> = {
@@ -640,13 +623,6 @@ export type NestedDecimalNullableFilter<$PrismaModel = never> = {
   not?: Prisma.NestedDecimalNullableFilter<$PrismaModel> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
-export type NestedEnumSteamInventoryItemTypeFilter<$PrismaModel = never> = {
-  equals?: $Enums.SteamInventoryItemType | Prisma.EnumSteamInventoryItemTypeFieldRefInput<$PrismaModel>
-  in?: $Enums.SteamInventoryItemType[] | Prisma.ListEnumSteamInventoryItemTypeFieldRefInput<$PrismaModel>
-  notIn?: $Enums.SteamInventoryItemType[] | Prisma.ListEnumSteamInventoryItemTypeFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumSteamInventoryItemTypeFilter<$PrismaModel> | $Enums.SteamInventoryItemType
-}
-
 export type NestedDecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
   equals?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel> | null
   in?: runtime.Decimal[] | runtime.DecimalJsLike[] | number[] | string[] | Prisma.ListDecimalFieldRefInput<$PrismaModel> | null
@@ -661,16 +637,6 @@ export type NestedDecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
   _sum?: Prisma.NestedDecimalNullableFilter<$PrismaModel>
   _min?: Prisma.NestedDecimalNullableFilter<$PrismaModel>
   _max?: Prisma.NestedDecimalNullableFilter<$PrismaModel>
-}
-
-export type NestedEnumSteamInventoryItemTypeWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.SteamInventoryItemType | Prisma.EnumSteamInventoryItemTypeFieldRefInput<$PrismaModel>
-  in?: $Enums.SteamInventoryItemType[] | Prisma.ListEnumSteamInventoryItemTypeFieldRefInput<$PrismaModel>
-  notIn?: $Enums.SteamInventoryItemType[] | Prisma.ListEnumSteamInventoryItemTypeFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumSteamInventoryItemTypeWithAggregatesFilter<$PrismaModel> | $Enums.SteamInventoryItemType
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumSteamInventoryItemTypeFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumSteamInventoryItemTypeFilter<$PrismaModel>
 }
 
 
