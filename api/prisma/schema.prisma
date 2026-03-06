@@ -226,6 +226,7 @@ model SteamInventoryItemPriceHistory {
     recordedAt   DateTime @default(now())
 
     @@index([marketUrl])
+    @@index([marketUrl, recordedAt(sort: Desc)])
 }
 
 enum CategoryType {

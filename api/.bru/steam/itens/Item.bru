@@ -1,0 +1,26 @@
+meta {
+  name: Item
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{url}}/steam/itens/:itemId
+  body: none
+  auth: inherit
+}
+
+params:path {
+  itemId: 207
+}
+
+body:json {
+  {
+    "steamId": "76561198131228650"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

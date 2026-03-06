@@ -1,0 +1,31 @@
+meta {
+  name: Item
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{url}}/steam/transactions/:itemId?limit&offset
+  body: none
+  auth: inherit
+}
+
+params:query {
+  limit: 
+  offset: 
+}
+
+params:path {
+  itemId: 207
+}
+
+body:json {
+  {
+    "steamId": "76561198131228650"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

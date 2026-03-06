@@ -1,0 +1,22 @@
+meta {
+  name: steam-cs2-price
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{url}}/steam/itens/cs2-item-price
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "marketUrl": "★ StatTrak™ Butterfly Knife | Black Laminate (Field-Tested)"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

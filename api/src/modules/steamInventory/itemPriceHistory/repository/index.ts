@@ -1,4 +1,5 @@
-import { prisma } from '../../../../db'
+import { Decimal } from '../../../../../prisma/generated/internal/prismaNamespace'
+import { Prisma, prisma } from '../../../../db'
 
 export default class SteamInventoryItemPriceHistoryRepository {
     private steamInventoryItemPriceHistory = prisma.steamInventoryItemPriceHistory
@@ -8,6 +9,15 @@ export default class SteamInventoryItemPriceHistoryRepository {
             where: { marketUrl },
             orderBy: { recordedAt: 'desc' },
         })
+    }
+
+    async findLastPricesByMarketUrls(marketUrls: string[]) {
+        return prisma.$queryRaw<{ marketUrl: string; priceSteam: Decimal }[]>`
+            SELECT DISTINCT ON ("marketUrl") "marketUrl", "priceSteam"
+            FROM "SteamInventoryItemPriceHistory"
+            WHERE "marketUrl" = ANY(ARRAY[${Prisma.join(marketUrls)}])
+            ORDER BY "marketUrl", "recordedAt" DESC
+        `
     }
 
     findTodayPriceByMarketUrl(marketUrl: string) {

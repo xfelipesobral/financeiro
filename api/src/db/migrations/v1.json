@@ -45,6 +45,7 @@
     "CREATE INDEX \"SteamInventoryItem_steamId_idx\" ON \"SteamInventoryItem\"(\"steamId\");",
     "CREATE INDEX \"SteamInventoryItemTransaction_steamInventoryItemId_idx\" ON \"SteamInventoryItemTransaction\"(\"steamInventoryItemId\");",
     "CREATE INDEX \"SteamInventoryItemPriceHistory_marketUrl_idx\" ON \"SteamInventoryItemPriceHistory\"(\"marketUrl\");",
+    "CREATE INDEX \"SteamInventoryItemPriceHistory_marketUrl_recordedAt_idx\" ON \"SteamInventoryItemPriceHistory\"(\"marketUrl\", \"recordedAt\" DESC);",
     "ALTER TABLE \"Session\" ADD CONSTRAINT \"Session_userId_fkey\" FOREIGN KEY (\"userId\") REFERENCES \"User\"(\"id\") ON DELETE RESTRICT ON UPDATE CASCADE;",
     "ALTER TABLE \"BankAccount\" ADD CONSTRAINT \"BankAccount_bankId_fkey\" FOREIGN KEY (\"bankId\") REFERENCES \"Bank\"(\"id\") ON DELETE RESTRICT ON UPDATE CASCADE;",
     "ALTER TABLE \"BankAccount\" ADD CONSTRAINT \"BankAccount_userId_fkey\" FOREIGN KEY (\"userId\") REFERENCES \"User\"(\"id\") ON DELETE RESTRICT ON UPDATE CASCADE;",

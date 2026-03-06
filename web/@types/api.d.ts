@@ -4,3 +4,9 @@ interface ResponseError {
         message: string
     }
 }
+
+interface ResponseApi<T> {
+    success: boolean
+    data?: T
+    message?: string
+}

@@ -6,8 +6,25 @@ export default class SteamInventoryItemRepository {
     private steamInventoryItem = prisma.steamInventoryItem
     private steamInventoryItemTransaction = prisma.steamInventoryItemTransaction
 
-    findMany() {
-        return this.steamInventoryItem.findMany()
+    findMany(filters: FindManyFilters = {}) {
+        return this.steamInventoryItem.findMany({})
+    }
+
+    userFindMany(userId: number, filters: FindManyFilters = {}) {
+        return this.steamInventoryItem.findMany({
+            where: {
+                userId,
+            },
+        })
+    }
+
+    userFindById(userId: number, id: number) {
+        return this.steamInventoryItem.findFirst({
+            where: {
+                userId,
+                id,
+            },
+        })
     }
 
     findById(id: number) {
@@ -93,3 +110,5 @@ interface UpdateData {
     lastPaidPrice?: number
     lastSoldPrice?: number
 }
+
+interface FindManyFilters {}

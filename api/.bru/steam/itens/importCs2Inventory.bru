@@ -1,11 +1,11 @@
 meta {
-  name: steam-cs2-price
+  name: importCs2Inventory
   type: http
-  seq: 2
+  seq: 1
 }
 
 post {
-  url: {{url}}/steam/cs2-item-price
+  url: {{url}}/steam/itens/inventory-import
   body: json
   auth: inherit
 }

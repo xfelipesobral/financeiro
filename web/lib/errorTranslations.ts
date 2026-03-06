@@ -15,7 +15,15 @@ export function translateErrorCode(code: string = 'UNKNOWN_ERROR'): string {
 }
 
 export function translateErrorCodeApi(err: unknown): string {
-    console.log(err)
-    const code = (err as AxiosError<ResponseError>)?.response?.data?.error?.code || 'UNKNOWN_ERROR'
-    return translateErrorCode(code)
+    if (err instanceof AxiosError) {
+        const code = err.response?.data?.error?.code || 'UNKNOWN_ERROR'
+        return translateErrorCode(code)
+    }
+
+    if (err instanceof Error) {
+        const code = (err as any).code || 'UNKNOWN_ERROR'
+        return translateErrorCode(code)
+    }
+
+    return translateErrorCode('UNKNOWN_ERROR')
 }
