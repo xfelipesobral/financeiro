@@ -5,7 +5,7 @@ import { translateErrorCodeApi } from '@/lib/errorTranslations'
 
 export interface ApiSteamItemTransaction {
     id: number
-    categoryId: number
+    type: 'BOUGHT' | 'SOLD'
     createdAt: string
     observation: string | null
     quantity: number

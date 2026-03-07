@@ -23,7 +23,7 @@ export default function PainelContainer({ children }: Params) {
         <SidebarProvider>
             <AppSidebar />
             <SidebarInset>
-                <header className="sticky z-90 top-0 flex h-16 shrink-0 items-center gap-2 border-b bg-background/90 backdrop-blur-sm px-4">
+                <header className="sticky z-50 top-0 flex h-16 shrink-0 items-center gap-2 border-b bg-background/90 backdrop-blur-sm px-4">
                     <SidebarTrigger className="-ml-1" />
                     {crumbs.map((crumb, i) => (
                         <span key={crumb.href}>

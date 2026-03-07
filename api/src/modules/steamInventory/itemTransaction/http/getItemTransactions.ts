@@ -2,6 +2,7 @@ import { FastifyReply, FastifyRequest } from 'fastify'
 import { ApiError, handleApiError } from '../../../../utils/error'
 import { steamInventoryItemPriceHistory } from '../../itemPriceHistory/service'
 import { steamInventoryItemTransaction } from '../service'
+import { CATEGORY_BOUGHT_STEAM_ITEM } from '../../constants'
 
 export async function getItemTransactions(request: FastifyRequest, reply: FastifyReply) {
     try {
@@ -45,7 +46,7 @@ export async function getItemTransactions(request: FastifyRequest, reply: Fastif
         reply.status(200).send(
             transactions.map(({ id, categoryId, createdAt, observation, quantity, totalAmount, unitPrice, updatedAt }) => ({
                 id,
-                categoryId,
+                type: categoryId === CATEGORY_BOUGHT_STEAM_ITEM ? 'BOUGHT' : 'SOLD',
                 createdAt,
                 observation,
                 quantity,

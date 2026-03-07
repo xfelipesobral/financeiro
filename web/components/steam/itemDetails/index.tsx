@@ -5,6 +5,7 @@ import { SubTitle, Title } from '@/components/title'
 import Image from 'next/image'
 import { ItemDetailsContext } from './context'
 import { SteamItemDetailsTransactions } from './transactions'
+import { numberToBrl } from '@/lib/formatNumber'
 
 export function SteamItemDetails({ data, backgroundItemImage }: Params) {
     return (
@@ -33,12 +34,12 @@ export function SteamItemDetails({ data, backgroundItemImage }: Params) {
                 <div className="rounded-xl border overflow-hidden grid divide-y sm:grid-cols-2 lg:grid-cols-5 lg:divide-y-0 sm:divide-x">
                     <div className="px-4 py-3 bg-linear-90 from-stone-100 to-white">
                         <p className="text-sm text-stone-500">Valor total</p>
-                        <p className="text-base font-bold">R$ {(data.lastPrice * data.quantity).toFixed(2)}</p>
+                        <p className="text-base font-bold">{numberToBrl(data.lastPrice * data.quantity)}</p>
                     </div>
 
                     <div className="px-4 py-3">
                         <p className="text-sm text-stone-500">Preço atual</p>
-                        <p className="text-base font-bold">R$ {data.lastPrice.toFixed(2)}</p>
+                        <p className="text-base font-bold">{numberToBrl(data.lastPrice)}</p>
                     </div>
 
                     <div className="px-4 py-3">
@@ -50,7 +51,7 @@ export function SteamItemDetails({ data, backgroundItemImage }: Params) {
                         <p className="text-sm text-stone-500">Último pago</p>
                         <p className="text-base font-bold">
                             {data.lastPaidPrice ? (
-                                `R$ ${data.lastPaidPrice.toFixed(2)}`
+                                `${numberToBrl(data.lastPaidPrice)}`
                             ) : (
                                 <span className="text-base text-stone-500 font-normal">N/A</span>
                             )}
@@ -59,7 +60,7 @@ export function SteamItemDetails({ data, backgroundItemImage }: Params) {
 
                     <div className="px-4 py-3">
                         <p className="text-sm text-stone-500">Último vendido</p>
-                        <p className="text-base font-bold">{data.lastSoldPrice ? `R$ ${data.lastSoldPrice.toFixed(2)}` : 'Item nunca vendido'}</p>
+                        <p className="text-base font-bold">{data.lastSoldPrice ? `${numberToBrl(data.lastSoldPrice)}` : 'Item nunca vendido'}</p>
                     </div>
                 </div>
 
