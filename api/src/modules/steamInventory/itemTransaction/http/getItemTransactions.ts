@@ -1,6 +1,5 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { ApiError, handleApiError } from '../../../../utils/error'
-import { steamInventoryItemPriceHistory } from '../../itemPriceHistory/service'
 import { steamInventoryItemTransaction } from '../service'
 import { CATEGORY_BOUGHT_STEAM_ITEM } from '../../constants'
 

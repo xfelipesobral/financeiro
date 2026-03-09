@@ -7,6 +7,42 @@ export default class SteamInventoryItemTransactionRepository {
         return this.steamInventoryItemTransaction.create({ data })
     }
 
+    update(id: number, data: Partial<CreateSteamInventoryItemTransactionDTO>) {
+        return this.steamInventoryItemTransaction.update({
+            where: { id },
+            data,
+        })
+    }
+
+    delete(id: number) {
+        return this.steamInventoryItemTransaction.delete({
+            where: { id },
+        })
+    }
+
+    findLastForCategoryByItemId(itemId: number, categoryId: number) {
+        return this.steamInventoryItemTransaction.findFirst({
+            where: {
+                steamInventoryItemId: itemId,
+                categoryId,
+            },
+            orderBy: {
+                createdAt: 'desc',
+            },
+        })
+    }
+
+    userFindById(userId: number, transactionId: number) {
+        return this.steamInventoryItemTransaction.findFirst({
+            where: {
+                id: transactionId,
+                steamInventoryItem: {
+                    userId,
+                },
+            },
+        })
+    }
+
     userTransactionsByItemId(userId: number, itemId: number, limit: number, offset: number, orderBy: 'asc' | 'desc' = 'desc') {
         return this.steamInventoryItemTransaction.findMany({
             where: {

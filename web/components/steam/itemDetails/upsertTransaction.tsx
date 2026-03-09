@@ -11,6 +11,8 @@ import { ApiSteamItemTransaction } from '@/api/steam/transactions/getItemTransac
 import { useForm, Controller } from 'react-hook-form'
 import { cn } from '@/lib/utils'
 import { DecimalInput, IntegerInput } from '@/components/inputs/maskedInput'
+import apiSaveSteamItemTransaction from '@/api/steam/transactions/saveItemTransaction'
+import { useItemDetails } from './context'
 
 interface Params {
     transaction: ApiSteamItemTransaction | null
@@ -27,6 +29,8 @@ export interface UpsertSteamItemTransactionForm {
 
 export function UpsertSteamItemTransaction({ transaction, closed }: Params) {
     const open = transaction !== null
+
+    const { id: itemId } = useItemDetails()
 
     const [loading, setLoading] = useState(false)
 
@@ -85,10 +89,26 @@ export function UpsertSteamItemTransaction({ transaction, closed }: Params) {
         }
 
         setLoading(true)
-        console.log(JSON.stringify({ quantity: qty, observation, totalAmount: totalAmountVal, type, unitPrice: unitPriceVal }))
-        // Função que irá enviar as alterações da transaction
+
+        const response = await apiSaveSteamItemTransaction(itemId, {
+            id: transaction?.id,
+            quantity: qty,
+            observation,
+            type,
+            unitPrice: unitPriceVal,
+        })
+
+        if (response.success) {
+            toast.success('Transação salva com sucesso!')
+            closed(true)
+        } else {
+            toast.error(response.message || 'Erro ao salvar transação. Tente novamente mais tarde.')
+        }
+
         setLoading(false)
     }
+
+    const updating = transaction !== null && transaction.id > 0
 
     return (
         <Dialog
@@ -100,7 +120,7 @@ export function UpsertSteamItemTransaction({ transaction, closed }: Params) {
             }}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>{(transaction?.id || 0) > 0 ? 'Editar Transação' : 'Adicionar Transação'}</DialogTitle>
+                    <DialogTitle>{updating ? 'Editar Transação' : 'Adicionar Transação'}</DialogTitle>
                     <DialogDescription>Preencha os dados da movimentação para compra ou venda do item.</DialogDescription>
                 </DialogHeader>
 
@@ -111,13 +131,17 @@ export function UpsertSteamItemTransaction({ transaction, closed }: Params) {
                             name="type"
                             control={control}
                             render={({ field: { value, onChange } }) => (
-                                <div className="flex overflow-hidden rounded-lg border divide-x font-semibold bg-stone-50 cursor-pointer select-none">
+                                <div
+                                    className={cn(
+                                        'flex overflow-hidden rounded-lg border divide-x font-semibold bg-stone-50 cursor-pointer select-none',
+                                        updating ? 'pointer-events-none opacity-60' : '',
+                                    )}>
                                     <div
                                         className={cn(
                                             'flex-1 p-2 flex items-center justify-center',
                                             value === 'BOUGHT' ? 'bg-radial from-green-50 to-green-100 text-green-800' : '',
                                         )}
-                                        onClick={() => onChange('BOUGHT')}>
+                                        onClick={() => !updating && onChange('BOUGHT')}>
                                         <p>Compra</p>
                                     </div>
                                     <div
@@ -125,7 +149,7 @@ export function UpsertSteamItemTransaction({ transaction, closed }: Params) {
                                             'flex-1 p-2 flex items-center justify-center',
                                             value === 'SOLD' ? 'bg-radial from-red-50 to-red-100 text-red-800' : '',
                                         )}
-                                        onClick={() => onChange('SOLD')}>
+                                        onClick={() => !updating && onChange('SOLD')}>
                                         <p>Venda</p>
                                     </div>
                                 </div>

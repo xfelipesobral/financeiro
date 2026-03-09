@@ -81,22 +81,26 @@ export default class SteamInventoryItemRepository {
         })
     }
 
-    applyInventoryMoviment(id: number, quantity: number, unitPrice: number, categoryId: number) {
-        return this.steamInventoryItem.update({
-            where: { id },
-            data: {
-                quantity: {
-                    increment: quantity * (categoryId === CATEGORY_BOUGHT_STEAM_ITEM ? 1 : -1),
-                },
-                lastPaidPrice: categoryId === CATEGORY_BOUGHT_STEAM_ITEM ? unitPrice : undefined,
-                lastSoldPrice: categoryId === CATEGORY_SOLD_STEAM_ITEM ? unitPrice : undefined,
-            },
-        })
-    }
-
     async deleteAll() {
         await this.steamInventoryItemTransaction.deleteMany()
         await this.steamInventoryItem.deleteMany()
+    }
+
+    updateLastTransaction(id: number, quantity?: number | null, lastPaidPrice?: number | null, lastSoldPrice?: number | null) {
+        console.log(`Alterando item ${id}, quantity ${quantity}, lastPaidPrice ${lastPaidPrice}, lastSoldPrice ${lastSoldPrice}`)
+
+        return this.steamInventoryItem.update({
+            where: { id },
+            data: {
+                quantity: quantity
+                    ? {
+                          increment: quantity,
+                      }
+                    : undefined,
+                lastPaidPrice,
+                lastSoldPrice,
+            },
+        })
     }
 }
 

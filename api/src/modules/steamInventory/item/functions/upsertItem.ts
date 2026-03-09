@@ -1,4 +1,5 @@
-import { insertItemTransaction } from '../../itemTransaction/functions/insertTransaction'
+import { CATEGORY_BOUGHT_STEAM_ITEM } from '../../constants'
+import { saveTransaction } from '../../itemTransaction/functions/saveTransaction'
 import { steamInventoryItem } from '../service'
 
 export async function upsertItem(userId: number, item: UpsertItemDTO) {
@@ -35,7 +36,15 @@ export async function upsertItem(userId: number, item: UpsertItemDTO) {
     }
 
     if (item.quantity > 0) {
-        await insertItemTransaction(currentItem.id, 2, item.quantity, item.paidPrice, 'Importação de inventário')
+        await saveTransaction({
+            itemId: currentItem.id,
+            categoryId: CATEGORY_BOUGHT_STEAM_ITEM,
+            quantity: item.quantity,
+            unitPrice: item.paidPrice,
+            observation: 'Importação de inventário',
+            userId,
+            findLastPrice: true,
+        })
     }
 
     return currentItem
