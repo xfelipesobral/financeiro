@@ -1,6 +1,5 @@
 import { prisma } from '../../../../db'
 import { uuid } from '../../../../utils/uuid'
-import { CATEGORY_BOUGHT_STEAM_ITEM, CATEGORY_SOLD_STEAM_ITEM } from '../../constants'
 
 export default class SteamInventoryItemRepository {
     private steamInventoryItem = prisma.steamInventoryItem
@@ -8,6 +7,20 @@ export default class SteamInventoryItemRepository {
 
     findMany(filters: FindManyFilters = {}) {
         return this.steamInventoryItem.findMany({})
+    }
+
+    getAllMarketUrls() {
+        return this.steamInventoryItem.findMany({
+            where: {
+                marketUrl: {
+                    not: null,
+                },
+            },
+            select: {
+                marketUrl: true,
+            },
+            distinct: ['marketUrl'],
+        })
     }
 
     userFindMany(userId: number, filters: FindManyFilters = {}) {

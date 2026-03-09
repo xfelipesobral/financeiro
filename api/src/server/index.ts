@@ -2,6 +2,7 @@ import Fastify from 'fastify'
 
 import router from '../routes'
 import { reorgDatabase } from '../db/migrations'
+import { initJobs } from '../functions/jobs'
 
 export async function startServer(porta: number = 3300) {
     await reorgDatabase()
@@ -18,6 +19,8 @@ export async function startServer(porta: number = 3300) {
         console.log(`PORTA: ${porta}`)
         console.log('#######################################################')
     })
+
+    initJobs()
 
     return app
 }

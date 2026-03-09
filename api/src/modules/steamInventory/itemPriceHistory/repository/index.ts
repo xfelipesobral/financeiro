@@ -11,6 +11,21 @@ export default class SteamInventoryItemPriceHistoryRepository {
         })
     }
 
+    getAllLastRecorded() {
+        return this.steamInventoryItemPriceHistory.groupBy({
+            by: ['marketUrl'],
+            _max: {
+                recordedAt: true,
+            },
+        })
+    }
+
+    insertMany(prices: { marketUrl: string; priceSteam: number }[]) {
+        return this.steamInventoryItemPriceHistory.createMany({
+            data: prices,
+        })
+    }
+
     async findLastPricesByMarketUrls(marketUrls: string[]) {
         return prisma.$queryRaw<{ marketUrl: string; priceSteam: Decimal }[]>`
             SELECT DISTINCT ON ("marketUrl") "marketUrl", "priceSteam"

@@ -1,6 +1,5 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { ApiError, handleApiError } from '../../../../../utils/error'
-import { getCs2Inventory } from '../functions/getCs2Inventory'
 import { getCs2PriceByMarketUrl } from '../functions/getCs2PriceByMarketUrl'
 
 export async function cs2PriceByMarketUrl(request: FastifyRequest, reply: FastifyReply) {
