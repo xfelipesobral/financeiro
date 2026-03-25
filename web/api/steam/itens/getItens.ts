@@ -14,6 +14,10 @@ export interface ApiSteamInventoryItem {
     lastPaidPrice: number | null
     lastSoldPrice: number | null
     lastPrice: number
+    averagePaidPrice: number
+    averageSoldPrice: number
+    quantityBought: number
+    quantitySold: number
 }
 
 export default async function apiGetSteamItens(): Promise<ResponseApi<ApiSteamInventoryItem[]>> {

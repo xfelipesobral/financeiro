@@ -69,6 +69,15 @@ export default class SteamInventoryItemTransactionRepository {
             },
         })
     }
+
+    averagePriceByItemIds(itemIds: number[]) {
+        return this.steamInventoryItemTransaction.groupBy({
+            by: ['steamInventoryItemId', 'categoryId'],
+            where: { steamInventoryItemId: { in: itemIds } },
+            _avg: { unitPrice: true },
+            _sum: { quantity: true },
+        })
+    }
 }
 
 interface CreateSteamInventoryItemTransactionDTO {

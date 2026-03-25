@@ -12,4 +12,6 @@ export function initJobs() {
             timezone: 'America/Sao_Paulo',
         },
     )
+
+    updateSteamItemsPrice() // Executar imediatamente na inicialização da aplicação
 }

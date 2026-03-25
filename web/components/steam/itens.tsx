@@ -38,7 +38,7 @@ export function SteamItens() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
                 {itens.map((item) => {
-                    const profit = calcProfit(item.lastPrice, item.lastPaidPrice || 0)
+                    const profit = calcProfit(item.lastPrice, item.averagePaidPrice ?? 0)
 
                     return (
                         <div
@@ -103,16 +103,16 @@ function ProfitRender({ percentage, flag }: { percentage: number; flag: ProfitFl
     return null
 }
 
-function calcProfit(lastPrice: number, lastPaidPrice: number = 0) {
+function calcProfit(lastPrice: number, averagePaidPrice: number = 0) {
     let flag: ProfitFlag = 'equal'
     let percentage = 0
 
-    if (lastPrice > lastPaidPrice) {
+    if (lastPrice > averagePaidPrice) {
         flag = 'encreased'
-        percentage = ((lastPrice - lastPaidPrice) / lastPaidPrice) * 100
-    } else if (lastPrice < lastPaidPrice) {
+        percentage = ((lastPrice - averagePaidPrice) / averagePaidPrice) * 100
+    } else if (lastPrice < averagePaidPrice) {
         flag = 'decreased'
-        percentage = ((lastPaidPrice - lastPrice) / lastPaidPrice) * 100
+        percentage = ((averagePaidPrice - lastPrice) / averagePaidPrice) * 100
     }
 
     return { flag, percentage }

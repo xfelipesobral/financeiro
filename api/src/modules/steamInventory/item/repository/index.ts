@@ -23,7 +23,7 @@ export default class SteamInventoryItemRepository {
         })
     }
 
-    userFindMany(userId: number, filters: FindManyFilters = {}) {
+    userFindMany(userId: number) {
         return this.steamInventoryItem.findMany({
             where: {
                 userId,
@@ -128,4 +128,6 @@ interface UpdateData {
     lastSoldPrice?: number
 }
 
-interface FindManyFilters {}
+interface FindManyFilters {
+    avaregePrices?: boolean
+}

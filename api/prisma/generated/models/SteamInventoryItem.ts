@@ -31,6 +31,10 @@ export type SteamInventoryItemAvgAggregateOutputType = {
   userId: number | null
   lastPaidPrice: runtime.Decimal | null
   lastSoldPrice: runtime.Decimal | null
+  averagePaidPrice: runtime.Decimal | null
+  averageSoldPrice: runtime.Decimal | null
+  quantityBought: number | null
+  quantitySold: number | null
   quantity: number | null
 }
 
@@ -39,6 +43,10 @@ export type SteamInventoryItemSumAggregateOutputType = {
   userId: number | null
   lastPaidPrice: runtime.Decimal | null
   lastSoldPrice: runtime.Decimal | null
+  averagePaidPrice: runtime.Decimal | null
+  averageSoldPrice: runtime.Decimal | null
+  quantityBought: number | null
+  quantitySold: number | null
   quantity: number | null
 }
 
@@ -51,6 +59,10 @@ export type SteamInventoryItemMinAggregateOutputType = {
   description: string | null
   lastPaidPrice: runtime.Decimal | null
   lastSoldPrice: runtime.Decimal | null
+  averagePaidPrice: runtime.Decimal | null
+  averageSoldPrice: runtime.Decimal | null
+  quantityBought: number | null
+  quantitySold: number | null
   marketUrl: string | null
   imageUrl: string | null
   color: string | null
@@ -68,6 +80,10 @@ export type SteamInventoryItemMaxAggregateOutputType = {
   description: string | null
   lastPaidPrice: runtime.Decimal | null
   lastSoldPrice: runtime.Decimal | null
+  averagePaidPrice: runtime.Decimal | null
+  averageSoldPrice: runtime.Decimal | null
+  quantityBought: number | null
+  quantitySold: number | null
   marketUrl: string | null
   imageUrl: string | null
   color: string | null
@@ -85,6 +101,10 @@ export type SteamInventoryItemCountAggregateOutputType = {
   description: number
   lastPaidPrice: number
   lastSoldPrice: number
+  averagePaidPrice: number
+  averageSoldPrice: number
+  quantityBought: number
+  quantitySold: number
   marketUrl: number
   imageUrl: number
   color: number
@@ -100,6 +120,10 @@ export type SteamInventoryItemAvgAggregateInputType = {
   userId?: true
   lastPaidPrice?: true
   lastSoldPrice?: true
+  averagePaidPrice?: true
+  averageSoldPrice?: true
+  quantityBought?: true
+  quantitySold?: true
   quantity?: true
 }
 
@@ -108,6 +132,10 @@ export type SteamInventoryItemSumAggregateInputType = {
   userId?: true
   lastPaidPrice?: true
   lastSoldPrice?: true
+  averagePaidPrice?: true
+  averageSoldPrice?: true
+  quantityBought?: true
+  quantitySold?: true
   quantity?: true
 }
 
@@ -120,6 +148,10 @@ export type SteamInventoryItemMinAggregateInputType = {
   description?: true
   lastPaidPrice?: true
   lastSoldPrice?: true
+  averagePaidPrice?: true
+  averageSoldPrice?: true
+  quantityBought?: true
+  quantitySold?: true
   marketUrl?: true
   imageUrl?: true
   color?: true
@@ -137,6 +169,10 @@ export type SteamInventoryItemMaxAggregateInputType = {
   description?: true
   lastPaidPrice?: true
   lastSoldPrice?: true
+  averagePaidPrice?: true
+  averageSoldPrice?: true
+  quantityBought?: true
+  quantitySold?: true
   marketUrl?: true
   imageUrl?: true
   color?: true
@@ -154,6 +190,10 @@ export type SteamInventoryItemCountAggregateInputType = {
   description?: true
   lastPaidPrice?: true
   lastSoldPrice?: true
+  averagePaidPrice?: true
+  averageSoldPrice?: true
+  quantityBought?: true
+  quantitySold?: true
   marketUrl?: true
   imageUrl?: true
   color?: true
@@ -258,6 +298,10 @@ export type SteamInventoryItemGroupByOutputType = {
   description: string
   lastPaidPrice: runtime.Decimal | null
   lastSoldPrice: runtime.Decimal | null
+  averagePaidPrice: runtime.Decimal | null
+  averageSoldPrice: runtime.Decimal | null
+  quantityBought: number | null
+  quantitySold: number | null
   marketUrl: string | null
   imageUrl: string | null
   color: string | null
@@ -298,6 +342,10 @@ export type SteamInventoryItemWhereInput = {
   description?: Prisma.StringFilter<"SteamInventoryItem"> | string
   lastPaidPrice?: Prisma.DecimalNullableFilter<"SteamInventoryItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   lastSoldPrice?: Prisma.DecimalNullableFilter<"SteamInventoryItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  averagePaidPrice?: Prisma.DecimalNullableFilter<"SteamInventoryItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  averageSoldPrice?: Prisma.DecimalNullableFilter<"SteamInventoryItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  quantityBought?: Prisma.IntNullableFilter<"SteamInventoryItem"> | number | null
+  quantitySold?: Prisma.IntNullableFilter<"SteamInventoryItem"> | number | null
   marketUrl?: Prisma.StringNullableFilter<"SteamInventoryItem"> | string | null
   imageUrl?: Prisma.StringNullableFilter<"SteamInventoryItem"> | string | null
   color?: Prisma.StringNullableFilter<"SteamInventoryItem"> | string | null
@@ -317,6 +365,10 @@ export type SteamInventoryItemOrderByWithRelationInput = {
   description?: Prisma.SortOrder
   lastPaidPrice?: Prisma.SortOrderInput | Prisma.SortOrder
   lastSoldPrice?: Prisma.SortOrderInput | Prisma.SortOrder
+  averagePaidPrice?: Prisma.SortOrderInput | Prisma.SortOrder
+  averageSoldPrice?: Prisma.SortOrderInput | Prisma.SortOrder
+  quantityBought?: Prisma.SortOrderInput | Prisma.SortOrder
+  quantitySold?: Prisma.SortOrderInput | Prisma.SortOrder
   marketUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   color?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -339,6 +391,10 @@ export type SteamInventoryItemWhereUniqueInput = Prisma.AtLeast<{
   description?: Prisma.StringFilter<"SteamInventoryItem"> | string
   lastPaidPrice?: Prisma.DecimalNullableFilter<"SteamInventoryItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   lastSoldPrice?: Prisma.DecimalNullableFilter<"SteamInventoryItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  averagePaidPrice?: Prisma.DecimalNullableFilter<"SteamInventoryItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  averageSoldPrice?: Prisma.DecimalNullableFilter<"SteamInventoryItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  quantityBought?: Prisma.IntNullableFilter<"SteamInventoryItem"> | number | null
+  quantitySold?: Prisma.IntNullableFilter<"SteamInventoryItem"> | number | null
   marketUrl?: Prisma.StringNullableFilter<"SteamInventoryItem"> | string | null
   imageUrl?: Prisma.StringNullableFilter<"SteamInventoryItem"> | string | null
   color?: Prisma.StringNullableFilter<"SteamInventoryItem"> | string | null
@@ -358,6 +414,10 @@ export type SteamInventoryItemOrderByWithAggregationInput = {
   description?: Prisma.SortOrder
   lastPaidPrice?: Prisma.SortOrderInput | Prisma.SortOrder
   lastSoldPrice?: Prisma.SortOrderInput | Prisma.SortOrder
+  averagePaidPrice?: Prisma.SortOrderInput | Prisma.SortOrder
+  averageSoldPrice?: Prisma.SortOrderInput | Prisma.SortOrder
+  quantityBought?: Prisma.SortOrderInput | Prisma.SortOrder
+  quantitySold?: Prisma.SortOrderInput | Prisma.SortOrder
   marketUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   color?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -383,6 +443,10 @@ export type SteamInventoryItemScalarWhereWithAggregatesInput = {
   description?: Prisma.StringWithAggregatesFilter<"SteamInventoryItem"> | string
   lastPaidPrice?: Prisma.DecimalNullableWithAggregatesFilter<"SteamInventoryItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   lastSoldPrice?: Prisma.DecimalNullableWithAggregatesFilter<"SteamInventoryItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  averagePaidPrice?: Prisma.DecimalNullableWithAggregatesFilter<"SteamInventoryItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  averageSoldPrice?: Prisma.DecimalNullableWithAggregatesFilter<"SteamInventoryItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  quantityBought?: Prisma.IntNullableWithAggregatesFilter<"SteamInventoryItem"> | number | null
+  quantitySold?: Prisma.IntNullableWithAggregatesFilter<"SteamInventoryItem"> | number | null
   marketUrl?: Prisma.StringNullableWithAggregatesFilter<"SteamInventoryItem"> | string | null
   imageUrl?: Prisma.StringNullableWithAggregatesFilter<"SteamInventoryItem"> | string | null
   color?: Prisma.StringNullableWithAggregatesFilter<"SteamInventoryItem"> | string | null
@@ -398,6 +462,10 @@ export type SteamInventoryItemCreateInput = {
   description: string
   lastPaidPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   lastSoldPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  averagePaidPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  averageSoldPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  quantityBought?: number | null
+  quantitySold?: number | null
   marketUrl?: string | null
   imageUrl?: string | null
   color?: string | null
@@ -417,6 +485,10 @@ export type SteamInventoryItemUncheckedCreateInput = {
   description: string
   lastPaidPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   lastSoldPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  averagePaidPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  averageSoldPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  quantityBought?: number | null
+  quantitySold?: number | null
   marketUrl?: string | null
   imageUrl?: string | null
   color?: string | null
@@ -433,6 +505,10 @@ export type SteamInventoryItemUpdateInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   lastPaidPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   lastSoldPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  averagePaidPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  averageSoldPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  quantityBought?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  quantitySold?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   marketUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -452,6 +528,10 @@ export type SteamInventoryItemUncheckedUpdateInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   lastPaidPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   lastSoldPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  averagePaidPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  averageSoldPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  quantityBought?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  quantitySold?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   marketUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -470,6 +550,10 @@ export type SteamInventoryItemCreateManyInput = {
   description: string
   lastPaidPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   lastSoldPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  averagePaidPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  averageSoldPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  quantityBought?: number | null
+  quantitySold?: number | null
   marketUrl?: string | null
   imageUrl?: string | null
   color?: string | null
@@ -485,6 +569,10 @@ export type SteamInventoryItemUpdateManyMutationInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   lastPaidPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   lastSoldPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  averagePaidPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  averageSoldPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  quantityBought?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  quantitySold?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   marketUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -502,6 +590,10 @@ export type SteamInventoryItemUncheckedUpdateManyInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   lastPaidPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   lastSoldPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  averagePaidPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  averageSoldPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  quantityBought?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  quantitySold?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   marketUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -529,6 +621,10 @@ export type SteamInventoryItemCountOrderByAggregateInput = {
   description?: Prisma.SortOrder
   lastPaidPrice?: Prisma.SortOrder
   lastSoldPrice?: Prisma.SortOrder
+  averagePaidPrice?: Prisma.SortOrder
+  averageSoldPrice?: Prisma.SortOrder
+  quantityBought?: Prisma.SortOrder
+  quantitySold?: Prisma.SortOrder
   marketUrl?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
   color?: Prisma.SortOrder
@@ -542,6 +638,10 @@ export type SteamInventoryItemAvgOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   lastPaidPrice?: Prisma.SortOrder
   lastSoldPrice?: Prisma.SortOrder
+  averagePaidPrice?: Prisma.SortOrder
+  averageSoldPrice?: Prisma.SortOrder
+  quantityBought?: Prisma.SortOrder
+  quantitySold?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
 }
 
@@ -554,6 +654,10 @@ export type SteamInventoryItemMaxOrderByAggregateInput = {
   description?: Prisma.SortOrder
   lastPaidPrice?: Prisma.SortOrder
   lastSoldPrice?: Prisma.SortOrder
+  averagePaidPrice?: Prisma.SortOrder
+  averageSoldPrice?: Prisma.SortOrder
+  quantityBought?: Prisma.SortOrder
+  quantitySold?: Prisma.SortOrder
   marketUrl?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
   color?: Prisma.SortOrder
@@ -571,6 +675,10 @@ export type SteamInventoryItemMinOrderByAggregateInput = {
   description?: Prisma.SortOrder
   lastPaidPrice?: Prisma.SortOrder
   lastSoldPrice?: Prisma.SortOrder
+  averagePaidPrice?: Prisma.SortOrder
+  averageSoldPrice?: Prisma.SortOrder
+  quantityBought?: Prisma.SortOrder
+  quantitySold?: Prisma.SortOrder
   marketUrl?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
   color?: Prisma.SortOrder
@@ -584,6 +692,10 @@ export type SteamInventoryItemSumOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   lastPaidPrice?: Prisma.SortOrder
   lastSoldPrice?: Prisma.SortOrder
+  averagePaidPrice?: Prisma.SortOrder
+  averageSoldPrice?: Prisma.SortOrder
+  quantityBought?: Prisma.SortOrder
+  quantitySold?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
 }
 
@@ -663,6 +775,10 @@ export type SteamInventoryItemCreateWithoutUserInput = {
   description: string
   lastPaidPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   lastSoldPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  averagePaidPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  averageSoldPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  quantityBought?: number | null
+  quantitySold?: number | null
   marketUrl?: string | null
   imageUrl?: string | null
   color?: string | null
@@ -680,6 +796,10 @@ export type SteamInventoryItemUncheckedCreateWithoutUserInput = {
   description: string
   lastPaidPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   lastSoldPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  averagePaidPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  averageSoldPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  quantityBought?: number | null
+  quantitySold?: number | null
   marketUrl?: string | null
   imageUrl?: string | null
   color?: string | null
@@ -727,6 +847,10 @@ export type SteamInventoryItemScalarWhereInput = {
   description?: Prisma.StringFilter<"SteamInventoryItem"> | string
   lastPaidPrice?: Prisma.DecimalNullableFilter<"SteamInventoryItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   lastSoldPrice?: Prisma.DecimalNullableFilter<"SteamInventoryItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  averagePaidPrice?: Prisma.DecimalNullableFilter<"SteamInventoryItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  averageSoldPrice?: Prisma.DecimalNullableFilter<"SteamInventoryItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  quantityBought?: Prisma.IntNullableFilter<"SteamInventoryItem"> | number | null
+  quantitySold?: Prisma.IntNullableFilter<"SteamInventoryItem"> | number | null
   marketUrl?: Prisma.StringNullableFilter<"SteamInventoryItem"> | string | null
   imageUrl?: Prisma.StringNullableFilter<"SteamInventoryItem"> | string | null
   color?: Prisma.StringNullableFilter<"SteamInventoryItem"> | string | null
@@ -742,6 +866,10 @@ export type SteamInventoryItemCreateWithoutSteamInventoryItemTransactionsInput =
   description: string
   lastPaidPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   lastSoldPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  averagePaidPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  averageSoldPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  quantityBought?: number | null
+  quantitySold?: number | null
   marketUrl?: string | null
   imageUrl?: string | null
   color?: string | null
@@ -760,6 +888,10 @@ export type SteamInventoryItemUncheckedCreateWithoutSteamInventoryItemTransactio
   description: string
   lastPaidPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   lastSoldPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  averagePaidPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  averageSoldPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  quantityBought?: number | null
+  quantitySold?: number | null
   marketUrl?: string | null
   imageUrl?: string | null
   color?: string | null
@@ -791,6 +923,10 @@ export type SteamInventoryItemUpdateWithoutSteamInventoryItemTransactionsInput =
   description?: Prisma.StringFieldUpdateOperationsInput | string
   lastPaidPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   lastSoldPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  averagePaidPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  averageSoldPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  quantityBought?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  quantitySold?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   marketUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -809,6 +945,10 @@ export type SteamInventoryItemUncheckedUpdateWithoutSteamInventoryItemTransactio
   description?: Prisma.StringFieldUpdateOperationsInput | string
   lastPaidPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   lastSoldPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  averagePaidPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  averageSoldPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  quantityBought?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  quantitySold?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   marketUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -825,6 +965,10 @@ export type SteamInventoryItemCreateManyUserInput = {
   description: string
   lastPaidPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   lastSoldPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  averagePaidPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  averageSoldPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  quantityBought?: number | null
+  quantitySold?: number | null
   marketUrl?: string | null
   imageUrl?: string | null
   color?: string | null
@@ -840,6 +984,10 @@ export type SteamInventoryItemUpdateWithoutUserInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   lastPaidPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   lastSoldPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  averagePaidPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  averageSoldPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  quantityBought?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  quantitySold?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   marketUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -857,6 +1005,10 @@ export type SteamInventoryItemUncheckedUpdateWithoutUserInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   lastPaidPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   lastSoldPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  averagePaidPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  averageSoldPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  quantityBought?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  quantitySold?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   marketUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -874,6 +1026,10 @@ export type SteamInventoryItemUncheckedUpdateManyWithoutUserInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   lastPaidPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   lastSoldPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  averagePaidPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  averageSoldPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  quantityBought?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  quantitySold?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   marketUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -922,6 +1078,10 @@ export type SteamInventoryItemSelect<ExtArgs extends runtime.Types.Extensions.In
   description?: boolean
   lastPaidPrice?: boolean
   lastSoldPrice?: boolean
+  averagePaidPrice?: boolean
+  averageSoldPrice?: boolean
+  quantityBought?: boolean
+  quantitySold?: boolean
   marketUrl?: boolean
   imageUrl?: boolean
   color?: boolean
@@ -942,6 +1102,10 @@ export type SteamInventoryItemSelectCreateManyAndReturn<ExtArgs extends runtime.
   description?: boolean
   lastPaidPrice?: boolean
   lastSoldPrice?: boolean
+  averagePaidPrice?: boolean
+  averageSoldPrice?: boolean
+  quantityBought?: boolean
+  quantitySold?: boolean
   marketUrl?: boolean
   imageUrl?: boolean
   color?: boolean
@@ -960,6 +1124,10 @@ export type SteamInventoryItemSelectUpdateManyAndReturn<ExtArgs extends runtime.
   description?: boolean
   lastPaidPrice?: boolean
   lastSoldPrice?: boolean
+  averagePaidPrice?: boolean
+  averageSoldPrice?: boolean
+  quantityBought?: boolean
+  quantitySold?: boolean
   marketUrl?: boolean
   imageUrl?: boolean
   color?: boolean
@@ -978,6 +1146,10 @@ export type SteamInventoryItemSelectScalar = {
   description?: boolean
   lastPaidPrice?: boolean
   lastSoldPrice?: boolean
+  averagePaidPrice?: boolean
+  averageSoldPrice?: boolean
+  quantityBought?: boolean
+  quantitySold?: boolean
   marketUrl?: boolean
   imageUrl?: boolean
   color?: boolean
@@ -986,7 +1158,7 @@ export type SteamInventoryItemSelectScalar = {
   updatedAt?: boolean
 }
 
-export type SteamInventoryItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "guid" | "userId" | "steamId" | "name" | "description" | "lastPaidPrice" | "lastSoldPrice" | "marketUrl" | "imageUrl" | "color" | "quantity" | "createdAt" | "updatedAt", ExtArgs["result"]["steamInventoryItem"]>
+export type SteamInventoryItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "guid" | "userId" | "steamId" | "name" | "description" | "lastPaidPrice" | "lastSoldPrice" | "averagePaidPrice" | "averageSoldPrice" | "quantityBought" | "quantitySold" | "marketUrl" | "imageUrl" | "color" | "quantity" | "createdAt" | "updatedAt", ExtArgs["result"]["steamInventoryItem"]>
 export type SteamInventoryItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   steamInventoryItemTransactions?: boolean | Prisma.SteamInventoryItem$steamInventoryItemTransactionsArgs<ExtArgs>
@@ -1014,6 +1186,10 @@ export type $SteamInventoryItemPayload<ExtArgs extends runtime.Types.Extensions.
     description: string
     lastPaidPrice: runtime.Decimal | null
     lastSoldPrice: runtime.Decimal | null
+    averagePaidPrice: runtime.Decimal | null
+    averageSoldPrice: runtime.Decimal | null
+    quantityBought: number | null
+    quantitySold: number | null
     marketUrl: string | null
     imageUrl: string | null
     color: string | null
@@ -1453,6 +1629,10 @@ export interface SteamInventoryItemFieldRefs {
   readonly description: Prisma.FieldRef<"SteamInventoryItem", 'String'>
   readonly lastPaidPrice: Prisma.FieldRef<"SteamInventoryItem", 'Decimal'>
   readonly lastSoldPrice: Prisma.FieldRef<"SteamInventoryItem", 'Decimal'>
+  readonly averagePaidPrice: Prisma.FieldRef<"SteamInventoryItem", 'Decimal'>
+  readonly averageSoldPrice: Prisma.FieldRef<"SteamInventoryItem", 'Decimal'>
+  readonly quantityBought: Prisma.FieldRef<"SteamInventoryItem", 'Int'>
+  readonly quantitySold: Prisma.FieldRef<"SteamInventoryItem", 'Int'>
   readonly marketUrl: Prisma.FieldRef<"SteamInventoryItem", 'String'>
   readonly imageUrl: Prisma.FieldRef<"SteamInventoryItem", 'String'>
   readonly color: Prisma.FieldRef<"SteamInventoryItem", 'String'>

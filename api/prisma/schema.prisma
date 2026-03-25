@@ -189,6 +189,10 @@ model SteamInventoryItem {
     description                    String
     lastPaidPrice                  Decimal?
     lastSoldPrice                  Decimal?
+    averagePaidPrice               Decimal?
+    averageSoldPrice               Decimal?
+    quantityBought                 Int?
+    quantitySold                   Int?
     marketUrl                      String?
     imageUrl                       String?
     color                          String?

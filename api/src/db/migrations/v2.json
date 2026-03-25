@@ -1,0 +1,6 @@
+[
+    "ALTER TABLE \"SteamInventoryItem\" ADD COLUMN \"averagePaidPrice\" DECIMAL;",
+    "ALTER TABLE \"SteamInventoryItem\" ADD COLUMN \"averageSoldPrice\" DECIMAL;",
+    "ALTER TABLE \"SteamInventoryItem\" ADD COLUMN \"quantityBought\" INTEGER;",
+    "ALTER TABLE \"SteamInventoryItem\" ADD COLUMN \"quantitySold\" INTEGER;"
+]

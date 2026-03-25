@@ -1,7 +1,7 @@
 import { prisma } from '..'
 import { databaseInfo } from '../../modules/databaseInfo/service'
 
-const lastVersion = 1
+const lastVersion = 2
 
 export async function reorgDatabase() {
     let querysList: string[] = []
@@ -13,6 +13,7 @@ export async function reorgDatabase() {
     }
 
     if (dbVersion === 0) querysList = require('./v1.json')
+    if (dbVersion === 1) querysList = require('./v2.json')
 
     dbVersion += 1
 
