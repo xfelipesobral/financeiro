@@ -1,0 +1,5 @@
+[
+    "CREATE INDEX IF NOT EXISTS \"BankAccountPix_bankAccountId_idx\" ON \"BankAccountPix\" (\"bankAccountId\");",
+    "CREATE INDEX IF NOT EXISTS \"Category_userId_idx\" ON \"Category\" (\"userId\");",
+    "CREATE INDEX IF NOT EXISTS \"Payment_cardId_idx\" ON \"Payment\" (\"cardId\");"
+]

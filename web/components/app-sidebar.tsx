@@ -22,6 +22,18 @@ const data = {
             url: '/painel',
         },
         {
+            title: 'Lançamentos',
+            url: '/painel/transacoes',
+        },
+        {
+            title: 'Contas Bancárias',
+            url: '/painel/contas',
+        },
+        {
+            title: 'Cartões',
+            url: '/painel/cartoes',
+        },
+        {
             title: 'Inventário Steam',
             url: '/painel/inventario-steam',
         },

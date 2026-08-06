@@ -10,6 +10,7 @@ yarn-error.log*
 
 api/dist
 api/prisma/migrations
+api/prisma/generated
 api/.prisma
 
 web/.next

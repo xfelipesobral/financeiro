@@ -1,19 +1,15 @@
 interface Transaction {
-    id: string
-    userId: string
-    bankId: number
+    id: number
+    guid: string
+    userId: number
+    bankAccountId: number
     categoryId: number
-    amount: string
+    totalAmount: number
     description: string
+    installmentTotal: number | null
     date: string
     createdAt: string
     updatedAt: string
     category: Category
-    bank: Bank
-}
-
-interface TransactionTotals {
-    balance: number
-    credit: number
-    debit: number
+    bankAccount: BankAccount
 }

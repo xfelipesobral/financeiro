@@ -1,4 +1,3 @@
-import { Request, Response } from 'express'
 import { CategoryType } from '../../../../prisma/generated/client'
 
 import { category, CategoryService } from '../service'
@@ -11,7 +10,7 @@ interface Filters {
 }
 
 export async function find(request: FastifyRequest, reply: FastifyReply) {
-    const userId = request.user!.id
+    const userId = request.authenticated!.userId
     const { id } = request.params as { id?: string }
     const querys = request.query as Filters
 
@@ -19,7 +18,7 @@ export async function find(request: FastifyRequest, reply: FastifyReply) {
 
     try {
         if (finalId) {
-            const categoryFinded = category.findById(Number(finalId), userId)
+            const categoryFinded = await category.findById(Number(finalId), userId)
 
             if (!categoryFinded) {
                 throw new ApiError('CATEGORY_NOT_FOUND', 'Category not found', 404)

@@ -59,6 +59,7 @@ model Transaction {
     totalAmount      Decimal
     description      String
     installmentTotal Int?
+    date             DateTime    @default(now()) // Data/hora em que a transação de fato ocorreu (informada pelo usuário, padrão: agora)
     createdAt        DateTime    @default(now())
     updatedAt        DateTime    @updatedAt
     user             User        @relation(fields: [userId], references: [id])
@@ -69,6 +70,7 @@ model Transaction {
     @@index([userId])
     @@index([bankAccountId])
     @@index([categoryId])
+    @@index([date])
 }
 
 model Bank {
@@ -107,6 +109,8 @@ model BankAccountPix {
     value         String @unique
 
     bankAccount BankAccount @relation(fields: [bankAccountId], references: [id])
+
+    @@index([bankAccountId])
 }
 
 model Category {
@@ -126,6 +130,7 @@ model Category {
     children Category[] @relation("CategoryHierarchy") // Relação inversa para acessar subcategorias
 
     @@index([parentId])
+    @@index([userId])
 }
 
 model PaymentMethod {
@@ -159,6 +164,7 @@ model Payment {
     @@index([userId])
     @@index([transactionId])
     @@index([paymentMethodId])
+    @@index([cardId])
     @@index([dueDate])
     @@index([status])
 }
