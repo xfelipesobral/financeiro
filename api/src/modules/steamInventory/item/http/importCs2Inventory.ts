@@ -8,7 +8,7 @@ export async function importCs2Inventory(request: FastifyRequest, reply: Fastify
         const { steamId } = request.body as { steamId?: string }
 
         if (!steamId) {
-            throw new ApiError('STEAM_ID_REQUIRED', 'Steam ID is required.', 400)
+            throw new ApiError('STEAM_ID_REQUIRED', 'Steam ID é obrigatório', 400)
         }
 
         const inventory = await getCs2Inventory(steamId)

@@ -8,7 +8,7 @@ export async function createNewUser(request: FastifyRequest, reply: FastifyReply
     const { email, firstName, lastName, password } = request.body as { email?: string; firstName?: string; lastName?: string; password?: string }
 
     if (!email || !firstName || !lastName || !password) {
-        throw new ApiError('REQUIRED_FIELDS_MISSING', 'All fields are required.', 400)
+        throw new ApiError('REQUIRED_FIELDS_MISSING', 'Email e senha são obrigatórios', 400)
     }
 
     try {

@@ -25,31 +25,31 @@ export async function createLoan(userId: number, data: CreateLoanDTO = {}) {
         data.desiredMonthlyPayment === undefined || data.desiredMonthlyPayment === null ? null : Number(data.desiredMonthlyPayment)
 
     if (!data.bankAccountId || isNaN(bankAccountId)) {
-        throw new ApiError('BANK_ACCOUNT_ID_REQUIRED', 'Bank account is required.', 400)
+        throw new ApiError('BANK_ACCOUNT_ID_REQUIRED', 'Conta bancária é obrigatória', 400)
     }
 
     if (!description) {
-        throw new ApiError('LOAN_DESCRIPTION_REQUIRED', 'Loan description is required.', 400)
+        throw new ApiError('LOAN_DESCRIPTION_REQUIRED', 'Descrição do empréstimo é obrigatória', 400)
     }
 
     if (isNaN(principal) || principal <= 0) {
-        throw new ApiError('INVALID_LOAN_AMOUNT', 'Loan amount must be greater than zero.', 400)
+        throw new ApiError('INVALID_LOAN_AMOUNT', 'Valor do empréstimo inválido', 400)
     }
 
     if (isNaN(dueDay) || dueDay < 1 || dueDay > 31) {
-        throw new ApiError('INVALID_DUE_DAY', 'Due day must be between 1 and 31.', 400)
+        throw new ApiError('INVALID_DUE_DAY', 'Dia de vencimento inválido (use um valor entre 1 e 31)', 400)
     }
 
     if (interestRate !== null && (isNaN(interestRate) || interestRate < 0)) {
-        throw new ApiError('INVALID_INTEREST_RATE', 'Interest rate must be greater than or equal to zero.', 400)
+        throw new ApiError('INVALID_INTEREST_RATE', 'Taxa de juros inválida', 400)
     }
 
     if (desiredMonthlyPayment !== null && (isNaN(desiredMonthlyPayment) || desiredMonthlyPayment <= 0)) {
-        throw new ApiError('INVALID_DESIRED_MONTHLY_PAYMENT', 'Desired monthly payment must be greater than zero.', 400)
+        throw new ApiError('INVALID_DESIRED_MONTHLY_PAYMENT', 'Pagamento mensal desejado inválido', 400)
     }
 
     if (isNaN(startDate.getTime())) {
-        throw new ApiError('INVALID_START_DATE', 'Start date is invalid.', 400)
+        throw new ApiError('INVALID_START_DATE', 'Data inicial inválida', 400)
     }
 
     // Duas formas de definir as parcelas:
@@ -65,9 +65,7 @@ export async function createLoan(userId: number, data: CreateLoanDTO = {}) {
         const schedule = calculateFixedPaymentSchedule(principal, interestRate ?? 0, desiredMonthlyPayment)
 
         if (!schedule.ok) {
-            throw new ApiError(
-                'INSUFFICIENT_MONTHLY_PAYMENT',
-                'Desired monthly payment does not cover the interest of the first month; the debt would never be paid off.',
+            throw new ApiError('INSUFFICIENT_MONTHLY_PAYMENT', 'Esse pagamento mensal não cobre nem os juros do primeiro mês — a dívida nunca seria quitada',
                 400,
             )
         }
@@ -78,7 +76,7 @@ export async function createLoan(userId: number, data: CreateLoanDTO = {}) {
         installmentTotal = data.installmentTotal === undefined ? NaN : Number(data.installmentTotal)
 
         if (isNaN(installmentTotal) || installmentTotal < 1 || !Number.isInteger(installmentTotal)) {
-            throw new ApiError('INVALID_INSTALLMENT_TOTAL', 'Installment total must be an integer greater than or equal to 1.', 400)
+            throw new ApiError('INVALID_INSTALLMENT_TOTAL', 'Número de parcelas inválido', 400)
         }
 
         amounts = splitAmountIntoInstallments(principal, installmentTotal)
@@ -92,19 +90,19 @@ export async function createLoan(userId: number, data: CreateLoanDTO = {}) {
     const bankAccountFinded = await bankAccount.userFindById(userId, bankAccountId)
 
     if (!bankAccountFinded) {
-        throw new ApiError('BANK_ACCOUNT_NOT_FOUND', 'Bank account not found.', 404)
+        throw new ApiError('BANK_ACCOUNT_NOT_FOUND', 'Conta bancária não encontrada', 404)
     }
 
     const loanCategory = await category.findById(LOAN_CATEGORY_ID, userId)
 
     if (!loanCategory) {
-        throw new ApiError('LOAN_CATEGORY_NOT_CONFIGURED', 'Default loan category is not configured.', 500)
+        throw new ApiError('LOAN_CATEGORY_NOT_CONFIGURED', 'Categoria padrão de empréstimo não configurada', 500)
     }
 
     const loanPaymentMethod = await paymentMethod.findByGuid(PAYMENT_METHOD_GUID.LOAN)
 
     if (!loanPaymentMethod) {
-        throw new ApiError('LOAN_PAYMENT_METHOD_NOT_CONFIGURED', 'Default loan payment method is not configured.', 500)
+        throw new ApiError('LOAN_PAYMENT_METHOD_NOT_CONFIGURED', 'Forma de pagamento padrão de empréstimo não configurada', 500)
     }
 
     const dueDates = calculateMonthlyDueDates(startDate, dueDay, installmentTotal)

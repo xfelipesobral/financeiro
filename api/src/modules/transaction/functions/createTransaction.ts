@@ -11,27 +11,27 @@ export async function createTransaction(userId: number, data: CreateTransactionD
     const description = data.description?.trim()
 
     if (!data.categoryId || isNaN(categoryId)) {
-        throw new ApiError('CATEGORY_ID_REQUIRED', 'Category is required.', 400)
+        throw new ApiError('CATEGORY_ID_REQUIRED', 'Categoria é obrigatória', 400)
     }
 
     if (isNaN(totalAmount) || totalAmount <= 0) {
-        throw new ApiError('INVALID_TRANSACTION_AMOUNT', 'Transaction amount must be greater than zero.', 400)
+        throw new ApiError('INVALID_TRANSACTION_AMOUNT', 'Valor do lançamento inválido', 400)
     }
 
     if (!description) {
-        throw new ApiError('TRANSACTION_DESCRIPTION_REQUIRED', 'Transaction description is required.', 400)
+        throw new ApiError('TRANSACTION_DESCRIPTION_REQUIRED', 'Descrição do lançamento é obrigatória', 400)
     }
 
     const date = data.date === undefined ? new Date() : new Date(data.date)
 
     if (isNaN(date.getTime())) {
-        throw new ApiError('INVALID_TRANSACTION_DATE', 'Transaction date is invalid.', 400)
+        throw new ApiError('INVALID_TRANSACTION_DATE', 'Data e hora do lançamento inválidas', 400)
     }
 
     const categoryFinded = await category.findById(categoryId, userId)
 
     if (!categoryFinded) {
-        throw new ApiError('CATEGORY_NOT_FOUND', 'Category not found.', 404)
+        throw new ApiError('CATEGORY_NOT_FOUND', 'Categoria não encontrada', 404)
     }
 
     const built = await buildTransactionPayments(userId, {

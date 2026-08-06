@@ -37,14 +37,14 @@ export class SessionService extends SessionRepository {
                 await super.revokeById(session.id) // Revoga a sessao
             }
 
-            throw new ApiError('INVALID_REFRESH_TOKEN', 'The provided refresh token is invalid or has expired.')
+            throw new ApiError('INVALID_REFRESH_TOKEN', 'Refresh token inválido ou expirado')
         }
 
         const sessionUser = await user.findById(session.userId)
 
         if (!sessionUser) {
             await super.revokeById(session.id) // Revoga a sessao
-            throw new ApiError('USER_NOT_FOUND', 'The user associated with this session was not found.')
+            throw new ApiError('USER_NOT_FOUND', 'Usuário não encontrado')
         }
 
         // Renova o access token

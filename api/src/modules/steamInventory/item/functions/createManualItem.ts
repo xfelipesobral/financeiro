@@ -13,23 +13,23 @@ export async function createManualItem(userId: number, data: CreateManualItemDTO
     const initialPaidPrice = data.initialPaidPrice === undefined || data.initialPaidPrice === null ? null : Number(data.initialPaidPrice)
 
     if (!name) {
-        throw new ApiError('ITEM_NAME_REQUIRED', 'Item name is required.', 400)
+        throw new ApiError('ITEM_NAME_REQUIRED', 'Nome do item é obrigatório', 400)
     }
 
     if (!marketHashName) {
-        throw new ApiError('MARKET_HASH_NAME_REQUIRED', 'Market hash name is required.', 400)
+        throw new ApiError('MARKET_HASH_NAME_REQUIRED', 'Market hash name é obrigatório', 400)
     }
 
     if (!imageUrl) {
-        throw new ApiError('ITEM_IMAGE_URL_REQUIRED', 'Item image URL is required.', 400)
+        throw new ApiError('ITEM_IMAGE_URL_REQUIRED', 'Link da imagem é obrigatório', 400)
     }
 
     if (!isValidHttpUrl(imageUrl)) {
-        throw new ApiError('INVALID_ITEM_IMAGE_URL', 'Item image URL must be a valid HTTP URL.', 400)
+        throw new ApiError('INVALID_ITEM_IMAGE_URL', 'Link da imagem inválido', 400)
     }
 
     if (initialPaidPrice !== null && (isNaN(initialPaidPrice) || initialPaidPrice <= 0)) {
-        throw new ApiError('INVALID_INITIAL_PAID_PRICE', 'Initial paid price must be greater than zero.', 400)
+        throw new ApiError('INVALID_INITIAL_PAID_PRICE', 'Valor pago inicial inválido', 400)
     }
 
     const item = await steamInventoryItem.create(userId, steamId, name, '', marketHashName, imageUrl, 'ded6cc')

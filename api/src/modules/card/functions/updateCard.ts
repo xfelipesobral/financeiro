@@ -8,7 +8,7 @@ export async function updateCard(userId: number, id: number, data: UpdateCardDTO
     const existing = await card.userFindById(userId, id)
 
     if (!existing) {
-        throw new ApiError('CARD_NOT_FOUND', 'Card not found.', 404)
+        throw new ApiError('CARD_NOT_FOUND', 'Cartão não encontrado', 404)
     }
 
     const updateData: { name?: string; closingDay?: number; type?: CardType; description?: string; limit?: number } = {}
@@ -17,7 +17,7 @@ export async function updateCard(userId: number, id: number, data: UpdateCardDTO
         const name = data.name.trim()
 
         if (!name) {
-            throw new ApiError('CARD_NAME_REQUIRED', 'Card name is required.', 400)
+            throw new ApiError('CARD_NAME_REQUIRED', 'Nome do cartão é obrigatório', 400)
         }
 
         updateData.name = name
@@ -27,7 +27,7 @@ export async function updateCard(userId: number, id: number, data: UpdateCardDTO
         const closingDay = Number(data.closingDay)
 
         if (isNaN(closingDay) || closingDay < 1 || closingDay > 31) {
-            throw new ApiError('INVALID_CLOSING_DAY', 'Closing day must be between 1 and 31.', 400)
+            throw new ApiError('INVALID_CLOSING_DAY', 'Dia de fechamento inválido (use um valor entre 1 e 31)', 400)
         }
 
         updateData.closingDay = closingDay
@@ -35,7 +35,7 @@ export async function updateCard(userId: number, id: number, data: UpdateCardDTO
 
     if (data.type !== undefined) {
         if (!CARD_TYPES.includes(data.type)) {
-            throw new ApiError('INVALID_CARD_TYPE', 'Card type must be CREDIT, DEBIT or CREDIT_AND_DEBIT.', 400)
+            throw new ApiError('INVALID_CARD_TYPE', 'Tipo de cartão inválido', 400)
         }
 
         updateData.type = data.type
@@ -49,7 +49,7 @@ export async function updateCard(userId: number, id: number, data: UpdateCardDTO
         const limit = Number(data.limit)
 
         if (isNaN(limit) || limit < 0) {
-            throw new ApiError('INVALID_CARD_LIMIT', 'Card limit must be greater than or equal to zero.', 400)
+            throw new ApiError('INVALID_CARD_LIMIT', 'Limite do cartão inválido', 400)
         }
 
         updateData.limit = limit

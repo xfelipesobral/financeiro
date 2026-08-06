@@ -8,13 +8,13 @@ export async function update(request: FastifyRequest<{ Body: UpdateCardDTO }>, r
         const { cardId } = request.params as { cardId?: string }
 
         if (!cardId) {
-            throw new ApiError('CARD_ID_REQUIRED', 'Card ID is required.', 400)
+            throw new ApiError('CARD_ID_REQUIRED', 'Cartão é obrigatório', 400)
         }
 
         const id = Number(cardId)
 
         if (isNaN(id)) {
-            throw new ApiError('INVALID_CARD_ID', 'Card ID must be a valid number.', 400)
+            throw new ApiError('INVALID_CARD_ID', 'Cartão inválido', 400)
         }
 
         const updatedCard = await updateCard(request.authenticated!.userId, id, request.body)

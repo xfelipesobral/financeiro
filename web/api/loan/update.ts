@@ -1,7 +1,7 @@
 'use server'
 
 import api from '../'
-import { translateErrorCodeApi } from '@/lib/errorTranslations'
+import { getApiErrorMessage } from '@/lib/apiError'
 
 export interface ApiUpdateLoanParams {
     description?: string
@@ -20,7 +20,7 @@ export default async function apiUpdateLoan(id: number | string, params: ApiUpda
     } catch (e) {
         return {
             success: false,
-            message: translateErrorCodeApi(e),
+            message: getApiErrorMessage(e),
         }
     }
 }

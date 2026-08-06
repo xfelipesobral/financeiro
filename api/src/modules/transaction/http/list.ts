@@ -26,11 +26,11 @@ export async function list(request: FastifyRequest<{ Querystring: Query }>, repl
         const pageSize = pageSizeQuery ? Number(pageSizeQuery) : DEFAULT_PAGE_SIZE
 
         if (isNaN(page) || page < 1) {
-            throw new ApiError('INVALID_PAGE', 'Page must be a positive number.', 400)
+            throw new ApiError('INVALID_PAGE', 'Página inválida', 400)
         }
 
         if (isNaN(pageSize) || pageSize < 1 || pageSize > MAX_PAGE_SIZE) {
-            throw new ApiError('INVALID_PAGE_SIZE', `Page size must be a number between 1 and ${MAX_PAGE_SIZE}.`, 400)
+            throw new ApiError('INVALID_PAGE_SIZE', `Quantidade de itens por página deve ser um número entre 1 e ${MAX_PAGE_SIZE}`, 400)
         }
 
         let categoryId: number | undefined
@@ -39,12 +39,12 @@ export async function list(request: FastifyRequest<{ Querystring: Query }>, repl
             categoryId = Number(categoryIdQuery)
 
             if (isNaN(categoryId)) {
-                throw new ApiError('INVALID_CATEGORY_ID', 'Category ID must be a valid number.', 400)
+                throw new ApiError('INVALID_CATEGORY_ID', 'Categoria inválida', 400)
             }
         }
 
         if (type && !TRANSACTION_TYPES.includes(type as CategoryType)) {
-            throw new ApiError('INVALID_TRANSACTION_TYPE', 'Type must be DEBIT or CREDIT.', 400)
+            throw new ApiError('INVALID_TRANSACTION_TYPE', 'Tipo de lançamento inválido', 400)
         }
 
         let startDate: Date | undefined
@@ -54,7 +54,7 @@ export async function list(request: FastifyRequest<{ Querystring: Query }>, repl
             startDate = new Date(startDateQuery)
 
             if (isNaN(startDate.getTime())) {
-                throw new ApiError('INVALID_START_DATE', 'Start date is invalid.', 400)
+                throw new ApiError('INVALID_START_DATE', 'Data inicial inválida', 400)
             }
         }
 
@@ -62,7 +62,7 @@ export async function list(request: FastifyRequest<{ Querystring: Query }>, repl
             endDate = new Date(endDateQuery)
 
             if (isNaN(endDate.getTime())) {
-                throw new ApiError('INVALID_END_DATE', 'End date is invalid.', 400)
+                throw new ApiError('INVALID_END_DATE', 'Data final inválida', 400)
             }
         }
 

@@ -8,13 +8,13 @@ export async function update(request: FastifyRequest<{ Body: UpdateTransactionDT
         const { transactionId } = request.params as { transactionId?: string }
 
         if (!transactionId) {
-            throw new ApiError('TRANSACTION_ID_REQUIRED', 'Transaction ID is required.', 400)
+            throw new ApiError('TRANSACTION_ID_REQUIRED', 'Lançamento é obrigatório', 400)
         }
 
         const id = Number(transactionId)
 
         if (isNaN(id)) {
-            throw new ApiError('INVALID_TRANSACTION_ID', 'Transaction ID must be a valid number.', 400)
+            throw new ApiError('INVALID_TRANSACTION_ID', 'Lançamento inválido', 400)
         }
 
         const updatedTransaction = await updateTransaction(request.authenticated!.userId, id, request.body)

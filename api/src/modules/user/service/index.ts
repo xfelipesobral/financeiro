@@ -14,7 +14,7 @@ export class UserService extends UserRepository {
         ipAddress?: string,
     ): Promise<{ accessToken: string; refreshToken: string }> {
         if (!password || !email) {
-            throw new ApiError('REQUIRED_FIELDS_MISSING', 'Email and password are required fields', 400)
+            throw new ApiError('REQUIRED_FIELDS_MISSING', 'Email e senha são obrigatórios', 400)
         }
 
         const user = await super.findByEmail(email)
@@ -41,7 +41,7 @@ export class UserService extends UserRepository {
             }
         }
 
-        throw new ApiError('INVALID_CREDENTIALS', 'Invalid email or password', 401)
+        throw new ApiError('INVALID_CREDENTIALS', 'Email ou senha inválidos', 401)
     }
 }
 

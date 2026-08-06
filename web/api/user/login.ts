@@ -2,7 +2,7 @@
 
 import { writeRefreshToken, writeToken } from '@/lib/storage/authentication'
 import api from '..'
-import { translateErrorCodeApi } from '@/lib/errorTranslations'
+import { getApiErrorMessage } from '@/lib/apiError'
 
 interface Login {
     accessToken: string
@@ -20,6 +20,6 @@ export default async function login(email: string, password: string): Promise<bo
 
         return true
     } catch (e) {
-        return translateErrorCodeApi(e)
+        return getApiErrorMessage(e)
     }
 }

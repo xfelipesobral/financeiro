@@ -9,19 +9,19 @@ export async function remove(request: FastifyRequest, reply: FastifyReply) {
         const { bankAccountId } = request.params as { bankAccountId?: string }
 
         if (!bankAccountId) {
-            throw new ApiError('BANK_ACCOUNT_ID_REQUIRED', 'Bank account ID is required.', 400)
+            throw new ApiError('BANK_ACCOUNT_ID_REQUIRED', 'Conta bancária é obrigatória', 400)
         }
 
         const id = Number(bankAccountId)
 
         if (isNaN(id)) {
-            throw new ApiError('INVALID_BANK_ACCOUNT_ID', 'Bank account ID must be a valid number.', 400)
+            throw new ApiError('INVALID_BANK_ACCOUNT_ID', 'Conta bancária inválida', 400)
         }
 
         const currentBankAccount = await bankAccount.userFindById(request.authenticated!.userId, id)
 
         if (!currentBankAccount) {
-            throw new ApiError('BANK_ACCOUNT_NOT_FOUND', 'Bank account not found.', 404)
+            throw new ApiError('BANK_ACCOUNT_NOT_FOUND', 'Conta bancária não encontrada', 404)
         }
 
         // Regra de negócio explícita: não há onDelete em cascata no schema, então a conta só
@@ -29,11 +29,11 @@ export async function remove(request: FastifyRequest, reply: FastifyReply) {
         const [cardsCount, transactionsCount] = await Promise.all([card.countByBankAccountId(id), transaction.countByBankAccountId(id)])
 
         if (cardsCount > 0) {
-            throw new ApiError('BANK_ACCOUNT_HAS_CARDS', 'Cannot delete a bank account that has cards linked to it.', 409)
+            throw new ApiError('BANK_ACCOUNT_HAS_CARDS', 'Não é possível excluir a conta: existem cartões vinculados a ela', 409)
         }
 
         if (transactionsCount > 0) {
-            throw new ApiError('BANK_ACCOUNT_HAS_TRANSACTIONS', 'Cannot delete a bank account that has transactions linked to it.', 409)
+            throw new ApiError('BANK_ACCOUNT_HAS_TRANSACTIONS', 'Não é possível excluir a conta: existem lançamentos vinculados a ela', 409)
         }
 
         await bankAccount.deletePixKeysByBankAccountId(id)

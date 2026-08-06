@@ -8,7 +8,7 @@ export async function authenticate(request: FastifyRequest, reply: FastifyReply)
         const { email, password } = request.body as { email?: string; password?: string }
 
         if (!email || !password) {
-            throw new ApiError('REQUIRED_FIELDS_MISSING', 'Email and password are required fields.', 400)
+            throw new ApiError('REQUIRED_FIELDS_MISSING', 'Email e senha são obrigatórios', 400)
         }
 
         const { ip, origin, userAgent } = extractInfosFromRequest(request)

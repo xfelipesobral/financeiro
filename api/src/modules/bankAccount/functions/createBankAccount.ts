@@ -10,21 +10,21 @@ export async function createBankAccount(userId: number, data: CreateBankAccountD
     const pixKeys = normalizePixKeys(data.pixKeys)
 
     if (!data.bankId || isNaN(bankId)) {
-        throw new ApiError('BANK_ID_REQUIRED', 'Bank is required.', 400)
+        throw new ApiError('BANK_ID_REQUIRED', 'Banco é obrigatório', 400)
     }
 
     if (!branchCode) {
-        throw new ApiError('BRANCH_CODE_REQUIRED', 'Branch code is required.', 400)
+        throw new ApiError('BRANCH_CODE_REQUIRED', 'Agência é obrigatória', 400)
     }
 
     if (!accountNumber) {
-        throw new ApiError('ACCOUNT_NUMBER_REQUIRED', 'Account number is required.', 400)
+        throw new ApiError('ACCOUNT_NUMBER_REQUIRED', 'Número da conta é obrigatório', 400)
     }
 
     const bankFinded = await bank.findById(bankId)
 
     if (!bankFinded) {
-        throw new ApiError('BANK_NOT_FOUND', 'Bank not found.', 404)
+        throw new ApiError('BANK_NOT_FOUND', 'Banco não encontrado', 404)
     }
 
     const createdBankAccount = await bankAccount.create(userId, bankId, branchCode, accountNumber, description)
@@ -46,11 +46,11 @@ function normalizePixKeys(pixKeys: CreateBankAccountDTO['pixKeys']) {
         const value = pixKey?.value?.trim()
 
         if (!type) {
-            throw new ApiError('PIX_KEY_TYPE_REQUIRED', `Pix key #${index + 1}: type is required.`, 400)
+            throw new ApiError('PIX_KEY_TYPE_REQUIRED', `Chave Pix #${index + 1}: tipo é obrigatório`, 400)
         }
 
         if (!value) {
-            throw new ApiError('PIX_KEY_VALUE_REQUIRED', `Pix key #${index + 1}: value is required.`, 400)
+            throw new ApiError('PIX_KEY_VALUE_REQUIRED', `Chave Pix #${index + 1}: valor é obrigatório`, 400)
         }
 
         return { type, value }

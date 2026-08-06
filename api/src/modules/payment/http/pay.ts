@@ -7,13 +7,13 @@ export async function pay(request: FastifyRequest, reply: FastifyReply) {
         const { paymentId } = request.params as { paymentId?: string }
 
         if (!paymentId) {
-            throw new ApiError('PAYMENT_ID_REQUIRED', 'Payment ID is required.', 400)
+            throw new ApiError('PAYMENT_ID_REQUIRED', 'Parcela é obrigatória', 400)
         }
 
         const id = Number(paymentId)
 
         if (isNaN(id)) {
-            throw new ApiError('INVALID_PAYMENT_ID', 'Payment ID must be a valid number.', 400)
+            throw new ApiError('INVALID_PAYMENT_ID', 'Parcela inválida', 400)
         }
 
         const updatedPayment = await payPayment(request.authenticated!.userId, id)

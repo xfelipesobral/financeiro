@@ -8,13 +8,13 @@ export async function update(request: FastifyRequest<{ Body: UpdateLoanDTO }>, r
         const { loanId } = request.params as { loanId?: string }
 
         if (!loanId) {
-            throw new ApiError('LOAN_ID_REQUIRED', 'Loan ID is required.', 400)
+            throw new ApiError('LOAN_ID_REQUIRED', 'Empréstimo é obrigatório', 400)
         }
 
         const id = Number(loanId)
 
         if (isNaN(id)) {
-            throw new ApiError('INVALID_LOAN_ID', 'Loan ID must be a valid number.', 400)
+            throw new ApiError('INVALID_LOAN_ID', 'Empréstimo inválido', 400)
         }
 
         const updatedLoan = await updateLoan(request.authenticated!.userId, id, request.body)

@@ -7,13 +7,13 @@ export async function update(request: FastifyRequest<{ Body: UpdateBankAccountDT
         const { bankAccountId } = request.params as { bankAccountId?: string }
 
         if (!bankAccountId) {
-            throw new ApiError('BANK_ACCOUNT_ID_REQUIRED', 'Bank account ID is required.', 400)
+            throw new ApiError('BANK_ACCOUNT_ID_REQUIRED', 'Conta bancária é obrigatória', 400)
         }
 
         const id = Number(bankAccountId)
 
         if (isNaN(id)) {
-            throw new ApiError('INVALID_BANK_ACCOUNT_ID', 'Bank account ID must be a valid number.', 400)
+            throw new ApiError('INVALID_BANK_ACCOUNT_ID', 'Conta bancária inválida', 400)
         }
 
         const updatedBankAccount = await updateBankAccount(request.authenticated!.userId, id, request.body)

@@ -24,10 +24,12 @@ export function handleApiError(error: unknown, reply: FastifyReply) {
         return
     }
 
+    console.error(error)
+
     reply.status(500).send({
         error: {
             code: 'INTERNAL_SERVER_ERROR',
-            message: (error as Error).message,
+            message: 'Erro interno do servidor. Tente novamente mais tarde.',
         },
     })
 }

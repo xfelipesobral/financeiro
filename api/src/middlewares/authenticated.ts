@@ -34,35 +34,35 @@ export async function middlewareAuthenticated(request: FastifyRequest, reply: Fa
         try {
             tokenPayload = verifyAccessToken(token) as SessionJwtPayload
         } catch (e) {
-            throw new ApiError('INVALID_TOKEN', 'The token is invalid.', 401)
+            throw new ApiError('INVALID_TOKEN', 'Token inválido', 401)
         }
 
         if (!tokenPayload || typeof tokenPayload !== 'object') {
-            throw new ApiError('INVALID_TOKEN', 'The token payload is invalid.', 401)
+            throw new ApiError('INVALID_TOKEN', 'Token inválido', 401)
         }
 
         const userId = Number(tokenPayload.sub)
 
         if (isNaN(userId)) {
-            throw new ApiError('INVALID_USER_ID', 'The user ID in the token is invalid.', 401)
+            throw new ApiError('INVALID_USER_ID', 'ID de usuário inválido no token', 401)
         }
 
         if (!tokenPayload.jti) {
-            throw new ApiError('INVALID_TOKEN', 'Token is missing JTI claim.', 401)
+            throw new ApiError('INVALID_TOKEN', 'Token inválido', 401)
         }
 
         const tokenInfo = await session.findByGuid(tokenPayload.jti)
 
         if (!tokenInfo) {
-            throw new ApiError('INVALID_TOKEN', 'The token is invalid.', 401)
+            throw new ApiError('INVALID_TOKEN', 'Token inválido', 401)
         }
 
         if (tokenInfo.userId !== userId) {
-            throw new ApiError('INVALID_TOKEN', 'Token does not match session owner.', 401)
+            throw new ApiError('INVALID_TOKEN', 'Token inválido', 401)
         }
 
         if (tokenInfo.revokedAt) {
-            throw new ApiError('TOKEN_REVOKED', 'The token has been revoked.', 401)
+            throw new ApiError('TOKEN_REVOKED', 'Token revogado', 401)
         }
 
         request.authenticated = { userId: userId, tokenId: tokenInfo.id }

@@ -45,13 +45,13 @@ export async function buildTransactionPayments(userId: number, input: BuildTrans
     const paymentMethodId = Number(input.paymentMethodId)
 
     if (!input.paymentMethodId || isNaN(paymentMethodId)) {
-        throw new ApiError('PAYMENT_METHOD_ID_REQUIRED', 'Payment method is required.', 400)
+        throw new ApiError('PAYMENT_METHOD_ID_REQUIRED', 'Forma de pagamento é obrigatória', 400)
     }
 
     const paymentMethodFinded = await paymentMethod.findById(paymentMethodId)
 
     if (!paymentMethodFinded) {
-        throw new ApiError('PAYMENT_METHOD_NOT_FOUND', 'Payment method not found.', 404)
+        throw new ApiError('PAYMENT_METHOD_NOT_FOUND', 'Forma de pagamento não encontrada', 404)
     }
 
     const isCreditCard = paymentMethodFinded.guid === PAYMENT_METHOD_GUID.CREDIT_CARD
@@ -60,13 +60,13 @@ export async function buildTransactionPayments(userId: number, input: BuildTrans
         const bankAccountId = Number(input.bankAccountId)
 
         if (!input.bankAccountId || isNaN(bankAccountId)) {
-            throw new ApiError('BANK_ACCOUNT_ID_REQUIRED', 'Bank account is required.', 400)
+            throw new ApiError('BANK_ACCOUNT_ID_REQUIRED', 'Conta bancária é obrigatória', 400)
         }
 
         const bankAccountFinded = await bankAccount.userFindById(userId, bankAccountId)
 
         if (!bankAccountFinded) {
-            throw new ApiError('BANK_ACCOUNT_NOT_FOUND', 'Bank account not found.', 404)
+            throw new ApiError('BANK_ACCOUNT_NOT_FOUND', 'Conta bancária não encontrada', 404)
         }
 
         return {
@@ -89,19 +89,19 @@ export async function buildTransactionPayments(userId: number, input: BuildTrans
     const cardId = Number(input.cardId)
 
     if (!input.cardId || isNaN(cardId)) {
-        throw new ApiError('CARD_ID_REQUIRED', 'Card is required.', 400)
+        throw new ApiError('CARD_ID_REQUIRED', 'Cartão é obrigatório', 400)
     }
 
     const cardFinded = await card.userFindById(userId, cardId)
 
     if (!cardFinded) {
-        throw new ApiError('CARD_NOT_FOUND', 'Card not found.', 404)
+        throw new ApiError('CARD_NOT_FOUND', 'Cartão não encontrado', 404)
     }
 
     const installmentTotal = input.installmentTotal === undefined ? 1 : Number(input.installmentTotal)
 
     if (isNaN(installmentTotal) || installmentTotal < 1 || !Number.isInteger(installmentTotal)) {
-        throw new ApiError('INVALID_INSTALLMENT_TOTAL', 'Installment total must be an integer greater than or equal to 1.', 400)
+        throw new ApiError('INVALID_INSTALLMENT_TOTAL', 'Número de parcelas inválido', 400)
     }
 
     const dueDates = calculateMonthlyDueDates(input.date, cardFinded.closingDay, installmentTotal)

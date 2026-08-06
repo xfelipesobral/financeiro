@@ -11,18 +11,18 @@ export async function getItem(request: FastifyRequest, reply: FastifyReply) {
         const { itemId } = request.params as { itemId?: string }
 
         if (!itemId) {
-            throw new ApiError('ITEM_ID_REQUIRED', 'Item ID is required.', 400)
+            throw new ApiError('ITEM_ID_REQUIRED', 'ID do item é obrigatório', 400)
         }
 
         const numItemId = Number(itemId)
         if (isNaN(numItemId)) {
-            throw new ApiError('INVALID_ITEM_ID', 'Item ID must be a valid number.', 400)
+            throw new ApiError('INVALID_ITEM_ID', 'ID do item inválido', 400)
         }
 
         const currentItem = await steamInventoryItem.userFindById(request.authenticated!.userId, numItemId)
 
         if (!currentItem) {
-            throw new ApiError('ITEM_NOT_FOUND', 'Item not found.', 404)
+            throw new ApiError('ITEM_NOT_FOUND', 'Item não encontrado', 404)
         }
 
         const averagePrices = await steamInventoryItemTransaction.averagePriceByItemIdsMap([currentItem.id])

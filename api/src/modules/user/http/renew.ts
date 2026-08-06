@@ -7,7 +7,7 @@ export async function renew(request: FastifyRequest, reply: FastifyReply) {
     const { refreshToken } = request.body as { refreshToken?: string }
 
     if (!refreshToken) {
-        throw new ApiError('REQUIRED_FIELDS_MISSING', 'Refresh token is a required field.', 400)
+        throw new ApiError('REQUIRED_FIELDS_MISSING', 'Email e senha são obrigatórios', 400)
     }
 
     try {

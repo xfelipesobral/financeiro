@@ -1,7 +1,7 @@
 'use server'
 
 import api from '../'
-import { translateErrorCodeApi } from '@/lib/errorTranslations'
+import { getApiErrorMessage } from '@/lib/apiError'
 
 export interface ApiCreateLoanParams {
     bankAccountId: number
@@ -29,7 +29,7 @@ export default async function apiCreateLoan(params: ApiCreateLoanParams): Promis
     } catch (e) {
         return {
             success: false,
-            message: translateErrorCodeApi(e),
+            message: getApiErrorMessage(e),
         }
     }
 }

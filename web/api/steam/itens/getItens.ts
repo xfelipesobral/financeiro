@@ -1,7 +1,7 @@
 'use server'
 
 import api from '../../'
-import { translateErrorCodeApi } from '@/lib/errorTranslations'
+import { getApiErrorMessage } from '@/lib/apiError'
 
 export interface ApiSteamInventoryItem {
     id: number
@@ -31,7 +31,7 @@ export default async function apiGetSteamItens(): Promise<ResponseApi<ApiSteamIn
     } catch (e) {
         return {
             success: false,
-            message: translateErrorCodeApi(e),
+            message: getApiErrorMessage(e),
         }
     }
 }

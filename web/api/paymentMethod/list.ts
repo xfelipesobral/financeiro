@@ -1,7 +1,7 @@
 'use server'
 
 import api from '../'
-import { translateErrorCodeApi } from '@/lib/errorTranslations'
+import { getApiErrorMessage } from '@/lib/apiError'
 
 export default async function apiGetPaymentMethods(): Promise<ResponseApi<PaymentMethod[]>> {
     try {
@@ -14,7 +14,7 @@ export default async function apiGetPaymentMethods(): Promise<ResponseApi<Paymen
     } catch (e) {
         return {
             success: false,
-            message: translateErrorCodeApi(e),
+            message: getApiErrorMessage(e),
         }
     }
 }

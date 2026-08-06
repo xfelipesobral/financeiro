@@ -1,7 +1,7 @@
 'use server'
 
 import api from '../'
-import { translateErrorCodeApi } from '@/lib/errorTranslations'
+import { getApiErrorMessage } from '@/lib/apiError'
 
 export default async function apiGetCards(): Promise<ResponseApi<Card[]>> {
     try {
@@ -14,7 +14,7 @@ export default async function apiGetCards(): Promise<ResponseApi<Card[]>> {
     } catch (e) {
         return {
             success: false,
-            message: translateErrorCodeApi(e),
+            message: getApiErrorMessage(e),
         }
     }
 }

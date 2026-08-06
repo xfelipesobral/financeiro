@@ -7,7 +7,7 @@ export async function cs2PriceByMarketUrl(request: FastifyRequest, reply: Fastif
         const { marketUrl } = request.body as { marketUrl?: string }
 
         if (!marketUrl) {
-            throw new ApiError('MARKET_URL_REQUIRED', 'Market URL is required.', 400)
+            throw new ApiError('MARKET_URL_REQUIRED', 'URL de mercado é obrigatória', 400)
         }
 
         const price = await getCs2PriceByMarketUrl(marketUrl)

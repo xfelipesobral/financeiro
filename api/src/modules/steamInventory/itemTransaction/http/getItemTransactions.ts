@@ -9,7 +9,7 @@ export async function getItemTransactions(request: FastifyRequest, reply: Fastif
         const { limit, offset } = request.query as { limit?: string; offset?: string }
 
         if (!itemId) {
-            throw new ApiError('ITEM_ID_REQUIRED', 'Item ID is required.', 400)
+            throw new ApiError('ITEM_ID_REQUIRED', 'ID do item é obrigatório', 400)
         }
 
         let numLimit = Number(limit)
@@ -17,7 +17,7 @@ export async function getItemTransactions(request: FastifyRequest, reply: Fastif
         let numItemId = Number(itemId)
 
         if (isNaN(numItemId) || numItemId < 1) {
-            throw new ApiError('INVALID_ITEM_ID', 'Item ID must be a positive integer.', 400)
+            throw new ApiError('INVALID_ITEM_ID', 'ID do item inválido', 400)
         }
 
         if (!numLimit || isNaN(numLimit) || numLimit < 1) {

@@ -8,11 +8,11 @@ export async function removeLoan(userId: number, id: number) {
     const existing = await loan.userFindById(userId, id)
 
     if (!existing) {
-        throw new ApiError('LOAN_NOT_FOUND', 'Loan not found.', 404)
+        throw new ApiError('LOAN_NOT_FOUND', 'Empréstimo não encontrado', 404)
     }
 
     if (existing.payments.some((existingPayment) => existingPayment.status !== 'PENDING')) {
-        throw new ApiError('LOAN_HAS_PAID_PAYMENTS', 'This loan already has paid installments and can no longer be removed.', 400)
+        throw new ApiError('LOAN_HAS_PAID_PAYMENTS', 'Este empréstimo já tem parcelas pagas e não pode mais ser removido', 400)
     }
 
     const transactionIds = [...new Set(existing.payments.map((existingPayment) => existingPayment.transactionId))]

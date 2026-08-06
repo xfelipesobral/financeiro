@@ -9,39 +9,39 @@ export async function updateTransaction(userId: number, id: number, data: Update
     const existing = await transaction.userFindById(userId, id)
 
     if (!existing) {
-        throw new ApiError('TRANSACTION_NOT_FOUND', 'Transaction not found.', 404)
+        throw new ApiError('TRANSACTION_NOT_FOUND', 'Lançamento não encontrado', 404)
     }
 
     const categoryId = data.categoryId !== undefined ? Number(data.categoryId) : existing.categoryId
 
     if (!categoryId || isNaN(categoryId)) {
-        throw new ApiError('CATEGORY_ID_REQUIRED', 'Category is required.', 400)
+        throw new ApiError('CATEGORY_ID_REQUIRED', 'Categoria é obrigatória', 400)
     }
 
     if (data.categoryId !== undefined) {
         const categoryFinded = await category.findById(categoryId, userId)
 
         if (!categoryFinded) {
-            throw new ApiError('CATEGORY_NOT_FOUND', 'Category not found.', 404)
+            throw new ApiError('CATEGORY_NOT_FOUND', 'Categoria não encontrada', 404)
         }
     }
 
     const totalAmount = data.totalAmount !== undefined ? Number(data.totalAmount) : existing.totalAmount.toNumber()
 
     if (isNaN(totalAmount) || totalAmount <= 0) {
-        throw new ApiError('INVALID_TRANSACTION_AMOUNT', 'Transaction amount must be greater than zero.', 400)
+        throw new ApiError('INVALID_TRANSACTION_AMOUNT', 'Valor do lançamento inválido', 400)
     }
 
     const description = data.description !== undefined ? data.description.trim() : existing.description
 
     if (!description) {
-        throw new ApiError('TRANSACTION_DESCRIPTION_REQUIRED', 'Transaction description is required.', 400)
+        throw new ApiError('TRANSACTION_DESCRIPTION_REQUIRED', 'Descrição do lançamento é obrigatória', 400)
     }
 
     const date = data.date !== undefined ? new Date(data.date) : existing.date
 
     if (isNaN(date.getTime())) {
-        throw new ApiError('INVALID_TRANSACTION_DATE', 'Transaction date is invalid.', 400)
+        throw new ApiError('INVALID_TRANSACTION_DATE', 'Data e hora do lançamento inválidas', 400)
     }
 
     // Se o usuário não informou nem bankAccountId nem cardId nesta edição, mantém a forma de pagamento atual.
@@ -72,9 +72,7 @@ export async function updateTransaction(userId: number, id: number, data: Update
     const hasSettledCardInstallment = !!existingCardId && existing.payments.some((existingPayment) => existingPayment.status !== 'PENDING')
 
     if (paymentsStructureChanged && hasSettledCardInstallment) {
-        throw new ApiError(
-            'TRANSACTION_HAS_PAID_PAYMENTS',
-            'This transaction already has paid installments, so its amount, date, payment method or installments can no longer be changed. Description and category can still be edited.',
+        throw new ApiError('TRANSACTION_HAS_PAID_PAYMENTS', 'Este lançamento já tem parcelas pagas e não pode mais ser editado',
             400,
         )
     }

@@ -8,7 +8,7 @@ export async function updateLoan(userId: number, id: number, data: UpdateLoanDTO
     const existing = await loan.userFindById(userId, id)
 
     if (!existing) {
-        throw new ApiError('LOAN_NOT_FOUND', 'Loan not found.', 404)
+        throw new ApiError('LOAN_NOT_FOUND', 'Empréstimo não encontrado', 404)
     }
 
     const updateData: { description?: string; dueDay?: number; interestRate?: number | null } = {}
@@ -17,7 +17,7 @@ export async function updateLoan(userId: number, id: number, data: UpdateLoanDTO
         const description = data.description.trim()
 
         if (!description) {
-            throw new ApiError('LOAN_DESCRIPTION_REQUIRED', 'Loan description is required.', 400)
+            throw new ApiError('LOAN_DESCRIPTION_REQUIRED', 'Descrição do empréstimo é obrigatória', 400)
         }
 
         updateData.description = description
@@ -27,7 +27,7 @@ export async function updateLoan(userId: number, id: number, data: UpdateLoanDTO
         const interestRate = data.interestRate === null ? null : Number(data.interestRate)
 
         if (interestRate !== null && (isNaN(interestRate) || interestRate < 0)) {
-            throw new ApiError('INVALID_INTEREST_RATE', 'Interest rate must be greater than or equal to zero.', 400)
+            throw new ApiError('INVALID_INTEREST_RATE', 'Taxa de juros inválida', 400)
         }
 
         updateData.interestRate = interestRate
@@ -39,7 +39,7 @@ export async function updateLoan(userId: number, id: number, data: UpdateLoanDTO
         dueDay = Number(data.dueDay)
 
         if (isNaN(dueDay) || dueDay < 1 || dueDay > 31) {
-            throw new ApiError('INVALID_DUE_DAY', 'Due day must be between 1 and 31.', 400)
+            throw new ApiError('INVALID_DUE_DAY', 'Dia de vencimento inválido (use um valor entre 1 e 31)', 400)
         }
 
         updateData.dueDay = dueDay

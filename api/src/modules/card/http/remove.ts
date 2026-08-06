@@ -7,19 +7,19 @@ export async function remove(request: FastifyRequest, reply: FastifyReply) {
         const { cardId } = request.params as { cardId?: string }
 
         if (!cardId) {
-            throw new ApiError('CARD_ID_REQUIRED', 'Card ID is required.', 400)
+            throw new ApiError('CARD_ID_REQUIRED', 'Cartão é obrigatório', 400)
         }
 
         const id = Number(cardId)
 
         if (isNaN(id)) {
-            throw new ApiError('INVALID_CARD_ID', 'Card ID must be a valid number.', 400)
+            throw new ApiError('INVALID_CARD_ID', 'Cartão inválido', 400)
         }
 
         const currentCard = await card.userFindById(request.authenticated!.userId, id)
 
         if (!currentCard) {
-            throw new ApiError('CARD_NOT_FOUND', 'Card not found.', 404)
+            throw new ApiError('CARD_NOT_FOUND', 'Cartão não encontrado', 404)
         }
 
         await card.deleteById(id)
