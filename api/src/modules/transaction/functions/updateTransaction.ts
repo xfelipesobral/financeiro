@@ -1,7 +1,9 @@
 import { ApiError } from '../../../utils/error'
-import { bankAccount } from '../../bankAccount/service'
+import { prisma } from '../../../db'
 import { category } from '../../category/service'
+import { payment } from '../../payment/service'
 import { transaction } from '../service'
+import { buildTransactionPayments } from './buildTransactionPayments'
 
 export async function updateTransaction(userId: number, id: number, data: UpdateTransactionDTO = {}) {
     const existing = await transaction.userFindById(userId, id)
@@ -10,77 +12,131 @@ export async function updateTransaction(userId: number, id: number, data: Update
         throw new ApiError('TRANSACTION_NOT_FOUND', 'Transaction not found.', 404)
     }
 
-    const updateData: { bankAccountId?: number; categoryId?: number; totalAmount?: number; description?: string; date?: Date } = {}
+    const categoryId = data.categoryId !== undefined ? Number(data.categoryId) : existing.categoryId
 
-    if (data.bankAccountId !== undefined) {
-        const bankAccountId = Number(data.bankAccountId)
-
-        if (!data.bankAccountId || isNaN(bankAccountId)) {
-            throw new ApiError('BANK_ACCOUNT_ID_REQUIRED', 'Bank account is required.', 400)
-        }
-
-        const bankAccountFinded = await bankAccount.userFindById(userId, bankAccountId)
-
-        if (!bankAccountFinded) {
-            throw new ApiError('BANK_ACCOUNT_NOT_FOUND', 'Bank account not found.', 404)
-        }
-
-        updateData.bankAccountId = bankAccountId
+    if (!categoryId || isNaN(categoryId)) {
+        throw new ApiError('CATEGORY_ID_REQUIRED', 'Category is required.', 400)
     }
 
     if (data.categoryId !== undefined) {
-        const categoryId = Number(data.categoryId)
-
-        if (!data.categoryId || isNaN(categoryId)) {
-            throw new ApiError('CATEGORY_ID_REQUIRED', 'Category is required.', 400)
-        }
-
         const categoryFinded = await category.findById(categoryId, userId)
 
         if (!categoryFinded) {
             throw new ApiError('CATEGORY_NOT_FOUND', 'Category not found.', 404)
         }
-
-        updateData.categoryId = categoryId
     }
 
-    if (data.totalAmount !== undefined) {
-        const totalAmount = Number(data.totalAmount)
+    const totalAmount = data.totalAmount !== undefined ? Number(data.totalAmount) : existing.totalAmount.toNumber()
 
-        if (isNaN(totalAmount) || totalAmount <= 0) {
-            throw new ApiError('INVALID_TRANSACTION_AMOUNT', 'Transaction amount must be greater than zero.', 400)
-        }
-
-        updateData.totalAmount = totalAmount
+    if (isNaN(totalAmount) || totalAmount <= 0) {
+        throw new ApiError('INVALID_TRANSACTION_AMOUNT', 'Transaction amount must be greater than zero.', 400)
     }
 
-    if (data.description !== undefined) {
-        const description = data.description.trim()
+    const description = data.description !== undefined ? data.description.trim() : existing.description
 
-        if (!description) {
-            throw new ApiError('TRANSACTION_DESCRIPTION_REQUIRED', 'Transaction description is required.', 400)
-        }
-
-        updateData.description = description
+    if (!description) {
+        throw new ApiError('TRANSACTION_DESCRIPTION_REQUIRED', 'Transaction description is required.', 400)
     }
 
-    if (data.date !== undefined) {
-        const date = new Date(data.date)
+    const date = data.date !== undefined ? new Date(data.date) : existing.date
 
-        if (isNaN(date.getTime())) {
-            throw new ApiError('INVALID_TRANSACTION_DATE', 'Transaction date is invalid.', 400)
-        }
-
-        updateData.date = date
+    if (isNaN(date.getTime())) {
+        throw new ApiError('INVALID_TRANSACTION_DATE', 'Transaction date is invalid.', 400)
     }
 
-    return transaction.updateById(id, updateData)
+    // Se o usuário não informou nem bankAccountId nem cardId nesta edição, mantém a forma de pagamento atual.
+    const existingCardId = existing.payments[0]?.cardId ?? undefined
+    const sourceProvided = data.bankAccountId !== undefined || data.cardId !== undefined
+    const bankAccountId = sourceProvided ? data.bankAccountId : existingCardId ? undefined : existing.bankAccountId
+    const cardId = sourceProvided ? data.cardId : existingCardId
+
+    const paymentMethodId = data.paymentMethodId !== undefined ? data.paymentMethodId : existing.payments[0]?.paymentMethodId
+
+    const installmentTotal = data.installmentTotal !== undefined ? data.installmentTotal : existing.installmentTotal ?? undefined
+
+    // O front sempre reenvia todos os campos (mesmo os que o usuário não mexeu), então não dá pra
+    // decidir o que "mudou de verdade" olhando só quais chaves vieram no body — comparamos os valores
+    // efetivos com os que já estão salvos. Só quando algo que afeta as parcelas (valor, data, forma de
+    // pagamento, cartão ou nº de parcelas) muda de fato é que precisamos recriar os `Payment`s.
+    const paymentsStructureChanged =
+        totalAmount !== existing.totalAmount.toNumber() ||
+        date.getTime() !== existing.date.getTime() ||
+        Number(paymentMethodId) !== existing.payments[0]?.paymentMethodId ||
+        (cardId ?? null) !== (existingCardId ?? null) ||
+        (installmentTotal ?? 1) !== (existing.installmentTotal ?? 1)
+
+    // A proteção contra "mexer no que já foi pago" só faz sentido pra parcelamento no cartão: uma
+    // transação em dinheiro/débito nasce com o único Payment já `PAID` (é assim por definição), então
+    // isso nunca poderia travar a edição dela. O risco real é desalinhar parcelas de cartão que já
+    // foram marcadas como pagas.
+    const hasSettledCardInstallment = !!existingCardId && existing.payments.some((existingPayment) => existingPayment.status !== 'PENDING')
+
+    if (paymentsStructureChanged && hasSettledCardInstallment) {
+        throw new ApiError(
+            'TRANSACTION_HAS_PAID_PAYMENTS',
+            'This transaction already has paid installments, so its amount, date, payment method or installments can no longer be changed. Description and category can still be edited.',
+            400,
+        )
+    }
+
+    if (!paymentsStructureChanged) {
+        // Nada que afete as parcelas mudou (só descrição/categoria, por exemplo) — não mexe nos Payments.
+        return transaction.updateById(id, { categoryId, description })
+    }
+
+    const built = await buildTransactionPayments(userId, {
+        paymentMethodId,
+        bankAccountId,
+        cardId,
+        installmentTotal,
+        totalAmount,
+        date,
+    })
+
+    return prisma.$transaction(async (tx) => {
+        await payment.deleteMany({ transactionId: id }, tx)
+
+        await Promise.all(
+            built.payments.map((builtPayment) =>
+                payment.create(
+                    {
+                        userId,
+                        paymentMethodId: built.paymentMethodId,
+                        transactionId: id,
+                        cardId: builtPayment.cardId,
+                        amount: builtPayment.amount,
+                        installmentNumber: builtPayment.installmentNumber,
+                        status: builtPayment.status,
+                        dueDate: builtPayment.dueDate,
+                        paidAt: builtPayment.paidAt,
+                    },
+                    tx,
+                ),
+            ),
+        )
+
+        return transaction.updateById(
+            id,
+            {
+                bankAccountId: built.bankAccountId,
+                categoryId,
+                totalAmount,
+                description,
+                date,
+                installmentTotal: built.installmentTotal,
+            },
+            tx,
+        )
+    })
 }
 
 export interface UpdateTransactionDTO {
-    bankAccountId?: number
     categoryId?: number
     totalAmount?: number
     description?: string
     date?: string
+    paymentMethodId?: number
+    bankAccountId?: number
+    cardId?: number
+    installmentTotal?: number
 }

@@ -57,6 +57,7 @@ const categories: { id: number; description: string; type: 'DEBIT' | 'CREDIT'; p
     { id: 54, description: 'Distribuição de lucros', type: 'CREDIT', parentId: 52 },
     { id: 55, description: 'Empréstimo', type: 'CREDIT' },
     { id: 56, description: 'Desconto Empréstimo', type: 'DEBIT' },
+    { id: 57, description: 'Seguros', type: 'DEBIT' },
 ]
 
 const banks: { id: number; name: string; guid: string }[] = [
@@ -81,6 +82,14 @@ const banks: { id: number; name: string; guid: string }[] = [
     { id: 19, name: 'Banrisul', guid: 'banrisul' },
     { id: 20, name: 'Banco BMG', guid: 'banco-bmg' },
     { id: 21, name: 'Carteira', guid: 'carteira' },
+]
+
+const paymentMethods: { id: number; guid: string; name: string }[] = [
+    { id: 1, guid: 'dinheiro', name: 'Dinheiro' },
+    { id: 2, guid: 'debito', name: 'Débito' },
+    { id: 3, guid: 'pix', name: 'Pix' },
+    { id: 4, guid: 'cartao-credito', name: 'Cartão de Crédito' },
+    { id: 5, guid: 'emprestimo', name: 'Empréstimo' },
 ]
 
 async function seed() {
@@ -110,6 +119,21 @@ async function seed() {
             })
         } catch {
             console.log(`Erro ao atualizar banco ${id} - ${name}`)
+        }
+    }
+
+    // Criando formas de pagamento
+    console.log('atualizando formas de pagamento...')
+    for (const { id, guid, name } of paymentMethods) {
+        console.log(`Atualizando forma de pagamento ${id} - ${name}`)
+        try {
+            await prisma.paymentMethod.upsert({
+                where: { id },
+                update: { guid, name },
+                create: { id, guid, name },
+            })
+        } catch {
+            console.log(`Erro ao atualizar forma de pagamento ${id} - ${name}`)
         }
     }
 }

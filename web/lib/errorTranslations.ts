@@ -49,6 +49,29 @@ export const errorTranslations: Record<string, string> = {
     INVALID_TRANSACTION_TYPE: 'Tipo de lançamento inválido',
     INVALID_START_DATE: 'Data inicial inválida',
     INVALID_END_DATE: 'Data final inválida',
+
+    // Forma de pagamento (Payment / PaymentMethod)
+    PAYMENT_METHOD_ID_REQUIRED: 'Forma de pagamento é obrigatória',
+    PAYMENT_METHOD_NOT_FOUND: 'Forma de pagamento não encontrada',
+    INVALID_PAYMENT_METHOD_ID: 'Forma de pagamento inválida',
+    INVALID_INSTALLMENT_TOTAL: 'Número de parcelas inválido',
+    PAYMENT_ID_REQUIRED: 'Parcela é obrigatória',
+    INVALID_PAYMENT_ID: 'Parcela inválida',
+    PAYMENT_NOT_FOUND: 'Parcela não encontrada',
+    PAYMENT_NOT_PENDING: 'Apenas parcelas pendentes podem ser marcadas como pagas',
+    TRANSACTION_HAS_PAID_PAYMENTS: 'Este lançamento já tem parcelas pagas e não pode mais ser editado',
+
+    // Empréstimo (Loan)
+    LOAN_ID_REQUIRED: 'Empréstimo é obrigatório',
+    INVALID_LOAN_ID: 'Empréstimo inválido',
+    LOAN_NOT_FOUND: 'Empréstimo não encontrado',
+    LOAN_DESCRIPTION_REQUIRED: 'Descrição do empréstimo é obrigatória',
+    INVALID_LOAN_AMOUNT: 'Valor do empréstimo inválido',
+    INVALID_DUE_DAY: 'Dia de vencimento inválido (use um valor entre 1 e 31)',
+    INVALID_INTEREST_RATE: 'Taxa de juros inválida',
+    LOAN_HAS_PAID_PAYMENTS: 'Este empréstimo já tem parcelas pagas e não pode mais ser removido',
+    LOAN_CATEGORY_NOT_CONFIGURED: 'Categoria padrão de empréstimo não configurada',
+    LOAN_PAYMENT_METHOD_NOT_CONFIGURED: 'Forma de pagamento padrão de empréstimo não configurada',
 }
 
 export function translateErrorCode(code: string = 'UNKNOWN_ERROR'): string {

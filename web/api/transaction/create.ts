@@ -4,11 +4,14 @@ import api from '../'
 import { translateErrorCodeApi } from '@/lib/errorTranslations'
 
 export interface ApiCreateTransactionParams {
-    bankAccountId: number
     categoryId: number
     totalAmount: number
     description: string
     date?: string
+    paymentMethodId: number
+    bankAccountId?: number
+    cardId?: number
+    installmentTotal?: number
 }
 
 export default async function apiCreateTransaction(params: ApiCreateTransactionParams): Promise<ResponseApi<Transaction>> {

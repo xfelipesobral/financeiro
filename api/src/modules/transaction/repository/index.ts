@@ -20,6 +20,7 @@ export class TransactionRepository {
     private static includeDefault = {
         category: true,
         bankAccount: { include: { bank: true } },
+        payments: { include: { card: true, loan: true }, orderBy: { installmentNumber: 'asc' as const } },
     } as const
 
     private buildWhere(userId: number, filters: TransactionFilters = {}): Prisma.TransactionWhereInput {
@@ -53,8 +54,8 @@ export class TransactionRepository {
         })
     }
 
-    userFindById(userId: number, id: number) {
-        return this.transaction.findFirst({
+    userFindById(userId: number, id: number, db: Prisma.TransactionClient = prisma) {
+        return db.transaction.findFirst({
             where: { userId, id },
             include: TransactionRepository.includeDefault,
         })
@@ -66,8 +67,17 @@ export class TransactionRepository {
         })
     }
 
-    create(userId: number, bankAccountId: number, categoryId: number, totalAmount: number, description: string, date: Date) {
-        return this.transaction.create({
+    create(
+        userId: number,
+        bankAccountId: number,
+        categoryId: number,
+        totalAmount: number,
+        description: string,
+        date: Date,
+        installmentTotal: number | null = null,
+        db: Prisma.TransactionClient = prisma,
+    ) {
+        return db.transaction.create({
             data: {
                 guid: uuid(),
                 userId,
@@ -76,21 +86,22 @@ export class TransactionRepository {
                 totalAmount,
                 description,
                 date,
+                installmentTotal,
             },
             include: TransactionRepository.includeDefault,
         })
     }
 
-    updateById(id: number, data: UpdateData) {
-        return this.transaction.update({
+    updateById(id: number, data: UpdateData, db: Prisma.TransactionClient = prisma) {
+        return db.transaction.update({
             where: { id },
             data,
             include: TransactionRepository.includeDefault,
         })
     }
 
-    deleteById(id: number) {
-        return this.transaction.delete({
+    deleteById(id: number, db: Prisma.TransactionClient = prisma) {
+        return db.transaction.delete({
             where: { id },
         })
     }
@@ -102,4 +113,5 @@ interface UpdateData {
     totalAmount?: number
     description?: string
     date?: Date
+    installmentTotal?: number | null
 }

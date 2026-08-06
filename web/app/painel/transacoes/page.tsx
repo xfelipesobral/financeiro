@@ -6,7 +6,9 @@ import { toast } from 'sonner'
 import { Plus } from 'lucide-react'
 
 import apiGetBankAccounts from '@/api/bankAccount/list'
+import apiGetCards from '@/api/card/list'
 import apiGetCategories from '@/api/category/list'
+import apiGetPaymentMethods from '@/api/paymentMethod/list'
 import apiGetTransactions from '@/api/transaction/list'
 import { DeleteTransaction } from '@/components/transaction/deleteTransaction'
 import { TransactionsList } from '@/components/transaction/list'
@@ -21,6 +23,8 @@ const FILTER_DEBOUNCE_MS = 400
 export default function TransacoesPage() {
     const [bankAccounts, setBankAccounts] = useState<BankAccount[]>([])
     const [categories, setCategories] = useState<Category[]>([])
+    const [cards, setCards] = useState<Card[]>([])
+    const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([])
     const [formOpen, setFormOpen] = useState(false)
     const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null)
     const [deletingTransaction, setDeletingTransaction] = useState<Transaction | null>(null)
@@ -56,7 +60,12 @@ export default function TransacoesPage() {
     }, [filters, page])
 
     const fetchOptions = async () => {
-        const [bankAccountsResponse, categoriesResponse] = await Promise.all([apiGetBankAccounts(), apiGetCategories()])
+        const [bankAccountsResponse, categoriesResponse, cardsResponse, paymentMethodsResponse] = await Promise.all([
+            apiGetBankAccounts(),
+            apiGetCategories(),
+            apiGetCards(),
+            apiGetPaymentMethods(),
+        ])
 
         if (!bankAccountsResponse.success) {
             toast.error(bankAccountsResponse.message || 'Erro ao buscar contas bancárias')
@@ -68,6 +77,18 @@ export default function TransacoesPage() {
             toast.error(categoriesResponse.message || 'Erro ao buscar categorias')
         } else {
             setCategories(categoriesResponse.data || [])
+        }
+
+        if (!cardsResponse.success) {
+            toast.error(cardsResponse.message || 'Erro ao buscar cartões')
+        } else {
+            setCards(cardsResponse.data || [])
+        }
+
+        if (!paymentMethodsResponse.success) {
+            toast.error(paymentMethodsResponse.message || 'Erro ao buscar formas de pagamento')
+        } else {
+            setPaymentMethods(paymentMethodsResponse.data || [])
         }
     }
 
@@ -100,6 +121,8 @@ export default function TransacoesPage() {
                 open={formOpen || !!editingTransaction}
                 bankAccounts={bankAccounts}
                 categories={categories}
+                cards={cards}
+                paymentMethods={paymentMethods}
                 transaction={editingTransaction}
                 closed={(reload = false) => {
                     setFormOpen(false)

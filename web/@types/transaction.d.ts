@@ -1,3 +1,5 @@
+type TransactionStatus = 'PENDING' | 'PAID'
+
 interface Transaction {
     id: number
     guid: string
@@ -12,4 +14,6 @@ interface Transaction {
     updatedAt: string
     category: Category
     bankAccount: BankAccount
+    payments: Payment[]
+    status: TransactionStatus
 }

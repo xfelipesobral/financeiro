@@ -5,16 +5,22 @@ import { Controller, useForm } from 'react-hook-form'
 import { Loader2, Plus } from 'lucide-react'
 import { toast } from 'sonner'
 
-import apiCreateTransaction from '@/api/transaction/create'
+import apiCreateTransaction, { ApiCreateTransactionParams } from '@/api/transaction/create'
 import apiUpdateTransaction from '@/api/transaction/update'
 import { DateTimePicker } from '@/components/inputs/dateTimePicker'
-import { DecimalInput } from '@/components/inputs/maskedInput'
+import { DecimalInput, IntegerInput } from '@/components/inputs/maskedInput'
 import { Button } from '@/components/ui/button'
 import { Combobox, ComboboxContent, ComboboxEmpty, ComboboxInput, ComboboxItem, ComboboxList } from '@/components/ui/combobox'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Field, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+
+// Guids fixos das formas de pagamento (ver api/src/db/seed.ts). O meio de pagamento
+// escolhido é quem decide se o formulário pede conta bancária ou cartão+parcelas —
+// não existe um campo separado pra isso.
+const CREDIT_CARD_PAYMENT_METHOD_GUID = 'cartao-credito'
+const LOAN_PAYMENT_METHOD_GUID = 'emprestimo'
 
 interface ComboboxOption {
     value: string
@@ -25,12 +31,17 @@ interface Params {
     open: boolean
     bankAccounts: BankAccount[]
     categories: Category[]
+    cards: Card[]
+    paymentMethods: PaymentMethod[]
     transaction?: Transaction | null
     closed: (update?: boolean) => void
 }
 
 interface Form {
     bankAccountId: string
+    cardId: string
+    installmentTotal: string
+    paymentMethodId: string
     categoryId: string
     totalAmount: string
     description: string
@@ -39,18 +50,33 @@ interface Form {
 
 const emptyForm: Form = {
     bankAccountId: '',
+    cardId: '',
+    installmentTotal: '1',
+    paymentMethodId: '',
     categoryId: '',
     totalAmount: '',
     description: '',
     date: new Date(),
 }
 
-export function TransactionFormDialog({ open, bankAccounts, categories, transaction, closed }: Params) {
+export function TransactionFormDialog({ open, bankAccounts, categories, cards, paymentMethods, transaction, closed }: Params) {
     const [loading, setLoading] = useState(false)
     const dialogContentRef = useRef<HTMLDivElement>(null)
     const isEditing = !!transaction
 
-    const { control, handleSubmit, register, reset } = useForm<Form>({ defaultValues: emptyForm })
+    const { control, handleSubmit, register, watch, reset } = useForm<Form>({ defaultValues: emptyForm })
+    const paymentMethodId = watch('paymentMethodId')
+
+    // Empréstimo não é escolhido aqui: as parcelas dele nascem junto com o próprio empréstimo.
+    const selectablePaymentMethods = useMemo(
+        () => paymentMethods.filter((paymentMethod) => paymentMethod.guid !== LOAN_PAYMENT_METHOD_GUID),
+        [paymentMethods],
+    )
+
+    const isCreditCard = useMemo(
+        () => paymentMethods.find((paymentMethod) => String(paymentMethod.id) === paymentMethodId)?.guid === CREDIT_CARD_PAYMENT_METHOD_GUID,
+        [paymentMethods, paymentMethodId],
+    )
 
     const categoryOptions: ComboboxOption[] = useMemo(
         () => categories.map((category) => ({ value: String(category.id), label: `${category.description} · ${category.type === 'CREDIT' ? 'Crédito' : 'Débito'}` })),
@@ -63,24 +89,39 @@ export function TransactionFormDialog({ open, bankAccounts, categories, transact
             return
         }
 
-        reset(
-            transaction
-                ? {
-                      bankAccountId: String(transaction.bankAccountId),
-                      categoryId: String(transaction.categoryId),
-                      totalAmount: String(transaction.totalAmount),
-                      description: transaction.description,
-                      date: new Date(transaction.date),
-                  }
-                : { ...emptyForm, date: new Date() },
-        )
+        if (transaction) {
+            const firstPayment = transaction.payments?.[0]
+
+            reset({
+                bankAccountId: String(transaction.bankAccountId),
+                cardId: firstPayment?.cardId ? String(firstPayment.cardId) : '',
+                installmentTotal: String(transaction.installmentTotal || 1),
+                paymentMethodId: firstPayment ? String(firstPayment.paymentMethodId) : '',
+                categoryId: String(transaction.categoryId),
+                totalAmount: String(transaction.totalAmount),
+                description: transaction.description,
+                date: new Date(transaction.date),
+            })
+        } else {
+            reset({ ...emptyForm, date: new Date() })
+        }
     }, [open, transaction, reset])
 
-    const onSubmit = async ({ bankAccountId, categoryId, totalAmount, description, date }: Form) => {
+    const onSubmit = async ({ bankAccountId, cardId, installmentTotal, paymentMethodId, categoryId, totalAmount, description, date }: Form) => {
         const normalizedDescription = description.trim()
         const amount = parseFloat(totalAmount)
 
-        if (!bankAccountId) {
+        if (!paymentMethodId) {
+            toast.error('Selecione uma forma de pagamento.')
+            return
+        }
+
+        if (isCreditCard && !cardId) {
+            toast.error('Selecione um cartão.')
+            return
+        }
+
+        if (!isCreditCard && !bankAccountId) {
             toast.error('Selecione uma conta bancária.')
             return
         }
@@ -100,14 +141,28 @@ export function TransactionFormDialog({ open, bankAccounts, categories, transact
             return
         }
 
+        let installmentTotalNumber: number | undefined
+
+        if (isCreditCard) {
+            installmentTotalNumber = parseInt(installmentTotal || '1', 10)
+
+            if (isNaN(installmentTotalNumber) || installmentTotalNumber < 1) {
+                toast.error('Número de parcelas inválido.')
+                return
+            }
+        }
+
         setLoading(true)
 
-        const params = {
-            bankAccountId: Number(bankAccountId),
+        const params: ApiCreateTransactionParams = {
             categoryId: Number(categoryId),
             totalAmount: amount,
             description: normalizedDescription,
             date: date.toISOString(),
+            paymentMethodId: Number(paymentMethodId),
+            ...(isCreditCard
+                ? { cardId: Number(cardId), installmentTotal: installmentTotalNumber }
+                : { bankAccountId: Number(bankAccountId) }),
         }
 
         const response = isEditing ? await apiUpdateTransaction(transaction!.id, params) : await apiCreateTransaction(params)
@@ -136,19 +191,19 @@ export function TransactionFormDialog({ open, bankAccounts, categories, transact
 
                 <form onSubmit={handleSubmit(onSubmit)} className="grid gap-3">
                     <Field>
-                        <FieldLabel htmlFor="transaction-bank-account">Conta bancária</FieldLabel>
+                        <FieldLabel htmlFor="transaction-payment-method">Forma de pagamento</FieldLabel>
                         <Controller
-                            name="bankAccountId"
+                            name="paymentMethodId"
                             control={control}
                             render={({ field: { value, onChange } }) => (
                                 <Select value={value} onValueChange={onChange}>
-                                    <SelectTrigger id="transaction-bank-account" className="w-full">
-                                        <SelectValue placeholder="Selecione uma conta" />
+                                    <SelectTrigger id="transaction-payment-method" className="w-full">
+                                        <SelectValue placeholder="Selecione a forma de pagamento" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        {bankAccounts.map((bankAccount) => (
-                                            <SelectItem key={bankAccount.id} value={String(bankAccount.id)}>
-                                                {bankAccount.bank.name} · {bankAccount.description || bankAccount.accountNumber}
+                                        {selectablePaymentMethods.map((paymentMethod) => (
+                                            <SelectItem key={paymentMethod.id} value={String(paymentMethod.id)}>
+                                                {paymentMethod.name}
                                             </SelectItem>
                                         ))}
                                     </SelectContent>
@@ -156,6 +211,65 @@ export function TransactionFormDialog({ open, bankAccounts, categories, transact
                             )}
                         />
                     </Field>
+
+                    {isCreditCard ? (
+                        <div className="grid grid-cols-2 gap-3">
+                            <Field>
+                                <FieldLabel htmlFor="transaction-card">Cartão</FieldLabel>
+                                <Controller
+                                    name="cardId"
+                                    control={control}
+                                    render={({ field: { value, onChange } }) => (
+                                        <Select value={value} onValueChange={onChange}>
+                                            <SelectTrigger id="transaction-card" className="w-full">
+                                                <SelectValue placeholder="Selecione um cartão" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {cards.map((card) => (
+                                                    <SelectItem key={card.id} value={String(card.id)}>
+                                                        {card.name}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    )}
+                                />
+                            </Field>
+
+                            <Field>
+                                <FieldLabel htmlFor="transaction-installment-total">Parcelas</FieldLabel>
+                                <Controller
+                                    name="installmentTotal"
+                                    control={control}
+                                    render={({ field: { value, onChange } }) => (
+                                        <IntegerInput id="transaction-installment-total" placeholder="1" value={value} onChange={onChange} />
+                                    )}
+                                />
+                            </Field>
+                        </div>
+                    ) : (
+                        <Field>
+                            <FieldLabel htmlFor="transaction-bank-account">Conta bancária</FieldLabel>
+                            <Controller
+                                name="bankAccountId"
+                                control={control}
+                                render={({ field: { value, onChange } }) => (
+                                    <Select value={value} onValueChange={onChange}>
+                                        <SelectTrigger id="transaction-bank-account" className="w-full">
+                                            <SelectValue placeholder="Selecione uma conta" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {bankAccounts.map((bankAccount) => (
+                                                <SelectItem key={bankAccount.id} value={String(bankAccount.id)}>
+                                                    {bankAccount.bank.name} · {bankAccount.description || bankAccount.accountNumber}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                )}
+                            />
+                        </Field>
+                    )}
 
                     <Field>
                         <FieldLabel htmlFor="transaction-category">Categoria</FieldLabel>

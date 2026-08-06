@@ -1,0 +1,10 @@
+[
+    "ALTER TABLE \"PaymentMethod\" ADD COLUMN IF NOT EXISTS \"guid\" TEXT;",
+    "UPDATE \"PaymentMethod\" SET \"guid\" = 'dinheiro' WHERE \"name\" = 'Dinheiro' AND \"guid\" IS NULL;",
+    "UPDATE \"PaymentMethod\" SET \"guid\" = 'debito' WHERE \"name\" = 'Débito' AND \"guid\" IS NULL;",
+    "UPDATE \"PaymentMethod\" SET \"guid\" = 'pix' WHERE \"name\" = 'Pix' AND \"guid\" IS NULL;",
+    "UPDATE \"PaymentMethod\" SET \"guid\" = 'cartao-credito' WHERE \"name\" = 'Cartão de Crédito' AND \"guid\" IS NULL;",
+    "UPDATE \"PaymentMethod\" SET \"guid\" = 'emprestimo' WHERE \"name\" = 'Empréstimo' AND \"guid\" IS NULL;",
+    "ALTER TABLE \"PaymentMethod\" ALTER COLUMN \"guid\" SET NOT NULL;",
+    "CREATE UNIQUE INDEX IF NOT EXISTS \"PaymentMethod_guid_key\" ON \"PaymentMethod\"(\"guid\");"
+]

@@ -33,6 +33,7 @@ export function TransactionsList({ transactions, loading, page, pageSize, total,
                         <TableHead>Descrição</TableHead>
                         <TableHead>Categoria</TableHead>
                         <TableHead>Conta</TableHead>
+                        <TableHead>Status</TableHead>
                         <TableHead>Valor</TableHead>
                         <TableHead className="text-right">Ações</TableHead>
                     </TableRow>
@@ -40,6 +41,10 @@ export function TransactionsList({ transactions, loading, page, pageSize, total,
                 <TableBody>
                     {transactions.map((transaction) => {
                         const isCredit = transaction.category.type === 'CREDIT'
+                        const payments = transaction.payments || []
+                        const firstPayment = payments[0]
+                        const paidCount = payments.filter((payment) => payment.status === 'PAID').length
+                        const isInstallment = payments.length > 1
 
                         return (
                             <TableRow key={transaction.id}>
@@ -51,8 +56,26 @@ export function TransactionsList({ transactions, loading, page, pageSize, total,
                                     <Badge variant={isCredit ? 'default' : 'destructive'}>{transaction.category.description}</Badge>
                                 </TableCell>
                                 <TableCell>
-                                    {transaction.bankAccount.bank.name} ·{' '}
-                                    {transaction.bankAccount.description || transaction.bankAccount.accountNumber}
+                                    {firstPayment?.card ? (
+                                        `Cartão · ${firstPayment.card.name}`
+                                    ) : (
+                                        <>
+                                            {transaction.bankAccount.bank.name} ·{' '}
+                                            {transaction.bankAccount.description || transaction.bankAccount.accountNumber}
+                                        </>
+                                    )}
+                                </TableCell>
+                                <TableCell>
+                                    <div className="flex flex-col gap-1">
+                                        <Badge variant={transaction.status === 'PAID' ? 'default' : 'secondary'}>
+                                            {transaction.status === 'PAID' ? 'Pago' : 'Pendente'}
+                                        </Badge>
+                                        {isInstallment && (
+                                            <span className="text-xs text-muted-foreground">
+                                                {paidCount}/{payments.length} parcelas pagas
+                                            </span>
+                                        )}
+                                    </div>
                                 </TableCell>
                                 <TableCell className={isCredit ? 'text-green-700' : 'text-red-600'}>
                                     {isCredit ? '+' : '-'}

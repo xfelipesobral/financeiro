@@ -34,6 +34,10 @@ const data = {
             url: '/painel/cartoes',
         },
         {
+            title: 'Empréstimos',
+            url: '/painel/emprestimos',
+        },
+        {
             title: 'Inventário Steam',
             url: '/painel/inventario-steam',
         },
