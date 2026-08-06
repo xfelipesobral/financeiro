@@ -115,11 +115,11 @@ export function LoanFormDialog({ open, bankAccounts, loan, closed }: Params) {
         'desiredMonthlyPayment',
     ])
 
-    const principal = parseFloat(watchedTotalAmount)
-    const monthlyRate = watchedInterestRate.trim() ? parseFloat(watchedInterestRate) : 0
+    const principal = Number(watchedTotalAmount)
+    const monthlyRate = watchedInterestRate.trim() ? Number(watchedInterestRate) : 0
 
     const fixedPaymentPlan = watchedDesiredMonthlyPayment.trim()
-        ? calculateFixedPaymentPlan(principal, monthlyRate, parseFloat(watchedDesiredMonthlyPayment))
+        ? calculateFixedPaymentPlan(principal, monthlyRate, Number(watchedDesiredMonthlyPayment))
         : null
 
     const installmentEstimate = fixedPaymentPlan ? null : calculateInstallmentEstimate(principal, monthlyRate, parseInt(watchedInstallmentTotal, 10))
@@ -168,103 +168,93 @@ export function LoanFormDialog({ open, bankAccounts, loan, closed }: Params) {
         desiredMonthlyPayment,
         startDate,
     }: Form) => {
-        const normalizedDescription = description.trim()
-        const dueDayNumber = parseInt(dueDay, 10)
-        const interestRateNumber = interestRate.trim() ? parseFloat(interestRate) : null
-        const desiredMonthlyPaymentNumber = desiredMonthlyPayment.trim() ? parseFloat(desiredMonthlyPayment) : null
-
-        if (!normalizedDescription) {
-            toast.error('Descrição é obrigatória.')
-            return
-        }
-
-        if (isNaN(dueDayNumber) || dueDayNumber < 1 || dueDayNumber > 31) {
-            toast.error('Informe um dia de vencimento entre 1 e 31.')
-            return
-        }
-
-        if (interestRateNumber !== null && (isNaN(interestRateNumber) || interestRateNumber < 0)) {
-            toast.error('Informe uma taxa de juros válida.')
-            return
-        }
-
-        if (desiredMonthlyPaymentNumber !== null && (isNaN(desiredMonthlyPaymentNumber) || desiredMonthlyPaymentNumber <= 0)) {
-            toast.error('Informe um pagamento mensal válido.')
-            return
-        }
-
         setLoading(true)
 
-        if (isEditing) {
-            const response = await apiUpdateLoan(loan!.id, {
+        try {
+            const normalizedDescription = description.trim()
+            const dueDayNumber = parseInt(dueDay, 10)
+            const interestRateNumber = interestRate.trim() ? Number(interestRate) : null
+            const desiredMonthlyPaymentNumber = desiredMonthlyPayment.trim() ? Number(desiredMonthlyPayment) : null
+
+            if (!normalizedDescription) {
+                throw new Error('Descrição é obrigatória.')
+            }
+
+            if (isNaN(dueDayNumber) || dueDayNumber < 1 || dueDayNumber > 31) {
+                throw new Error('Informe um dia de vencimento entre 1 e 31.')
+            }
+
+            if (interestRateNumber !== null && (isNaN(interestRateNumber) || interestRateNumber < 0)) {
+                throw new Error('Informe uma taxa de juros válida.')
+            }
+
+            if (desiredMonthlyPaymentNumber !== null && (isNaN(desiredMonthlyPaymentNumber) || desiredMonthlyPaymentNumber <= 0)) {
+                throw new Error('Informe um pagamento mensal válido.')
+            }
+
+            if (isEditing) {
+                const response = await apiUpdateLoan(loan!.id, {
+                    description: normalizedDescription,
+                    dueDay: dueDayNumber,
+                    interestRate: interestRateNumber,
+                })
+
+                if (!response.success) {
+                    throw new Error(response.message || 'Erro ao salvar empréstimo. Tente novamente mais tarde.')
+                }
+
+                toast.success('Empréstimo atualizado com sucesso!')
+                closed(true)
+                return
+            }
+
+            const totalAmountNumber = Number(totalAmount)
+
+            if (!bankAccountId) {
+                throw new Error('Selecione uma conta bancária.')
+            }
+
+            if (isNaN(totalAmountNumber) || totalAmountNumber <= 0) {
+                throw new Error('Informe um valor total maior que zero.')
+            }
+
+            let installmentTotalNumber: number | undefined
+
+            if (desiredMonthlyPaymentNumber !== null) {
+                // Nesse modo o servidor calcula o nº de parcelas de verdade (com juros compostos).
+                if (fixedPaymentPlan?.insufficient) {
+                    throw new Error('Esse pagamento mensal não cobre nem os juros do primeiro mês, a dívida nunca seria quitada.')
+                }
+            } else {
+                installmentTotalNumber = parseInt(installmentTotal, 10)
+
+                if (isNaN(installmentTotalNumber) || installmentTotalNumber < 1) {
+                    throw new Error('Informe um número de parcelas válido.')
+                }
+            }
+
+            const response = await apiCreateLoan({
+                bankAccountId: Number(bankAccountId),
                 description: normalizedDescription,
+                totalAmount: totalAmountNumber,
+                installmentTotal: installmentTotalNumber,
                 dueDay: dueDayNumber,
                 interestRate: interestRateNumber,
+                desiredMonthlyPayment: desiredMonthlyPaymentNumber,
+                startDate: startDate.toISOString(),
             })
 
             if (!response.success) {
-                toast.error(response.message || 'Erro ao salvar empréstimo. Tente novamente mais tarde.')
-                setLoading(false)
-                return
+                throw new Error(response.message || 'Erro ao salvar empréstimo. Tente novamente mais tarde.')
             }
 
-            toast.success('Empréstimo atualizado com sucesso!')
+            toast.success('Empréstimo cadastrado com sucesso! As parcelas já foram lançadas como pendentes.')
             closed(true)
-            return
-        }
-
-        const totalAmountNumber = parseFloat(totalAmount)
-
-        if (!bankAccountId) {
-            toast.error('Selecione uma conta bancária.')
+        } catch (e) {
+            toast.error(e instanceof Error ? e.message : 'Erro ao salvar empréstimo. Tente novamente mais tarde.')
+        } finally {
             setLoading(false)
-            return
         }
-
-        if (isNaN(totalAmountNumber) || totalAmountNumber <= 0) {
-            toast.error('Informe um valor total maior que zero.')
-            setLoading(false)
-            return
-        }
-
-        let installmentTotalNumber: number | undefined
-
-        if (desiredMonthlyPaymentNumber !== null) {
-            // Nesse modo o servidor calcula o nº de parcelas de verdade (com juros compostos).
-            if (fixedPaymentPlan?.insufficient) {
-                toast.error('Esse pagamento mensal não cobre nem os juros do primeiro mês — a dívida nunca seria quitada.')
-                setLoading(false)
-                return
-            }
-        } else {
-            installmentTotalNumber = parseInt(installmentTotal, 10)
-
-            if (isNaN(installmentTotalNumber) || installmentTotalNumber < 1) {
-                toast.error('Informe um número de parcelas válido.')
-                setLoading(false)
-                return
-            }
-        }
-
-        const response = await apiCreateLoan({
-            bankAccountId: Number(bankAccountId),
-            description: normalizedDescription,
-            totalAmount: totalAmountNumber,
-            installmentTotal: installmentTotalNumber,
-            dueDay: dueDayNumber,
-            interestRate: interestRateNumber,
-            desiredMonthlyPayment: desiredMonthlyPaymentNumber,
-            startDate: startDate.toISOString(),
-        })
-
-        if (!response.success) {
-            toast.error(response.message || 'Erro ao salvar empréstimo. Tente novamente mais tarde.')
-            setLoading(false)
-            return
-        }
-
-        toast.success('Empréstimo cadastrado com sucesso! As parcelas já foram lançadas como pendentes.')
-        closed(true)
     }
 
     return (
@@ -415,8 +405,8 @@ export function LoanFormDialog({ open, bankAccounts, loan, closed }: Params) {
                             </div>
                             <div className="col-span-2">
                                 <p className="text-muted-foreground">
-                                    Total pago: {currencyFormatter.format(fixedPaymentPlan.totalPaid)} · Juros:{' '}
-                                    {currencyFormatter.format(fixedPaymentPlan.totalInterest)}
+                                    Total pago: <span className="text-stone-900">{currencyFormatter.format(fixedPaymentPlan.totalPaid)}</span> ·
+                                    Juros: <span className="text-orange-600">{currencyFormatter.format(fixedPaymentPlan.totalInterest)}</span>
                                 </p>
                             </div>
                         </div>

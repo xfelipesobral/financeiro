@@ -34,15 +34,15 @@ export class LoanRepository {
         })
     }
 
-    userFindById(userId: number, id: number, db: Prisma.TransactionClient = prisma) {
-        return db.loan.findFirst({
+    userFindById(userId: number, id: number) {
+        return this.loan.findFirst({
             where: { id, userId },
             include: LoanRepository.includeDefault,
         })
     }
 
-    create(data: CreateLoanData, db: Prisma.TransactionClient = prisma) {
-        return db.loan.create({
+    create(data: CreateLoanData) {
+        return this.loan.create({
             data: {
                 guid: uuid(),
                 ...data,
@@ -51,16 +51,16 @@ export class LoanRepository {
         })
     }
 
-    updateById(id: number, data: UpdateLoanData, db: Prisma.TransactionClient = prisma) {
-        return db.loan.update({
+    updateById(id: number, data: UpdateLoanData) {
+        return this.loan.update({
             where: { id },
             data,
             include: LoanRepository.includeDefault,
         })
     }
 
-    deleteById(id: number, db: Prisma.TransactionClient = prisma) {
-        return db.loan.delete({
+    deleteById(id: number) {
+        return this.loan.delete({
             where: { id },
         })
     }

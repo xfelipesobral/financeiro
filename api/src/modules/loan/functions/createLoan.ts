@@ -19,10 +19,10 @@ export async function createLoan(userId: number, data: CreateLoanDTO = {}) {
     const description = data.description?.trim()
     const principal = data.totalAmount === undefined ? NaN : Number(data.totalAmount)
     const dueDay = data.dueDay === undefined ? NaN : Number(data.dueDay)
-    const interestRate = data.interestRate === undefined || data.interestRate === null ? null : Number(data.interestRate)
+    const interestRate = data.interestRate === undefined || data.interestRate === null ? null : Number(data.interestRate) // Taxa de juros mensal
     const startDate = data.startDate === undefined ? new Date() : new Date(data.startDate)
     const desiredMonthlyPayment =
-        data.desiredMonthlyPayment === undefined || data.desiredMonthlyPayment === null ? null : Number(data.desiredMonthlyPayment)
+        data.desiredMonthlyPayment === undefined || data.desiredMonthlyPayment === null ? null : Number(data.desiredMonthlyPayment) // Valor desejado para cada parcela (com juros compostos sobre o saldo devedor). Se informado, `installmentTotal` é ignorado.
 
     if (!data.bankAccountId || isNaN(bankAccountId)) {
         throw new ApiError('BANK_ACCOUNT_ID_REQUIRED', 'Conta bancária é obrigatória', 400)
@@ -65,7 +65,9 @@ export async function createLoan(userId: number, data: CreateLoanDTO = {}) {
         const schedule = calculateFixedPaymentSchedule(principal, interestRate ?? 0, desiredMonthlyPayment)
 
         if (!schedule.ok) {
-            throw new ApiError('INSUFFICIENT_MONTHLY_PAYMENT', 'Esse pagamento mensal não cobre nem os juros do primeiro mês — a dívida nunca seria quitada',
+            throw new ApiError(
+                'INSUFFICIENT_MONTHLY_PAYMENT',
+                'Esse pagamento mensal não cobre nem os juros do primeiro mês, a dívida nunca seria quitada',
                 400,
             )
         }
@@ -107,53 +109,44 @@ export async function createLoan(userId: number, data: CreateLoanDTO = {}) {
 
     const dueDates = calculateMonthlyDueDates(startDate, dueDay, installmentTotal)
 
-    return prisma.$transaction(async (tx) => {
-        const createdTransaction = await transaction.create(
-            userId,
-            bankAccountId,
-            LOAN_CATEGORY_ID,
-            totalAmount,
-            description,
-            startDate,
-            installmentTotal > 1 ? installmentTotal : null,
-            tx,
-        )
-
-        const createdLoan = await loan.create(
-            {
-                userId,
-                bankAccountId,
-                description,
-                totalAmount,
-                installmentTotal,
-                dueDay,
-                interestRate,
-                startDate,
-            },
-            tx,
-        )
-
-        await Promise.all(
-            amounts.map((amount, index) =>
-                payment.create(
-                    {
-                        userId,
-                        paymentMethodId: loanPaymentMethod.id,
-                        transactionId: createdTransaction.id,
-                        loanId: createdLoan.id,
-                        amount,
-                        installmentNumber: index + 1,
-                        status: 'PENDING',
-                        dueDate: dueDates[index],
-                        paidAt: null,
-                    },
-                    tx,
-                ),
-            ),
-        )
-
-        return (await loan.userFindById(userId, createdLoan.id, tx))!
+    const createdLoan = await loan.create({
+        userId,
+        bankAccountId,
+        description,
+        totalAmount,
+        installmentTotal,
+        dueDay,
+        interestRate,
+        startDate,
     })
+
+    const createdTransaction = await transaction.create(
+        userId,
+        bankAccountId,
+        LOAN_CATEGORY_ID,
+        totalAmount,
+        description,
+        startDate,
+        installmentTotal > 1 ? installmentTotal : null,
+    )
+
+    await Promise.all(
+        amounts.map((amount, index) =>
+            payment.create({
+                userId,
+                paymentMethodId: loanPaymentMethod.id,
+                transactionId: createdTransaction.id,
+                loanId: createdLoan.id,
+                amount,
+                installmentNumber: index + 1,
+                status: 'PENDING',
+                dueDate: dueDates[index],
+                paidAt: null,
+            }),
+        ),
+    )
+
+    return createdLoan
 }
 
 export interface CreateLoanDTO {

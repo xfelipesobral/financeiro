@@ -14,9 +14,9 @@ export interface ApiCreateLoanParams {
     startDate?: string
 }
 
-export default async function apiCreateLoan(params: ApiCreateLoanParams): Promise<ResponseApi<Loan>> {
+export default async function apiCreateLoan(params: ApiCreateLoanParams): Promise<ResponseApi<{ id: number }>> {
     try {
-        const { data, status } = await (await api()).post<Loan>('/loan', params)
+        const { data, status } = await (await api()).post<{ id: number }>('/loan', params)
 
         if (status !== 201) {
             throw new Error('UNKNOWN_ERROR')
