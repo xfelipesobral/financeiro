@@ -7,9 +7,10 @@ export interface ApiCreateLoanParams {
     bankAccountId: number
     description: string
     totalAmount: number
-    installmentTotal: number
+    installmentTotal?: number
     dueDay: number
     interestRate?: number | null
+    desiredMonthlyPayment?: number | null
     startDate?: string
 }
 

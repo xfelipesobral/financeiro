@@ -48,12 +48,12 @@ export function DateTimePicker({ id, value, onChange, container }: Params) {
                     render={
                         <Button variant="outline" id={id} className="flex-1 justify-start px-2.5 font-normal">
                             <CalendarIcon data-icon="inline-start" />
-                            {format(value, "dd/MM/yyyy", { locale: ptBR })}
+                            {format(value, 'dd/MM/yyyy', { locale: ptBR })}
                         </Button>
                     }
                 />
                 <PopoverContent className="w-auto p-0" align="start" container={container}>
-                    <Calendar mode="single" locale={ptBR} selected={value} defaultMonth={value} onSelect={handleDaySelect} />
+                    <Calendar mode="single" locale={ptBR} selected={value} defaultMonth={value} onSelect={handleDaySelect} captionLayout="dropdown" />
                 </PopoverContent>
             </Popover>
 

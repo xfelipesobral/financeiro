@@ -69,6 +69,8 @@ export const errorTranslations: Record<string, string> = {
     INVALID_LOAN_AMOUNT: 'Valor do empréstimo inválido',
     INVALID_DUE_DAY: 'Dia de vencimento inválido (use um valor entre 1 e 31)',
     INVALID_INTEREST_RATE: 'Taxa de juros inválida',
+    INVALID_DESIRED_MONTHLY_PAYMENT: 'Pagamento mensal desejado inválido',
+    INSUFFICIENT_MONTHLY_PAYMENT: 'Esse pagamento mensal não cobre nem os juros do primeiro mês — a dívida nunca seria quitada',
     LOAN_HAS_PAID_PAYMENTS: 'Este empréstimo já tem parcelas pagas e não pode mais ser removido',
     LOAN_CATEGORY_NOT_CONFIGURED: 'Categoria padrão de empréstimo não configurada',
     LOAN_PAYMENT_METHOD_NOT_CONFIGURED: 'Forma de pagamento padrão de empréstimo não configurada',

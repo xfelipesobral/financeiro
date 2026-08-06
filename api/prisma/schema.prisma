@@ -201,7 +201,7 @@ model Loan {
     totalAmount      Decimal
     installmentTotal Int
     dueDay           Int
-    interestRate     Decimal? // Taxa mensal (% a.m.), só informativa, não entra em nenhum cálculo de parcela
+    interestRate     Decimal? // Taxa mensal (% a.m.). Só entra no cálculo das parcelas quando criado com `desiredMonthlyPayment`.
     startDate        DateTime    @default(now())
     createdAt        DateTime    @default(now())
     updatedAt        DateTime    @updatedAt
