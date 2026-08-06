@@ -1,8 +1,8 @@
 'use client'
 
+import { AddSteamItem } from '@/components/steam/addSteamItem'
 import { ImportSteamInventory } from '@/components/steam/importSteamInventory'
 import { SteamItens } from '@/components/steam/itens'
-import { SteamInventoryItem } from '@/components/steam/steamInventoryItem'
 import { SubTitle, Title } from '@/components/title'
 import { Button } from '@/components/ui/button'
 import {
@@ -18,10 +18,21 @@ import { useState } from 'react'
 
 export default function InventarioSteamPage() {
     const [importSteamInventoryOpen, setImportSteamInventoryOpen] = useState(false)
+    const [addSteamItemOpen, setAddSteamItemOpen] = useState(false)
 
     return (
         <div className="p-4">
-            {/* <SteamInventoryItem id={null} /> */}
+            <AddSteamItem
+                open={addSteamItemOpen}
+                closed={(reload = false) => {
+                    setAddSteamItemOpen(false)
+
+                    if (reload) {
+                        location.reload()
+                    }
+                }}
+            />
+
             <ImportSteamInventory
                 open={importSteamInventoryOpen}
                 closed={(reload = false) => {
@@ -41,7 +52,7 @@ export default function InventarioSteamPage() {
                 </div>
 
                 <div className="flex gap-2">
-                    <Button>
+                    <Button onClick={() => setAddSteamItemOpen(true)}>
                         <Plus /> Adicionar Item
                     </Button>
                     <DropdownMenu>

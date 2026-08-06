@@ -8,7 +8,8 @@
     "scripts": {
         "start": "tsc && node dist/src/index.js",
         "dev": "tsx watch src/index.ts",
-        "build": "yarn tsc"
+        "build": "yarn tsc",
+        "seed": "tsx src/db/seed.ts"
     },
     "dependencies": {
         "@prisma/adapter-pg": "^7.4.1",
