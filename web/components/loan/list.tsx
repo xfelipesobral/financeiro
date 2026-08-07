@@ -1,10 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { toast } from 'sonner'
-import { CircleCheck, Loader2, Pencil, Trash2 } from 'lucide-react'
+import { CircleCheck, Pencil, Trash2 } from 'lucide-react'
 
-import apiPayPayment from '@/api/payment/pay'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
@@ -14,30 +11,12 @@ interface Params {
     loading: boolean
     onEdit: (loan: Loan) => void
     onDelete: (loan: Loan) => void
-    onReload: () => void
+    onSettle: (loan: Loan) => void
 }
 
-export function LoansList({ loans, loading, onEdit, onDelete, onReload }: Params) {
-    const [payingPaymentId, setPayingPaymentId] = useState<number | null>(null)
-
+export function LoansList({ loans, loading, onEdit, onDelete, onSettle }: Params) {
     if (!loading && !loans.length) {
         return <p className="text-sm text-muted-foreground">Nenhum empréstimo cadastrado ainda.</p>
-    }
-
-    const payNextInstallment = async (payment: Payment) => {
-        setPayingPaymentId(payment.id)
-
-        const response = await apiPayPayment(payment.id)
-
-        if (!response.success) {
-            toast.error(response.message || 'Erro ao dar baixa na parcela. Tente novamente mais tarde.')
-            setPayingPaymentId(null)
-            return
-        }
-
-        toast.success('Parcela baixada com sucesso!')
-        setPayingPaymentId(null)
-        onReload()
     }
 
     return (
@@ -57,7 +36,7 @@ export function LoansList({ loans, loading, onEdit, onDelete, onReload }: Params
                     const sortedPayments = [...loan.payments].sort((a, b) => (a.installmentNumber ?? 0) - (b.installmentNumber ?? 0))
                     const paidCount = sortedPayments.filter((payment) => payment.status === 'PAID').length
                     const allPaid = paidCount === sortedPayments.length
-                    const nextPending = sortedPayments.find((payment) => payment.status === 'PENDING')
+                    const hasPending = sortedPayments.some((payment) => payment.status === 'PENDING')
 
                     return (
                         <TableRow key={loan.id}>
@@ -73,14 +52,9 @@ export function LoansList({ loans, loading, onEdit, onDelete, onReload }: Params
                                 </Badge>
                             </TableCell>
                             <TableCell className="text-right">
-                                {nextPending && (
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        title={`Dar baixa na parcela ${nextPending.installmentNumber}`}
-                                        disabled={payingPaymentId === nextPending.id}
-                                        onClick={() => payNextInstallment(nextPending)}>
-                                        {payingPaymentId === nextPending.id ? <Loader2 className="animate-spin" /> : <CircleCheck />}
+                                {hasPending && (
+                                    <Button variant="ghost" size="icon" title="Dar baixa em parcelas" onClick={() => onSettle(loan)}>
+                                        <CircleCheck />
                                     </Button>
                                 )}
                                 <Button variant="ghost" size="icon" onClick={() => onEdit(loan)}>

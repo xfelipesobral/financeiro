@@ -4,6 +4,7 @@ import { list } from './list'
 import { get } from './get'
 import { update } from './update'
 import { remove } from './remove'
+import { settleInstallments } from './settleInstallments'
 import { middlewareAuthenticated } from '../../../middlewares/authenticated'
 
 export async function loanRoutes(app: FastifyInstance) {
@@ -14,6 +15,7 @@ export async function loanRoutes(app: FastifyInstance) {
         instancia.get('/', list)
         instancia.get('/:loanId', get)
         instancia.patch('/:loanId', update)
+        instancia.patch('/:loanId/settle-installments', settleInstallments)
         instancia.delete('/:loanId', remove)
     })
 }

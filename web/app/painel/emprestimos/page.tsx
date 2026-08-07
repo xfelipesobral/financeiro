@@ -9,6 +9,7 @@ import apiGetLoans from '@/api/loan/list'
 import { DeleteLoan } from '@/components/loan/deleteLoan'
 import { LoansList } from '@/components/loan/list'
 import { LoanFormDialog } from '@/components/loan/loanFormDialog'
+import { SettleInstallmentsDialog } from '@/components/loan/settleInstallmentsDialog'
 import { SubTitle, Title } from '@/components/title'
 import { Button } from '@/components/ui/button'
 
@@ -19,6 +20,7 @@ export default function EmprestimosPage() {
     const [formOpen, setFormOpen] = useState(false)
     const [editingLoan, setEditingLoan] = useState<Loan | null>(null)
     const [deletingLoan, setDeletingLoan] = useState<Loan | null>(null)
+    const [settlingLoan, setSettlingLoan] = useState<Loan | null>(null)
 
     useEffect(() => {
         fetchBankAccounts()
@@ -78,6 +80,17 @@ export default function EmprestimosPage() {
                 }}
             />
 
+            <SettleInstallmentsDialog
+                loan={settlingLoan}
+                closed={(reload = false) => {
+                    setSettlingLoan(null)
+
+                    if (reload) {
+                        fetchLoans()
+                    }
+                }}
+            />
+
             <div className="flex justify-between items-center">
                 <div className="flex-1">
                     <Title>Empréstimos</Title>
@@ -98,7 +111,7 @@ export default function EmprestimosPage() {
             </div>
 
             <div className="mt-4">
-                <LoansList loans={loans} loading={loading} onEdit={setEditingLoan} onDelete={setDeletingLoan} onReload={fetchLoans} />
+                <LoansList loans={loans} loading={loading} onEdit={setEditingLoan} onDelete={setDeletingLoan} onSettle={setSettlingLoan} />
             </div>
         </div>
     )
