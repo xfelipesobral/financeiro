@@ -22,6 +22,10 @@ const data = {
             url: '/painel',
         },
         {
+            title: 'Contas a Pagar',
+            url: '/painel/contas-a-pagar',
+        },
+        {
             title: 'Lançamentos',
             url: '/painel/transacoes',
         },

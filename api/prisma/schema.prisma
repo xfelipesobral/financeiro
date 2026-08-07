@@ -186,6 +186,7 @@ model Card {
     guid          String      @unique @db.Uuid
     name          String
     closingDay    Int
+    dueDay        Int
     type          CardType
     description   String
     limit         Decimal

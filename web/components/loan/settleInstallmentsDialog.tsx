@@ -9,20 +9,24 @@ import { DatePicker } from '@/components/inputs/datePicker'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Field, FieldLabel } from '@/components/ui/field'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 
 interface Params {
     loan?: Loan | null
+    bankAccounts: BankAccount[]
     closed: (update?: boolean) => void
 }
 
-export function SettleInstallmentsDialog({ loan, closed }: Params) {
+export function SettleInstallmentsDialog({ loan, bankAccounts, closed }: Params) {
     const open = !!loan
     const dialogContentRef = useRef<HTMLDivElement>(null)
 
     const [loading, setLoading] = useState(false)
     const [selected, setSelected] = useState<Record<number, boolean>>({})
     const [paidAtByPayment, setPaidAtByPayment] = useState<Record<number, Date>>({})
+    const [bankAccountId, setBankAccountId] = useState('')
 
     const pendingPayments = [...(loan?.payments ?? [])]
         .filter((payment) => payment.status === 'PENDING')
@@ -32,6 +36,7 @@ export function SettleInstallmentsDialog({ loan, closed }: Params) {
         setLoading(false)
         setSelected({})
         setPaidAtByPayment(Object.fromEntries(pendingPayments.map((payment) => [payment.id, new Date(payment.dueDate)])))
+        setBankAccountId(loan ? String(loan.bankAccountId) : '')
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [loan])
 
@@ -50,9 +55,14 @@ export function SettleInstallmentsDialog({ loan, closed }: Params) {
             return
         }
 
+        if (!bankAccountId) {
+            toast.error('Selecione a conta bancária de onde saiu o pagamento.')
+            return
+        }
+
         setLoading(true)
 
-        const response = await apiSettleLoanInstallments(loan!.id, { installments })
+        const response = await apiSettleLoanInstallments(loan!.id, { bankAccountId: Number(bankAccountId), installments })
 
         if (response.success) {
             toast.success(`${installments.length} parcela(s) baixada(s) com sucesso!`)
@@ -75,6 +85,22 @@ export function SettleInstallmentsDialog({ loan, closed }: Params) {
                     <DialogTitle>Dar baixa em parcelas</DialogTitle>
                     <DialogDescription>Selecione as parcelas já pagas e, se precisar, ajuste a data de baixa de cada uma.</DialogDescription>
                 </DialogHeader>
+
+                <Field>
+                    <FieldLabel htmlFor="settle-installments-bank-account">Conta de débito</FieldLabel>
+                    <Select value={bankAccountId} onValueChange={setBankAccountId}>
+                        <SelectTrigger id="settle-installments-bank-account" className="w-full">
+                            <SelectValue placeholder="Selecione a conta de onde saiu o pagamento" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {bankAccounts.map((account) => (
+                                <SelectItem key={account.id} value={String(account.id)}>
+                                    {account.bank.name} · {account.description || account.accountNumber}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                </Field>
 
                 <div className="-mx-4 no-scrollbar max-h-[50vh] overflow-y-auto px-4">
                     {pendingPayments.length ? (

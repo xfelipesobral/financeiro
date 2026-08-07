@@ -1,0 +1,5 @@
+[
+    "ALTER TABLE \"Card\" ADD COLUMN IF NOT EXISTS \"dueDay\" INTEGER;",
+    "UPDATE \"Card\" SET \"dueDay\" = \"closingDay\" WHERE \"dueDay\" IS NULL;",
+    "ALTER TABLE \"Card\" ALTER COLUMN \"dueDay\" SET NOT NULL;"
+]

@@ -55,6 +55,7 @@ export function CardsList({ onEdit, onDelete }: Params) {
                     <TableHead>Conta bancária</TableHead>
                     <TableHead>Tipo</TableHead>
                     <TableHead>Fechamento</TableHead>
+                    <TableHead>Vencimento</TableHead>
                     <TableHead>Limite</TableHead>
                     <TableHead className="text-right">Ações</TableHead>
                 </TableRow>
@@ -70,6 +71,7 @@ export function CardsList({ onEdit, onDelete }: Params) {
                             <Badge variant="secondary">{CARD_TYPE_LABELS[card.type]}</Badge>
                         </TableCell>
                         <TableCell>Dia {card.closingDay}</TableCell>
+                        <TableCell>Dia {card.dueDay}</TableCell>
                         <TableCell>{card.limit.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</TableCell>
                         <TableCell className="text-right">
                             <Button variant="ghost" size="icon" onClick={() => onEdit(card)}>

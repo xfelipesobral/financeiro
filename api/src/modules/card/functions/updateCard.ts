@@ -11,7 +11,7 @@ export async function updateCard(userId: number, id: number, data: UpdateCardDTO
         throw new ApiError('CARD_NOT_FOUND', 'Cartão não encontrado', 404)
     }
 
-    const updateData: { name?: string; closingDay?: number; type?: CardType; description?: string; limit?: number } = {}
+    const updateData: { name?: string; closingDay?: number; dueDay?: number; type?: CardType; description?: string; limit?: number } = {}
 
     if (data.name !== undefined) {
         const name = data.name.trim()
@@ -31,6 +31,16 @@ export async function updateCard(userId: number, id: number, data: UpdateCardDTO
         }
 
         updateData.closingDay = closingDay
+    }
+
+    if (data.dueDay !== undefined) {
+        const dueDay = Number(data.dueDay)
+
+        if (isNaN(dueDay) || dueDay < 1 || dueDay > 31) {
+            throw new ApiError('INVALID_DUE_DAY', 'Dia de vencimento inválido (use um valor entre 1 e 31)', 400)
+        }
+
+        updateData.dueDay = dueDay
     }
 
     if (data.type !== undefined) {
@@ -61,6 +71,7 @@ export async function updateCard(userId: number, id: number, data: UpdateCardDTO
 export interface UpdateCardDTO {
     name?: string
     closingDay?: number
+    dueDay?: number
     type?: CardType
     description?: string
     limit?: number

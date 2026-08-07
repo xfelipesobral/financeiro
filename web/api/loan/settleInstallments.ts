@@ -4,6 +4,7 @@ import api from '../'
 import { getApiErrorMessage } from '@/lib/apiError'
 
 export interface ApiSettleLoanInstallmentsParams {
+    bankAccountId: number
     installments: { paymentId: number; paidAt?: string }[]
 }
 

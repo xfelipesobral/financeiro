@@ -64,4 +64,28 @@ export class PaymentRepository {
     deleteMany(where: Prisma.PaymentWhereInput, db: Prisma.TransactionClient = prisma) {
         return db.payment.deleteMany({ where })
     }
+
+    // Todos os Payments PENDING do usuário — base de dados do dashboard "Contas a pagar". Inclui só a
+    // descrição da transação original (rótulo de fallback); card/loan completos já são buscados à
+    // parte pelo front (GET /card, GET /loan) para exibição/seleção de conta.
+    userFindManyPending(userId: number) {
+        return this.payment.findMany({
+            where: { userId, status: 'PENDING' },
+            include: {
+                transaction: { select: { id: true, description: true } },
+            },
+            orderBy: { dueDate: 'asc' },
+        })
+    }
+
+    // Parcelas PENDING de uma fatura específica: mesmo cardId + mesmo dueDate exato. Todas as
+    // parcelas de um cartão que vencem no mesmo mês compartilham o mesmo dueDate (calculado a partir
+    // de card.closingDay, ver calculateMonthlyDueDates/buildTransactionPayments), então isso é o
+    // suficiente para identificar "a fatura".
+    findManyPendingByCardIdAndDueDate(cardId: number, dueDate: Date) {
+        return this.payment.findMany({
+            where: { cardId, dueDate, status: 'PENDING' },
+            orderBy: { installmentNumber: 'asc' },
+        })
+    }
 }

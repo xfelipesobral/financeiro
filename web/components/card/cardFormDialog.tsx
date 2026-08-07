@@ -31,6 +31,7 @@ interface Form {
     bankAccountId: string
     name: string
     closingDay: string
+    dueDay: string
     type: CardType | ''
     description: string
     limit: string
@@ -40,6 +41,7 @@ const emptyForm: Form = {
     bankAccountId: '',
     name: '',
     closingDay: '',
+    dueDay: '',
     type: '',
     description: '',
     limit: '',
@@ -63,6 +65,7 @@ export function CardFormDialog({ open, bankAccounts, card, closed }: Params) {
                       bankAccountId: String(card.bankAccountId),
                       name: card.name,
                       closingDay: String(card.closingDay),
+                      dueDay: String(card.dueDay),
                       type: card.type,
                       description: card.description,
                       limit: String(card.limit),
@@ -71,10 +74,11 @@ export function CardFormDialog({ open, bankAccounts, card, closed }: Params) {
         )
     }, [open, card, reset])
 
-    const onSubmit = async ({ bankAccountId, name, closingDay, type, description, limit }: Form) => {
+    const onSubmit = async ({ bankAccountId, name, closingDay, dueDay, type, description, limit }: Form) => {
         const normalizedName = name.trim()
         const normalizedDescription = description.trim()
         const closingDayNumber = parseInt(closingDay, 10)
+        const dueDayNumber = parseInt(dueDay, 10)
         const limitNumber = parseFloat(limit)
 
         if (!bankAccountId) {
@@ -97,6 +101,11 @@ export function CardFormDialog({ open, bankAccounts, card, closed }: Params) {
             return
         }
 
+        if (isNaN(dueDayNumber) || dueDayNumber < 1 || dueDayNumber > 31) {
+            toast.error('Informe um dia de vencimento entre 1 e 31.')
+            return
+        }
+
         if (isNaN(limitNumber) || limitNumber < 0) {
             toast.error('Informe um limite válido.')
             return
@@ -108,6 +117,7 @@ export function CardFormDialog({ open, bankAccounts, card, closed }: Params) {
             bankAccountId: Number(bankAccountId),
             name: normalizedName,
             closingDay: closingDayNumber,
+            dueDay: dueDayNumber,
             type,
             description: normalizedDescription,
             limit: limitNumber,
@@ -165,29 +175,29 @@ export function CardFormDialog({ open, bankAccounts, card, closed }: Params) {
                         <Input id="card-name" type="text" placeholder="Nubank Ultravioleta" {...register('name')} />
                     </Field>
 
-                    <div className="grid grid-cols-2 gap-3">
-                        <Field>
-                            <FieldLabel htmlFor="card-type">Tipo</FieldLabel>
-                            <Controller
-                                name="type"
-                                control={control}
-                                render={({ field: { value, onChange } }) => (
-                                    <Select value={value} onValueChange={onChange}>
-                                        <SelectTrigger id="card-type" className="w-full">
-                                            <SelectValue placeholder="Selecione o tipo" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {CARD_TYPES.map((cardType) => (
-                                                <SelectItem key={cardType.value} value={cardType.value}>
-                                                    {cardType.label}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                )}
-                            />
-                        </Field>
+                    <Field>
+                        <FieldLabel htmlFor="card-type">Tipo</FieldLabel>
+                        <Controller
+                            name="type"
+                            control={control}
+                            render={({ field: { value, onChange } }) => (
+                                <Select value={value} onValueChange={onChange}>
+                                    <SelectTrigger id="card-type" className="w-full">
+                                        <SelectValue placeholder="Selecione o tipo" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {CARD_TYPES.map((cardType) => (
+                                            <SelectItem key={cardType.value} value={cardType.value}>
+                                                {cardType.label}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            )}
+                        />
+                    </Field>
 
+                    <div className="grid grid-cols-2 gap-3">
                         <Field>
                             <FieldLabel htmlFor="card-closing-day">Dia de fechamento</FieldLabel>
                             <Controller
@@ -195,6 +205,17 @@ export function CardFormDialog({ open, bankAccounts, card, closed }: Params) {
                                 control={control}
                                 render={({ field: { value, onChange } }) => (
                                     <IntegerInput id="card-closing-day" placeholder="10" value={value} onChange={onChange} />
+                                )}
+                            />
+                        </Field>
+
+                        <Field>
+                            <FieldLabel htmlFor="card-due-day">Dia de vencimento</FieldLabel>
+                            <Controller
+                                name="dueDay"
+                                control={control}
+                                render={({ field: { value, onChange } }) => (
+                                    <IntegerInput id="card-due-day" placeholder="17" value={value} onChange={onChange} />
                                 )}
                             />
                         </Field>

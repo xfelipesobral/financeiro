@@ -10,6 +10,7 @@ export async function createCard(userId: number, data: CreateCardDTO = {}) {
     const name = data.name?.trim()
     const description = data.description?.trim() ?? ''
     const closingDay = data.closingDay === undefined ? NaN : Number(data.closingDay)
+    const dueDay = data.dueDay === undefined ? NaN : Number(data.dueDay)
     const limit = data.limit === undefined ? NaN : Number(data.limit)
 
     if (!data.bankAccountId || isNaN(bankAccountId)) {
@@ -22,6 +23,10 @@ export async function createCard(userId: number, data: CreateCardDTO = {}) {
 
     if (isNaN(closingDay) || closingDay < 1 || closingDay > 31) {
         throw new ApiError('INVALID_CLOSING_DAY', 'Dia de fechamento inválido (use um valor entre 1 e 31)', 400)
+    }
+
+    if (isNaN(dueDay) || dueDay < 1 || dueDay > 31) {
+        throw new ApiError('INVALID_DUE_DAY', 'Dia de vencimento inválido (use um valor entre 1 e 31)', 400)
     }
 
     if (!data.type || !CARD_TYPES.includes(data.type)) {
@@ -38,13 +43,14 @@ export async function createCard(userId: number, data: CreateCardDTO = {}) {
         throw new ApiError('BANK_ACCOUNT_NOT_FOUND', 'Conta bancária não encontrada', 404)
     }
 
-    return card.create(bankAccountId, name, closingDay, data.type, description, limit)
+    return card.create(bankAccountId, name, closingDay, dueDay, data.type, description, limit)
 }
 
 export interface CreateCardDTO {
     bankAccountId?: number
     name?: string
     closingDay?: number
+    dueDay?: number
     type?: CardType
     description?: string
     limit?: number

@@ -19,3 +19,12 @@ interface Payment {
     card?: Card | null
     loan?: Loan | null
 }
+
+// Payment PENDING retornado por GET /payment/pending, usado no dashboard "Contas a pagar" — sempre
+// traz a descrição da transação original (compra que gerou a parcela) como rótulo de fallback.
+type PendingPayment = Payment & {
+    transaction: {
+        id: number
+        description: string
+    }
+}

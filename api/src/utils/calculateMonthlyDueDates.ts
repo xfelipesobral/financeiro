@@ -47,3 +47,33 @@ export function changeDayOfMonth(date: Date, day: number): Date {
 
     return new Date(date.getFullYear(), date.getMonth(), clampedDay, date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds())
 }
+
+/**
+ * Calcula as datas de vencimento de uma série de parcelas de fatura de cartão, respeitando
+ * fechamento e vencimento como dias distintos: a parcela cai na fatura que fecha em `closingDay`
+ * (mesma lógica de rollover de `calculateMonthlyDueDates`, aplicada sobre `closingDay`), e o
+ * vencimento dessa fatura é em `dueDay` — no mesmo mês do fechamento se `dueDay > closingDay`
+ * (ex: fecha dia 4, vence dia 10), ou no mês seguinte caso contrário (ex: fecha dia 25, vence dia 5).
+ */
+export function calculateCardInvoiceDueDates(fromDate: Date, closingDay: number, dueDay: number, count: number): Date[] {
+    const closingDates = calculateMonthlyDueDates(fromDate, closingDay, count)
+    const monthOffset = dueDay > closingDay ? 0 : 1
+
+    return closingDates.map((closingDate) => {
+        const monthIndex = closingDate.getFullYear() * 12 + closingDate.getMonth() + monthOffset
+        const year = Math.floor(monthIndex / 12)
+        const month = monthIndex % 12
+        const daysInMonth = new Date(year, month + 1, 0).getDate()
+        const clampedDay = Math.min(dueDay, daysInMonth)
+
+        return new Date(
+            year,
+            month,
+            clampedDay,
+            closingDate.getHours(),
+            closingDate.getMinutes(),
+            closingDate.getSeconds(),
+            closingDate.getMilliseconds(),
+        )
+    })
+}

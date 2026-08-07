@@ -37,6 +37,7 @@ interface Card {
     guid: string
     name: string
     closingDay: number
+    dueDay: number
     type: CardType
     description: string
     limit: number

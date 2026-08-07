@@ -30,13 +30,14 @@ export class CardRepository {
         })
     }
 
-    create(bankAccountId: number, name: string, closingDay: number, type: CardType, description: string, limit: number) {
+    create(bankAccountId: number, name: string, closingDay: number, dueDay: number, type: CardType, description: string, limit: number) {
         return this.card.create({
             data: {
                 guid: uuid(),
                 bankAccountId,
                 name,
                 closingDay,
+                dueDay,
                 type,
                 description,
                 limit,
@@ -63,6 +64,7 @@ export class CardRepository {
 interface UpdateData {
     name?: string
     closingDay?: number
+    dueDay?: number
     type?: CardType
     description?: string
     limit?: number

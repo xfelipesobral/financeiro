@@ -4,7 +4,7 @@ import { bankAccount } from '../../bankAccount/service'
 import { card } from '../../card/service'
 import { paymentMethod } from '../../paymentMethod/service'
 import { PAYMENT_METHOD_GUID } from '../../paymentMethod/constants'
-import { calculateMonthlyDueDates } from '../../../utils/calculateMonthlyDueDates'
+import { calculateCardInvoiceDueDates } from '../../../utils/calculateMonthlyDueDates'
 import { splitAmountIntoInstallments } from '../../../utils/splitAmountIntoInstallments'
 
 export interface BuildTransactionPaymentsInput {
@@ -37,7 +37,7 @@ export interface BuiltTransactionPayments {
  * correspondentes. O meio de pagamento escolhido (`paymentMethod.guid`) é quem
  * decide o caminho, não um campo separado:
  * - Cartão de crédito (guid `cartao-credito`): N parcelas `PENDING`, com vencimento
- *   a partir do fechamento do cartão.
+ *   calculado a partir do fechamento e do vencimento da fatura do cartão (`closingDay`/`dueDay`).
  * - Qualquer outro (dinheiro, débito, pix, ...): 1 parcela já `PAID`, usando a
  *   conta bancária informada.
  */
@@ -104,7 +104,7 @@ export async function buildTransactionPayments(userId: number, input: BuildTrans
         throw new ApiError('INVALID_INSTALLMENT_TOTAL', 'Número de parcelas inválido', 400)
     }
 
-    const dueDates = calculateMonthlyDueDates(input.date, cardFinded.closingDay, installmentTotal)
+    const dueDates = calculateCardInvoiceDueDates(input.date, cardFinded.closingDay, cardFinded.dueDay, installmentTotal)
     const amounts = splitAmountIntoInstallments(input.totalAmount, installmentTotal)
     const isInstallment = installmentTotal > 1
 

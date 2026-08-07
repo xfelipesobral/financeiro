@@ -4,6 +4,7 @@ import { list } from './list'
 import { get } from './get'
 import { update } from './update'
 import { remove } from './remove'
+import { payInvoice } from './payInvoice'
 import { middlewareAuthenticated } from '../../../middlewares/authenticated'
 
 export async function cardRoutes(app: FastifyInstance) {
@@ -15,5 +16,6 @@ export async function cardRoutes(app: FastifyInstance) {
         instancia.get('/:cardId', get)
         instancia.patch('/:cardId', update)
         instancia.delete('/:cardId', remove)
+        instancia.post('/:cardId/pay-invoice', payInvoice)
     })
 }

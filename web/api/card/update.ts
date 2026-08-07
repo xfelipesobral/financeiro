@@ -6,6 +6,7 @@ import { getApiErrorMessage } from '@/lib/apiError'
 export interface ApiUpdateCardParams {
     name?: string
     closingDay?: number
+    dueDay?: number
     type?: CardType
     description?: string
     limit?: number

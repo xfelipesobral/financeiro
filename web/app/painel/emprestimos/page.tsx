@@ -82,6 +82,7 @@ export default function EmprestimosPage() {
 
             <SettleInstallmentsDialog
                 loan={settlingLoan}
+                bankAccounts={bankAccounts}
                 closed={(reload = false) => {
                     setSettlingLoan(null)
 
