@@ -1,4 +1,4 @@
-import { CATEGORY_BOUGHT_STEAM_ITEM } from '../../constants'
+import { CATEGORY_BOUGHT_STEAM_ITEM } from '../../../category/constants'
 import { saveTransaction } from '../../itemTransaction/functions/saveTransaction'
 import { steamInventoryItem } from '../service'
 

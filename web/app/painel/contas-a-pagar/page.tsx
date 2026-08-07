@@ -94,83 +94,88 @@ export default function ContasAPagarPage() {
             {!loading && !months.length && <p className="text-sm text-muted-foreground">Nenhuma pendência encontrada. Tudo em dia!</p>}
 
             <div className="grid gap-4">
-                {months.map((month) => (
-                    <UiCard key={month.monthKey}>
-                        <CardHeader>
-                            <CardTitle>{month.monthLabel}</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <Table>
-                                <TableHeader>
-                                    <TableRow>
-                                        <TableHead>Tipo</TableHead>
-                                        <TableHead>Descrição</TableHead>
-                                        <TableHead>Vencimento</TableHead>
-                                        <TableHead>Situação</TableHead>
-                                        <TableHead>Valor</TableHead>
-                                        <TableHead className="text-right">Ações</TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {month.cardGroups.map((group) => {
-                                        const card = cards.find((currentCard) => currentCard.id === group.cardId)
+                {months.map((month) => {
+                    const monthTotal = [...month.cardGroups, ...month.loanGroups].reduce((sum, group) => sum + group.totalAmount, 0)
 
-                                        return (
-                                            <TableRow key={group.key}>
-                                                <TableCell>
-                                                    <Badge variant="secondary">Cartão</Badge>
-                                                </TableCell>
-                                                <TableCell>{card?.name || 'Cartão'}</TableCell>
-                                                <TableCell>{new Date(group.dueDate).toLocaleDateString('pt-BR')}</TableCell>
-                                                <TableCell>
-                                                    {isOverdue(group.dueDate) && <Badge variant="destructive">Atrasado</Badge>}
-                                                </TableCell>
-                                                <TableCell>{numberToBrl(group.totalAmount)}</TableCell>
-                                                <TableCell className="text-right">
-                                                    {card && (
-                                                        <Button
-                                                            size="sm"
-                                                            onClick={() =>
-                                                                setPayingInvoice({
-                                                                    card,
-                                                                    dueDate: group.dueDate,
-                                                                    totalAmount: group.totalAmount,
-                                                                    payments: group.payments,
-                                                                })
-                                                            }>
-                                                            Pagar fatura
-                                                        </Button>
-                                                    )}
-                                                </TableCell>
-                                            </TableRow>
-                                        )
-                                    })}
+                    return (
+                        <UiCard key={month.monthKey}>
+                            <CardHeader className="flex items-center justify-between">
+                                <CardTitle>{month.monthLabel}</CardTitle>
+                                <p className="text-lg font-semibold">{numberToBrl(monthTotal)}</p>
+                            </CardHeader>
+                            <CardContent>
+                                <Table>
+                                    <TableHeader>
+                                        <TableRow>
+                                            <TableHead>Tipo</TableHead>
+                                            <TableHead>Descrição</TableHead>
+                                            <TableHead>Vencimento</TableHead>
+                                            <TableHead>Situação</TableHead>
+                                            <TableHead>Valor</TableHead>
+                                            <TableHead className="text-right">Ações</TableHead>
+                                        </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                        {month.cardGroups.map((group) => {
+                                            const card = cards.find((currentCard) => currentCard.id === group.cardId)
 
-                                    {month.loanGroups.map((group) => {
-                                        const loan = loans.find((currentLoan) => currentLoan.id === group.loanId)
+                                            return (
+                                                <TableRow key={group.key}>
+                                                    <TableCell>
+                                                        <Badge variant="secondary">Cartão</Badge>
+                                                    </TableCell>
+                                                    <TableCell>{card?.name || 'Cartão'}</TableCell>
+                                                    <TableCell>{new Date(group.dueDate).toLocaleDateString('pt-BR')}</TableCell>
+                                                    <TableCell>
+                                                        {isOverdue(group.dueDate) && <Badge variant="destructive">Atrasado</Badge>}
+                                                    </TableCell>
+                                                    <TableCell>{numberToBrl(group.totalAmount)}</TableCell>
+                                                    <TableCell className="text-right">
+                                                        {card && (
+                                                            <Button
+                                                                size="sm"
+                                                                onClick={() =>
+                                                                    setPayingInvoice({
+                                                                        card,
+                                                                        dueDate: group.dueDate,
+                                                                        totalAmount: group.totalAmount,
+                                                                        payments: group.payments,
+                                                                    })
+                                                                }>
+                                                                Pagar fatura
+                                                            </Button>
+                                                        )}
+                                                    </TableCell>
+                                                </TableRow>
+                                            )
+                                        })}
 
-                                        return (
-                                            <TableRow key={group.key}>
-                                                <TableCell>
-                                                    <Badge variant="secondary">Empréstimo</Badge>
-                                                </TableCell>
-                                                <TableCell>{loan?.description || 'Empréstimo'}</TableCell>
-                                                <TableCell>{new Date(group.dueDate).toLocaleDateString('pt-BR')}</TableCell>
-                                                <TableCell>
-                                                    {isOverdue(group.dueDate) && <Badge variant="destructive">Atrasado</Badge>}
-                                                </TableCell>
-                                                <TableCell>{numberToBrl(group.totalAmount)}</TableCell>
-                                                <TableCell className="text-right text-sm text-muted-foreground">
-                                                    Dar baixa em Empréstimos
-                                                </TableCell>
-                                            </TableRow>
-                                        )
-                                    })}
-                                </TableBody>
-                            </Table>
-                        </CardContent>
-                    </UiCard>
-                ))}
+                                        {month.loanGroups.map((group) => {
+                                            const loan = loans.find((currentLoan) => currentLoan.id === group.loanId)
+
+                                            return (
+                                                <TableRow key={group.key}>
+                                                    <TableCell>
+                                                        <Badge variant="secondary">Empréstimo</Badge>
+                                                    </TableCell>
+                                                    <TableCell>{loan?.description || 'Empréstimo'}</TableCell>
+                                                    <TableCell>{new Date(group.dueDate).toLocaleDateString('pt-BR')}</TableCell>
+                                                    <TableCell>
+                                                        {isOverdue(group.dueDate) && <Badge variant="destructive">Atrasado</Badge>}
+                                                    </TableCell>
+                                                    <TableCell>{numberToBrl(group.totalAmount)}</TableCell>
+                                                    <TableCell className="text-right text-sm text-muted-foreground">
+                                                        Dar baixa em Empréstimos
+                                                    </TableCell>
+                                                </TableRow>
+                                            )
+                                        })}
+                                    </TableBody>
+                                </Table>
+                            </CardContent>
+                        </UiCard>
+                    )
+                })}
             </div>
         </div>
     )

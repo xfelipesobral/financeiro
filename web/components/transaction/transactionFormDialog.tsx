@@ -10,22 +10,28 @@ import apiUpdateTransaction from '@/api/transaction/update'
 import { DateTimePicker } from '@/components/inputs/dateTimePicker'
 import { DecimalInput, IntegerInput } from '@/components/inputs/maskedInput'
 import { Button } from '@/components/ui/button'
-import { Combobox, ComboboxContent, ComboboxEmpty, ComboboxInput, ComboboxItem, ComboboxList } from '@/components/ui/combobox'
+import {
+    Combobox,
+    ComboboxCollection,
+    ComboboxContent,
+    ComboboxEmpty,
+    ComboboxGroup,
+    ComboboxInput,
+    ComboboxItem,
+    ComboboxLabel,
+    ComboboxList,
+} from '@/components/ui/combobox'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Field, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { CategoryOption, CategoryOptionGroup, groupCategoriesByBase } from '@/components/category/groupCategoriesByBase'
 
 // Guids fixos das formas de pagamento (ver api/src/db/seed.ts). O meio de pagamento
 // escolhido é quem decide se o formulário pede conta bancária ou cartão+parcelas —
 // não existe um campo separado pra isso.
 const CREDIT_CARD_PAYMENT_METHOD_GUID = 'cartao-credito'
 const LOAN_PAYMENT_METHOD_GUID = 'emprestimo'
-
-interface ComboboxOption {
-    value: string
-    label: string
-}
 
 interface Params {
     open: boolean
@@ -80,14 +86,10 @@ export function TransactionFormDialog({ open, bankAccounts, categories, cards, p
 
     // Categorias do sistema (userId null — empréstimo, fatura de cartão, transferência) não aparecem
     // aqui: só podem ser usadas pelos fluxos dedicados, montar uma transação manual com elas quebraria
-    // a marcação usada por relatórios de gasto/receita.
-    const categoryOptions: ComboboxOption[] = useMemo(
-        () =>
-            categories
-                .filter((category) => category.userId !== null)
-                .map((category) => ({ value: String(category.id), label: `${category.description} · ${category.type === 'CREDIT' ? 'Crédito' : 'Débito'}` })),
-        [categories],
-    )
+    // a marcação usada por relatórios de gasto/receita. Agrupado por categoria base — sem `includeBase`,
+    // só subcategorias específicas são selecionáveis, a base vira só cabeçalho visual do grupo.
+    const categoryGroups: CategoryOptionGroup[] = useMemo(() => groupCategoriesByBase(categories), [categories])
+    const categoryOptions = useMemo(() => categoryGroups.flatMap((group) => group.items), [categoryGroups])
 
     useEffect(() => {
         if (!open) {
@@ -284,17 +286,24 @@ export function TransactionFormDialog({ open, bankAccounts, categories, cards, p
                             control={control}
                             render={({ field: { value, onChange } }) => (
                                 <Combobox
-                                    items={categoryOptions}
+                                    items={categoryGroups}
                                     value={categoryOptions.find((option) => option.value === value) ?? null}
                                     onValueChange={(option) => onChange(option ? option.value : '')}>
                                     <ComboboxInput id="transaction-category" className="w-full" placeholder="Selecione uma categoria" />
                                     <ComboboxContent container={dialogContentRef}>
                                         <ComboboxEmpty>Nenhuma categoria encontrada.</ComboboxEmpty>
                                         <ComboboxList>
-                                            {(option: ComboboxOption) => (
-                                                <ComboboxItem key={option.value} value={option}>
-                                                    {option.label}
-                                                </ComboboxItem>
+                                            {(group: CategoryOptionGroup) => (
+                                                <ComboboxGroup key={group.value} items={group.items}>
+                                                    <ComboboxLabel>{group.value}</ComboboxLabel>
+                                                    <ComboboxCollection>
+                                                        {(option: CategoryOption) => (
+                                                            <ComboboxItem key={option.value} value={option}>
+                                                                {option.label}
+                                                            </ComboboxItem>
+                                                        )}
+                                                    </ComboboxCollection>
+                                                </ComboboxGroup>
                                             )}
                                         </ComboboxList>
                                     </ComboboxContent>

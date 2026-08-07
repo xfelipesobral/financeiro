@@ -1,10 +1,15 @@
 import { prisma } from '.'
 
+// - 1/2/3: sustentam o inventário Steam (ver STEAM_CATEGORY_ID, CATEGORY_BOUGHT_STEAM_ITEM,
+//   CATEGORY_SOLD_STEAM_ITEM em api/src/modules/category/constants.ts), não podem sumir.
 // - 55/56/58/59/60: sustentam empréstimo/fatura de cartão/transferência (ver LOAN_CATEGORY_ID,
 //   LOAN_SETTLEMENT_CATEGORY_ID, CARD_INVOICE_CATEGORY_ID, TRANSFER_CATEGORY_IDS), não podem sumir.
 // - 61-71: categorias base curadas, ponto de partida pro relatório geral. O usuário pode criar
 //   mais categorias base além dessas (sem trava), e subcategorias à vontade dentro de qualquer uma.
 const categories: { id: number; description: string; type: 'DEBIT' | 'CREDIT'; parentId?: number }[] = [
+    { id: 1, description: 'Steam', type: 'DEBIT' },
+    { id: 2, description: 'Compra Item Steam', type: 'DEBIT', parentId: 1 },
+    { id: 3, description: 'Venda Item Steam', type: 'CREDIT', parentId: 1 },
     { id: 55, description: 'Empréstimo', type: 'CREDIT' },
     { id: 56, description: 'Desconto Empréstimo', type: 'DEBIT' },
     { id: 58, description: 'Fatura Cartão de Crédito', type: 'DEBIT' },

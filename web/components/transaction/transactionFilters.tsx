@@ -8,15 +8,21 @@ import type { DateRange } from 'react-day-picker'
 
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
-import { Combobox, ComboboxContent, ComboboxEmpty, ComboboxInput, ComboboxItem, ComboboxList } from '@/components/ui/combobox'
+import {
+    Combobox,
+    ComboboxCollection,
+    ComboboxContent,
+    ComboboxEmpty,
+    ComboboxGroup,
+    ComboboxInput,
+    ComboboxItem,
+    ComboboxLabel,
+    ComboboxList,
+} from '@/components/ui/combobox'
 import { Field, FieldLabel } from '@/components/ui/field'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-
-interface CategoryOption {
-    value: string
-    label: string
-}
+import { CategoryOption, CategoryOptionGroup, groupCategoriesByBase } from '@/components/category/groupCategoriesByBase'
 
 export type TransactionTypeFilter = 'ALL' | 'DEBIT' | 'CREDIT'
 
@@ -39,14 +45,10 @@ interface Params {
 }
 
 export function TransactionFilters({ categories, value, onChange }: Params) {
-    const categoryOptions: CategoryOption[] = useMemo(
-        () =>
-            categories.map((category) => ({
-                value: String(category.id),
-                label: `${category.description} · ${category.type === 'CREDIT' ? 'Crédito' : 'Débito'}`,
-            })),
-        [categories],
-    )
+    // includeBase: aqui (diferente do formulário de lançamento) a categoria base continua
+    // selecionável diretamente — útil pra achar lançamentos antigos categorizados assim.
+    const categoryGroups: CategoryOptionGroup[] = useMemo(() => groupCategoriesByBase(categories, { includeBase: true }), [categories])
+    const categoryOptions = useMemo(() => categoryGroups.flatMap((group) => group.items), [categoryGroups])
 
     const hasActiveFilters = !!value.dateRange?.from || !!value.categoryId || value.type !== 'ALL'
 
@@ -89,17 +91,24 @@ export function TransactionFilters({ categories, value, onChange }: Params) {
             <Field className="w-64">
                 <FieldLabel htmlFor="transaction-filter-category">Categoria</FieldLabel>
                 <Combobox
-                    items={categoryOptions}
+                    items={categoryGroups}
                     value={categoryOptions.find((option) => option.value === value.categoryId) ?? null}
                     onValueChange={(option) => onChange({ ...value, categoryId: option ? option.value : '' })}>
                     <ComboboxInput id="transaction-filter-category" className="w-full" placeholder="Todas as categorias" />
                     <ComboboxContent>
                         <ComboboxEmpty>Nenhuma categoria encontrada.</ComboboxEmpty>
                         <ComboboxList>
-                            {(option: CategoryOption) => (
-                                <ComboboxItem key={option.value} value={option}>
-                                    {option.label}
-                                </ComboboxItem>
+                            {(group: CategoryOptionGroup) => (
+                                <ComboboxGroup key={group.value} items={group.items}>
+                                    <ComboboxLabel>{group.value}</ComboboxLabel>
+                                    <ComboboxCollection>
+                                        {(option: CategoryOption) => (
+                                            <ComboboxItem key={option.value} value={option}>
+                                                {option.label}
+                                            </ComboboxItem>
+                                        )}
+                                    </ComboboxCollection>
+                                </ComboboxGroup>
                             )}
                         </ComboboxList>
                     </ComboboxContent>

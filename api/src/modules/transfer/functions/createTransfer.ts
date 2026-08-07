@@ -6,7 +6,7 @@ import { PAYMENT_METHOD_GUID } from '../../paymentMethod/constants'
 import { payment } from '../../payment/service'
 import { transaction } from '../../transaction/service'
 import { transfer } from '../service'
-import { TRANSFER_CATEGORY_IDS } from '../constants'
+import { TRANSFER_CATEGORY_IDS } from '../../category/constants'
 
 export async function createTransfer(userId: number, data: CreateTransferDTO = {}) {
     const fromBankAccountId = Number(data.fromBankAccountId)

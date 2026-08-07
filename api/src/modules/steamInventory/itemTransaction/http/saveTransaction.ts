@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { ApiError, handleApiError } from '../../../../utils/error'
 import { steamInventoryItemTransaction } from '../service'
-import { CATEGORY_BOUGHT_STEAM_ITEM, CATEGORY_SOLD_STEAM_ITEM } from '../../constants'
+import { CATEGORY_BOUGHT_STEAM_ITEM, CATEGORY_SOLD_STEAM_ITEM } from '../../../category/constants'
 import { steamInventoryItem } from '../../item/service'
 import { saveTransaction } from '../functions/saveTransaction'
 

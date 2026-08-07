@@ -4,7 +4,7 @@ import { steamInventoryItem } from '../service'
 import { steamInventoryItemPriceHistory } from '../../itemPriceHistory/service'
 import { formatImageUrl, formatColor } from '../functions/formatting'
 import { steamInventoryItemTransaction } from '../../itemTransaction/service'
-import { CATEGORY_BOUGHT_STEAM_ITEM, CATEGORY_SOLD_STEAM_ITEM } from '../../constants'
+import { CATEGORY_BOUGHT_STEAM_ITEM, CATEGORY_SOLD_STEAM_ITEM } from '../../../category/constants'
 
 export async function getItem(request: FastifyRequest, reply: FastifyReply) {
     try {

@@ -102,22 +102,20 @@ export default function CategoriasPage() {
                             <CardHeader className="flex items-center justify-between">
                                 <div className="flex items-center gap-2">
                                     <CardTitle>{base.description}</CardTitle>
-                                    <Badge variant={base.type === 'CREDIT' ? 'default' : 'destructive'}>{CATEGORY_TYPE_LABELS[base.type]}</Badge>
+                                    <Badge variant={base.type === 'CREDIT' ? 'green' : 'destructive'}>{CATEGORY_TYPE_LABELS[base.type]}</Badge>
                                     {isSystem && <Badge variant="secondary">Sistema</Badge>}
                                 </div>
 
                                 <div className="flex gap-1">
-                                    {!isSystem && (
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            onClick={() => {
-                                                setNewCategoryParentId(base.id)
-                                                setFormOpen(true)
-                                            }}>
-                                            <Plus /> Subcategoria
-                                        </Button>
-                                    )}
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => {
+                                            setNewCategoryParentId(base.id)
+                                            setFormOpen(true)
+                                        }}>
+                                        <Plus /> Subcategoria
+                                    </Button>
                                     {!isSystem && (
                                         <>
                                             <Button variant="ghost" size="icon" onClick={() => setEditingCategory(base)}>
@@ -149,7 +147,7 @@ export default function CategoriasPage() {
                                                     <TableRow key={child.id}>
                                                         <TableCell>{child.description}</TableCell>
                                                         <TableCell>
-                                                            <Badge variant={child.type === 'CREDIT' ? 'default' : 'destructive'}>
+                                                            <Badge variant={child.type === 'CREDIT' ? 'green' : 'destructive'}>
                                                                 {CATEGORY_TYPE_LABELS[child.type]}
                                                             </Badge>
                                                         </TableCell>
@@ -159,10 +157,7 @@ export default function CategoriasPage() {
                                                                     <Button variant="ghost" size="icon" onClick={() => setEditingCategory(child)}>
                                                                         <Pencil />
                                                                     </Button>
-                                                                    <Button
-                                                                        variant="ghost"
-                                                                        size="icon"
-                                                                        onClick={() => setDeletingCategory(child)}>
+                                                                    <Button variant="ghost" size="icon" onClick={() => setDeletingCategory(child)}>
                                                                         <Trash2 />
                                                                     </Button>
                                                                 </>

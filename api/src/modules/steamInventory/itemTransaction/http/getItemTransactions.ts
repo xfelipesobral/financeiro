@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { ApiError, handleApiError } from '../../../../utils/error'
 import { steamInventoryItemTransaction } from '../service'
-import { CATEGORY_BOUGHT_STEAM_ITEM } from '../../constants'
+import { CATEGORY_BOUGHT_STEAM_ITEM } from '../../../category/constants'
 
 export async function getItemTransactions(request: FastifyRequest, reply: FastifyReply) {
     try {

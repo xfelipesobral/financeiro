@@ -1,6 +1,6 @@
 import { ApiError } from '../../../../utils/error'
 import { uuid } from '../../../../utils/uuid'
-import { CATEGORY_BOUGHT_STEAM_ITEM } from '../../constants'
+import { CATEGORY_BOUGHT_STEAM_ITEM } from '../../../category/constants'
 import { steamInventoryItemPriceHistory } from '../../itemPriceHistory/service'
 import { saveTransaction } from '../../itemTransaction/functions/saveTransaction'
 import { steamInventoryItem } from '../service'

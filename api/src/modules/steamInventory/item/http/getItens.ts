@@ -3,7 +3,7 @@ import { handleApiError } from '../../../../utils/error'
 import { steamInventoryItem } from '../service'
 import { steamInventoryItemPriceHistory } from '../../itemPriceHistory/service'
 import { steamInventoryItemTransaction } from '../../itemTransaction/service'
-import { CATEGORY_BOUGHT_STEAM_ITEM, CATEGORY_SOLD_STEAM_ITEM } from '../../constants'
+import { CATEGORY_BOUGHT_STEAM_ITEM, CATEGORY_SOLD_STEAM_ITEM } from '../../../category/constants'
 
 export async function getItens(request: FastifyRequest, reply: FastifyReply) {
     try {

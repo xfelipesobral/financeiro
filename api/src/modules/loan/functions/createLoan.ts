@@ -2,6 +2,7 @@ import { ApiError } from '../../../utils/error'
 import { prisma } from '../../../db'
 import { bankAccount } from '../../bankAccount/service'
 import { category } from '../../category/service'
+import { LOAN_CATEGORY_ID } from '../../category/constants'
 import { paymentMethod } from '../../paymentMethod/service'
 import { PAYMENT_METHOD_GUID } from '../../paymentMethod/constants'
 import { payment } from '../../payment/service'
@@ -10,9 +11,6 @@ import { loan } from '../service'
 import { calculateMonthlyDueDates } from '../../../utils/calculateMonthlyDueDates'
 import { splitAmountIntoInstallments } from '../../../utils/splitAmountIntoInstallments'
 import { calculateFixedPaymentSchedule } from '../../../utils/calculateFixedPaymentSchedule'
-
-// Categoria fixa seedada para representar empréstimos (ver api/src/db/seed.ts).
-const LOAN_CATEGORY_ID = 55 // 'Empréstimo'
 
 export async function createLoan(userId: number, data: CreateLoanDTO = {}) {
     const bankAccountId = Number(data.bankAccountId)

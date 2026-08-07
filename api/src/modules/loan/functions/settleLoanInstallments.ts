@@ -6,7 +6,7 @@ import { PAYMENT_METHOD_GUID } from '../../paymentMethod/constants'
 import { payment } from '../../payment/service'
 import { transaction } from '../../transaction/service'
 import { loan } from '../service'
-import { LOAN_SETTLEMENT_CATEGORY_ID } from '../constants'
+import { LOAN_SETTLEMENT_CATEGORY_ID } from '../../category/constants'
 
 export async function settleLoanInstallments(userId: number, loanId: number, data: SettleLoanInstallmentsDTO = {}) {
     const existing = await loan.userFindById(userId, loanId)

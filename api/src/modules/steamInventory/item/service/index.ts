@@ -1,4 +1,4 @@
-import { CATEGORY_BOUGHT_STEAM_ITEM, CATEGORY_SOLD_STEAM_ITEM } from '../../constants'
+import { CATEGORY_BOUGHT_STEAM_ITEM, CATEGORY_SOLD_STEAM_ITEM } from '../../../category/constants'
 import { steamInventoryItemTransaction } from '../../itemTransaction/service'
 import Repository from '../repository'
 

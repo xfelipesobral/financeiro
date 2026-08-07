@@ -1,2 +1,0 @@
-export const CATEGORY_SOLD_STEAM_ITEM = 3
-export const CATEGORY_BOUGHT_STEAM_ITEM = 2

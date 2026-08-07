@@ -30,12 +30,8 @@ export async function createCategory(userId: number, data: CreateCategoryDTO = {
             throw new ApiError('PARENT_CATEGORY_NOT_FOUND', 'Categoria pai não encontrada', 404)
         }
 
-        // Só pode usar como pai uma categoria que seja sua (nunca uma global/do sistema) e que ela
-        // mesma seja uma categoria base (sem pai) — mantém a hierarquia em só 2 níveis.
-        if (parentFinded.userId !== userId) {
-            throw new ApiError('PARENT_CATEGORY_NOT_EDITABLE', 'A categoria pai precisa ser uma categoria sua', 400)
-        }
-
+        // Pai pode ser sua ou do sistema (é pra isso que as categorias base curadas existem) — só
+        // precisa ela mesma ser uma categoria base (sem pai), pra manter a hierarquia em só 2 níveis.
         if (parentFinded.parentId) {
             throw new ApiError('PARENT_CATEGORY_HAS_PARENT', 'Só é possível usar uma categoria base (sem categoria pai) como categoria pai', 400)
         }

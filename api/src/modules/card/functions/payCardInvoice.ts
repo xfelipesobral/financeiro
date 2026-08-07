@@ -6,7 +6,7 @@ import { PAYMENT_METHOD_GUID } from '../../paymentMethod/constants'
 import { payment } from '../../payment/service'
 import { transaction } from '../../transaction/service'
 import { card } from '../service'
-import { CARD_INVOICE_CATEGORY_ID } from '../constants'
+import { CARD_INVOICE_CATEGORY_ID } from '../../category/constants'
 
 export async function payCardInvoice(userId: number, cardId: number, data: PayCardInvoiceDTO = {}) {
     const bankAccountId = Number(data.bankAccountId)

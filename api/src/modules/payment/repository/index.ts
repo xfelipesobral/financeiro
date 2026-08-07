@@ -1,6 +1,7 @@
 import { prisma, Prisma } from '../../../db'
 import { PaymentStatus } from '../../../../prisma/generated/enums'
 import { uuid } from '../../../utils/uuid'
+import { startOfDay } from '../../../utils/calculateMonthlyDueDates'
 
 export interface CreatePaymentData {
     userId: number
@@ -50,6 +51,7 @@ export class PaymentRepository {
             data: {
                 guid: uuid(),
                 ...data,
+                dueDate: startOfDay(data.dueDate),
             },
         })
     }
@@ -57,7 +59,10 @@ export class PaymentRepository {
     updateById(id: number, data: UpdatePaymentData, db: Prisma.TransactionClient = prisma) {
         return db.payment.update({
             where: { id },
-            data,
+            data: {
+                ...data,
+                dueDate: data.dueDate !== undefined ? startOfDay(data.dueDate) : undefined,
+            },
         })
     }
 
@@ -84,7 +89,7 @@ export class PaymentRepository {
     // suficiente para identificar "a fatura".
     findManyPendingByCardIdAndDueDate(cardId: number, dueDate: Date) {
         return this.payment.findMany({
-            where: { cardId, dueDate, status: 'PENDING' },
+            where: { cardId, dueDate: startOfDay(dueDate), status: 'PENDING' },
             orderBy: { installmentNumber: 'asc' },
         })
     }

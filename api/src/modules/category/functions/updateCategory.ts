@@ -51,10 +51,8 @@ export async function updateCategory(userId: number, id: number, data: UpdateCat
                 throw new ApiError('PARENT_CATEGORY_NOT_FOUND', 'Categoria pai não encontrada', 404)
             }
 
-            if (parentFinded.userId !== userId) {
-                throw new ApiError('PARENT_CATEGORY_NOT_EDITABLE', 'A categoria pai precisa ser uma categoria sua', 400)
-            }
-
+            // Pai pode ser sua ou do sistema (é pra isso que as categorias base curadas existem) — só
+            // precisa ela mesma ser uma categoria base (sem pai), pra manter a hierarquia em só 2 níveis.
             if (parentFinded.parentId) {
                 throw new ApiError(
                     'PARENT_CATEGORY_HAS_PARENT',

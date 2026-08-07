@@ -44,10 +44,11 @@ export function CategoryFormDialog({ open, categories, category, initialParentId
 
     const { control, handleSubmit, register, reset } = useForm<Form>({ defaultValues: emptyForm })
 
-    // Só categorias suas (não do sistema) e que sejam elas mesmas uma categoria base podem ser pai —
-    // mantém a hierarquia em 2 níveis. Uma categoria não pode ser pai dela mesma.
+    // Categoria pai pode ser sua ou do sistema (as categorias base curadas existem exatamente pra
+    // isso) — só precisa ser ela mesma uma categoria base (sem pai), mantendo a hierarquia em 2
+    // níveis. Uma categoria não pode ser pai dela mesma.
     const baseCategoryOptions = useMemo(
-        () => categories.filter((current) => current.userId !== null && !current.parentId && current.id !== category?.id),
+        () => categories.filter((current) => !current.parentId && current.id !== category?.id),
         [categories, category],
     )
 
