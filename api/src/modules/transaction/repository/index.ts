@@ -21,6 +21,12 @@ export class TransactionRepository {
         category: true,
         bankAccount: { include: { bank: true } },
         payments: { include: { card: true, loan: true }, orderBy: { installmentNumber: 'asc' as const } },
+        transfer: {
+            include: {
+                fromBankAccount: { include: { bank: true } },
+                toBankAccount: { include: { bank: true } },
+            },
+        },
     } as const
 
     private buildWhere(userId: number, filters: TransactionFilters = {}): Prisma.TransactionWhereInput {
@@ -105,6 +111,22 @@ export class TransactionRepository {
             where: { id },
         })
     }
+
+    // Soma o totalAmount das transações de um tipo (DEBIT/CREDIT), agrupado por conta bancária, para
+    // calcular saldo. Transações no cartão de crédito são excluídas (`payments.none.cardId != null`):
+    // o dinheiro só sai da conta bancária quando a fatura é paga, o que hoje não existe como
+    // transação própria — incluí-las contaria uma compra parcelada como se já tivesse saído da conta.
+    sumTotalAmountByBankAccount(userId: number, type: CategoryType, db: Prisma.TransactionClient = prisma) {
+        return db.transaction.groupBy({
+            by: ['bankAccountId'],
+            where: {
+                userId,
+                category: { type },
+                payments: { none: { cardId: { not: null } } },
+            },
+            _sum: { totalAmount: true },
+        })
+    }
 }
 
 interface UpdateData {
@@ -114,4 +136,5 @@ interface UpdateData {
     description?: string
     date?: Date
     installmentTotal?: number | null
+    transferId?: number | null
 }

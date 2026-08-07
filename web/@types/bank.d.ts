@@ -25,6 +25,9 @@ interface BankAccount {
     createdAt: string
     updatedAt: string
     bank: Bank
+    // Créditos - débitos das transações da conta (exclui compras no cartão de crédito, que só saem
+    // da conta quando a fatura é paga). Ver api/src/modules/bankAccount/functions/calculateBalances.ts.
+    balance: number
 }
 
 type CardType = 'CREDIT' | 'DEBIT' | 'CREDIT_AND_DEBIT'

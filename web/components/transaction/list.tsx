@@ -1,6 +1,6 @@
 'use client'
 
-import { ChevronLeft, ChevronRight, Pencil, Trash2 } from 'lucide-react'
+import { ArrowLeftRight, ChevronLeft, ChevronRight, Pencil, Receipt, Trash2 } from 'lucide-react'
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -15,9 +15,22 @@ interface Params {
     onPageChange: (page: number) => void
     onEdit: (transaction: Transaction) => void
     onDelete: (transaction: Transaction) => void
+    onDeleteTransfer: (transaction: Transaction) => void
+    onViewPayments: (transaction: Transaction) => void
 }
 
-export function TransactionsList({ transactions, loading, page, pageSize, total, onPageChange, onEdit, onDelete }: Params) {
+export function TransactionsList({
+    transactions,
+    loading,
+    page,
+    pageSize,
+    total,
+    onPageChange,
+    onEdit,
+    onDelete,
+    onDeleteTransfer,
+    onViewPayments,
+}: Params) {
     const totalPages = Math.max(1, Math.ceil(total / pageSize))
 
     if (!loading && !transactions.length) {
@@ -82,12 +95,27 @@ export function TransactionsList({ transactions, loading, page, pageSize, total,
                                     {transaction.totalAmount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                                 </TableCell>
                                 <TableCell className="text-right">
-                                    <Button variant="ghost" size="icon" onClick={() => onEdit(transaction)}>
-                                        <Pencil />
+                                    <Button variant="ghost" size="icon" title="Ver pagamentos" onClick={() => onViewPayments(transaction)}>
+                                        <Receipt />
                                     </Button>
-                                    <Button variant="ghost" size="icon" onClick={() => onDelete(transaction)}>
-                                        <Trash2 />
-                                    </Button>
+                                    {transaction.transferId ? (
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            title="Excluir transferência"
+                                            onClick={() => onDeleteTransfer(transaction)}>
+                                            <ArrowLeftRight />
+                                        </Button>
+                                    ) : (
+                                        <>
+                                            <Button variant="ghost" size="icon" onClick={() => onEdit(transaction)}>
+                                                <Pencil />
+                                            </Button>
+                                            <Button variant="ghost" size="icon" onClick={() => onDelete(transaction)}>
+                                                <Trash2 />
+                                            </Button>
+                                        </>
+                                    )}
                                 </TableCell>
                             </TableRow>
                         )

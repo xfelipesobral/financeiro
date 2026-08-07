@@ -7,4 +7,5 @@ export const PAYMENT_METHOD_GUID = {
     PIX: 'pix',
     CREDIT_CARD: 'cartao-credito',
     LOAN: 'emprestimo',
+    TRANSFER: 'transferencia',
 } as const

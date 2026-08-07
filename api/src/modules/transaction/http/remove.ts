@@ -22,6 +22,14 @@ export async function remove(request: FastifyRequest, reply: FastifyReply) {
             throw new ApiError('TRANSACTION_NOT_FOUND', 'Lançamento não encontrado', 404)
         }
 
+        if (currentTransaction.transferId) {
+            throw new ApiError(
+                'TRANSACTION_PART_OF_TRANSFER',
+                'Esta transação faz parte de uma transferência entre contas. Exclua a transferência para removê-la.',
+                400,
+            )
+        }
+
         await transaction.deleteById(id)
 
         reply.status(204).send()

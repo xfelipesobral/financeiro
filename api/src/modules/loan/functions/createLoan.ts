@@ -120,11 +120,14 @@ export async function createLoan(userId: number, data: CreateLoanDTO = {}) {
         startDate,
     })
 
+    // Só o principal é efetivamente desembolsado na conta bancária; os juros (quando existem, no
+    // modo `desiredMonthlyPayment`) não são dinheiro recebido agora, são custo embutido nas parcelas
+    // futuras — por isso o crédito usa `principal`, não `totalAmount`.
     const createdTransaction = await transaction.create(
         userId,
         bankAccountId,
         LOAN_CATEGORY_ID,
-        totalAmount,
+        principal,
         description,
         startDate,
         installmentTotal > 1 ? installmentTotal : null,

@@ -10,10 +10,12 @@ interface Transaction {
     description: string
     installmentTotal: number | null
     date: string
+    transferId: number | null
     createdAt: string
     updatedAt: string
     category: Category
     bankAccount: BankAccount
     payments: Payment[]
     status: TransactionStatus
+    transfer: { id: number; fromBankAccount: BankAccount; toBankAccount: BankAccount } | null
 }

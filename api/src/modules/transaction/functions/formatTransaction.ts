@@ -5,10 +5,13 @@ type TransactionWithRelations = Prisma.TransactionGetPayload<{
         category: true
         bankAccount: { include: { bank: true } }
         payments: { include: { card: true; loan: true } }
+        transfer: { include: { fromBankAccount: { include: { bank: true } }; toBankAccount: { include: { bank: true } } } }
     }
 }>
 
 export function formatTransaction(transaction: TransactionWithRelations) {
+    const transfer = transaction.transfer ? { ...transaction.transfer, amount: transaction.transfer.amount.toNumber() } : null
+
     const payments = transaction.payments.map((transactionPayment) => ({
         ...transactionPayment,
         amount: transactionPayment.amount.toNumber(),
@@ -29,5 +32,6 @@ export function formatTransaction(transaction: TransactionWithRelations) {
         totalAmount: transaction.totalAmount.toNumber(),
         payments,
         status,
+        transfer,
     }
 }

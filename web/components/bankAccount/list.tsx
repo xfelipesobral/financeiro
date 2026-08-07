@@ -50,6 +50,7 @@ export function BankAccountsList({ onEdit, onDelete }: Params) {
                     <TableHead>Agência</TableHead>
                     <TableHead>Conta</TableHead>
                     <TableHead>Chaves Pix</TableHead>
+                    <TableHead>Saldo atual</TableHead>
                     <TableHead className="text-right">Ações</TableHead>
                 </TableRow>
             </TableHeader>
@@ -62,6 +63,9 @@ export function BankAccountsList({ onEdit, onDelete }: Params) {
                         <TableCell>{bankAccount.accountNumber}</TableCell>
                         <TableCell>
                             {bankAccount.pixs.length ? <Badge variant="secondary">{bankAccount.pixs.length} chave(s)</Badge> : '-'}
+                        </TableCell>
+                        <TableCell className={bankAccount.balance < 0 ? 'text-red-600' : 'text-green-700'}>
+                            {bankAccount.balance.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                         </TableCell>
                         <TableCell className="text-right">
                             <Button variant="ghost" size="icon" onClick={() => onEdit(bankAccount)}>

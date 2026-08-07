@@ -6,6 +6,7 @@ import { bankRoutes } from '../modules/bank/http'
 import { bankAccountRoutes } from '../modules/bankAccount/http'
 import { cardRoutes } from '../modules/card/http'
 import { loanRoutes } from '../modules/loan/http'
+import { transferRoutes } from '../modules/transfer/http'
 import { paymentMethodRoutes } from '../modules/paymentMethod/http'
 import { paymentRoutes } from '../modules/payment/http'
 import { transactionRoutes } from '../modules/transaction/http'
@@ -25,6 +26,7 @@ export default async function router(app: FastifyInstance) {
     await app.register(bankAccountRoutes, { prefix: '/bank-account' })
     await app.register(cardRoutes, { prefix: '/card' })
     await app.register(loanRoutes, { prefix: '/loan' })
+    await app.register(transferRoutes, { prefix: '/transfer' })
     await app.register(paymentMethodRoutes, { prefix: '/payment-method' })
     await app.register(paymentRoutes, { prefix: '/payment' })
     await app.register(transactionRoutes, { prefix: '/transaction' })

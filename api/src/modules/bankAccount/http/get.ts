@@ -1,6 +1,7 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { ApiError, handleApiError } from '../../../utils/error'
 import { bankAccount } from '../service'
+import { calculateBalances } from '../functions/calculateBalances'
 
 export async function get(request: FastifyRequest, reply: FastifyReply) {
     try {
@@ -22,7 +23,9 @@ export async function get(request: FastifyRequest, reply: FastifyReply) {
             throw new ApiError('BANK_ACCOUNT_NOT_FOUND', 'Conta bancária não encontrada', 404)
         }
 
-        reply.status(200).send(currentBankAccount)
+        const balances = await calculateBalances(request.authenticated!.userId)
+
+        reply.status(200).send({ ...currentBankAccount, balance: balances.get(currentBankAccount.id) ?? 0 })
     } catch (error) {
         handleApiError(error, reply)
     }

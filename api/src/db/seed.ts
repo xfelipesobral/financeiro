@@ -58,6 +58,9 @@ const categories: { id: number; description: string; type: 'DEBIT' | 'CREDIT'; p
     { id: 55, description: 'Empréstimo', type: 'CREDIT' },
     { id: 56, description: 'Desconto Empréstimo', type: 'DEBIT' },
     { id: 57, description: 'Seguros', type: 'DEBIT' },
+    { id: 58, description: 'Fatura Cartão de Crédito', type: 'DEBIT' },
+    { id: 59, description: 'Transferência Enviada', type: 'DEBIT' },
+    { id: 60, description: 'Transferência Recebida', type: 'CREDIT' },
 ]
 
 const banks: { id: number; name: string; guid: string }[] = [
@@ -90,6 +93,7 @@ const paymentMethods: { id: number; guid: string; name: string }[] = [
     { id: 3, guid: 'pix', name: 'Pix' },
     { id: 4, guid: 'cartao-credito', name: 'Cartão de Crédito' },
     { id: 5, guid: 'emprestimo', name: 'Empréstimo' },
+    { id: 6, guid: 'transferencia', name: 'Transferência' },
 ]
 
 async function seed() {

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { endOfDay, startOfDay } from 'date-fns'
 import { toast } from 'sonner'
-import { Plus } from 'lucide-react'
+import { ArrowLeftRight, Plus } from 'lucide-react'
 
 import apiGetBankAccounts from '@/api/bankAccount/list'
 import apiGetCards from '@/api/card/list'
@@ -11,8 +11,11 @@ import apiGetCategories from '@/api/category/list'
 import apiGetPaymentMethods from '@/api/paymentMethod/list'
 import apiGetTransactions from '@/api/transaction/list'
 import { DeleteTransaction } from '@/components/transaction/deleteTransaction'
+import { DeleteTransfer } from '@/components/transaction/deleteTransfer'
 import { TransactionsList } from '@/components/transaction/list'
+import { TransactionPaymentsDialog } from '@/components/transaction/paymentsDialog'
 import { TransactionFormDialog } from '@/components/transaction/transactionFormDialog'
+import { TransferFormDialog } from '@/components/transaction/transferFormDialog'
 import { emptyTransactionFilters, TransactionFilters, TransactionFiltersValue } from '@/components/transaction/transactionFilters'
 import { SubTitle, Title } from '@/components/title'
 import { Button } from '@/components/ui/button'
@@ -26,8 +29,11 @@ export default function TransacoesPage() {
     const [cards, setCards] = useState<Card[]>([])
     const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([])
     const [formOpen, setFormOpen] = useState(false)
+    const [transferFormOpen, setTransferFormOpen] = useState(false)
     const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null)
     const [deletingTransaction, setDeletingTransaction] = useState<Transaction | null>(null)
+    const [deletingTransfer, setDeletingTransfer] = useState<Transaction | null>(null)
+    const [viewingPaymentsTransaction, setViewingPaymentsTransaction] = useState<Transaction | null>(null)
 
     const [filters, setFilters] = useState<TransactionFiltersValue>(emptyTransactionFilters)
     const [page, setPage] = useState(1)
@@ -145,23 +151,63 @@ export default function TransacoesPage() {
                 }}
             />
 
+            <TransferFormDialog
+                open={transferFormOpen}
+                bankAccounts={bankAccounts}
+                closed={(reload = false) => {
+                    setTransferFormOpen(false)
+
+                    if (reload) {
+                        fetchTransactions()
+                    }
+                }}
+            />
+
+            <DeleteTransfer
+                transaction={deletingTransfer}
+                closed={(reload = false) => {
+                    setDeletingTransfer(null)
+
+                    if (reload) {
+                        fetchTransactions()
+                    }
+                }}
+            />
+
+            <TransactionPaymentsDialog transaction={viewingPaymentsTransaction} closed={() => setViewingPaymentsTransaction(null)} />
+
             <div className="flex justify-between items-center">
                 <div className="flex-1">
                     <Title>Lançamentos</Title>
                     <SubTitle>Registre débitos e créditos das suas contas</SubTitle>
                 </div>
 
-                <Button
-                    onClick={() => {
-                        if (!bankAccounts.length) {
-                            toast.error('Cadastre uma conta bancária antes de lançar uma transação.')
-                            return
-                        }
+                <div className="flex gap-2">
+                    <Button
+                        variant="outline"
+                        onClick={() => {
+                            if (bankAccounts.length < 2) {
+                                toast.error('Cadastre pelo menos 2 contas bancárias antes de fazer uma transferência.')
+                                return
+                            }
 
-                        setFormOpen(true)
-                    }}>
-                    <Plus /> Novo lançamento
-                </Button>
+                            setTransferFormOpen(true)
+                        }}>
+                        <ArrowLeftRight /> Nova transferência
+                    </Button>
+
+                    <Button
+                        onClick={() => {
+                            if (!bankAccounts.length) {
+                                toast.error('Cadastre uma conta bancária antes de lançar uma transação.')
+                                return
+                            }
+
+                            setFormOpen(true)
+                        }}>
+                        <Plus /> Novo lançamento
+                    </Button>
+                </div>
             </div>
 
             <div className="mt-4">
@@ -178,6 +224,8 @@ export default function TransacoesPage() {
                     onPageChange={setPage}
                     onEdit={setEditingTransaction}
                     onDelete={setDeletingTransaction}
+                    onDeleteTransfer={setDeletingTransfer}
+                    onViewPayments={setViewingPaymentsTransaction}
                 />
             </div>
         </div>
