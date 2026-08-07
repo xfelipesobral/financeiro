@@ -30,6 +30,10 @@ const data = {
             url: '/painel/transacoes',
         },
         {
+            title: 'Categorias',
+            url: '/painel/categorias',
+        },
+        {
             title: 'Contas Bancárias',
             url: '/painel/contas',
         },

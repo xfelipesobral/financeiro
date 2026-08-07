@@ -28,7 +28,7 @@ export class CategoryRepository {
         })
     }
 
-    create(description: string, type: CategoryType, userId?: number, parentCategoryId?: number) {
+    create(description: string, type: CategoryType, userId: number, parentCategoryId?: number | null) {
         return this.category.create({
             data: {
                 description,
@@ -39,7 +39,7 @@ export class CategoryRepository {
         })
     }
 
-    updateById(id: number, description: string, type: CategoryType, parentCategoryId?: number) {
+    updateById(id: number, description: string, type: CategoryType, parentCategoryId?: number | null) {
         return this.category.update({
             where: {
                 id,
@@ -50,5 +50,30 @@ export class CategoryRepository {
                 parentId: parentCategoryId,
             },
         })
+    }
+
+    deleteById(id: number) {
+        return this.category.delete({
+            where: { id },
+        })
+    }
+
+    // Quantas categorias têm esta como pai — usado pra bloquear exclusão/reparent de categoria que
+    // ainda tem subcategorias.
+    countByParentId(parentId: number) {
+        return this.category.count({
+            where: { parentId },
+        })
+    }
+
+    // Soma de lançamentos (Transaction + SteamInventoryItemTransaction) que usam esta categoria —
+    // usado pra bloquear exclusão de categoria já em uso.
+    async countUsage(id: number) {
+        const [transactions, steamTransactions] = await Promise.all([
+            prisma.transaction.count({ where: { categoryId: id } }),
+            prisma.steamInventoryItemTransaction.count({ where: { categoryId: id } }),
+        ])
+
+        return transactions + steamTransactions
     }
 }

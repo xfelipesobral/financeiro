@@ -22,12 +22,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 const CREDIT_CARD_PAYMENT_METHOD_GUID = 'cartao-credito'
 const LOAN_PAYMENT_METHOD_GUID = 'emprestimo'
 
-// Categorias fixas seedadas para as duas pernas de uma transferência entre contas (ver
-// api/src/modules/transfer/constants.ts). Não aparecem aqui porque só podem ser usadas pelo fluxo
-// dedicado de transferência — montar uma transação manual com elas quebraria a marcação usada por
-// futuros relatórios de gasto/receita.
-const TRANSFER_CATEGORY_IDS = [59, 60]
-
 interface ComboboxOption {
     value: string
     label: string
@@ -84,10 +78,13 @@ export function TransactionFormDialog({ open, bankAccounts, categories, cards, p
         [paymentMethods, paymentMethodId],
     )
 
+    // Categorias do sistema (userId null — empréstimo, fatura de cartão, transferência) não aparecem
+    // aqui: só podem ser usadas pelos fluxos dedicados, montar uma transação manual com elas quebraria
+    // a marcação usada por relatórios de gasto/receita.
     const categoryOptions: ComboboxOption[] = useMemo(
         () =>
             categories
-                .filter((category) => !TRANSFER_CATEGORY_IDS.includes(category.id))
+                .filter((category) => category.userId !== null)
                 .map((category) => ({ value: String(category.id), label: `${category.description} · ${category.type === 'CREDIT' ? 'Crédito' : 'Débito'}` })),
         [categories],
     )
