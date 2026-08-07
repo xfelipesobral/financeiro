@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { Loader2, Plus } from 'lucide-react'
+import { CalendarClock, Loader2, Plus } from 'lucide-react'
 import { toast } from 'sonner'
 
 import apiCreateTransaction, { ApiCreateTransactionParams } from '@/api/transaction/create'
@@ -72,6 +72,7 @@ export function TransactionFormDialog({ open, bankAccounts, categories, cards, p
 
     const { control, handleSubmit, register, watch, reset } = useForm<Form>({ defaultValues: emptyForm })
     const paymentMethodId = watch('paymentMethodId')
+    const date = watch('date')
 
     // Empréstimo não é escolhido aqui: as parcelas dele nascem junto com o próprio empréstimo.
     const selectablePaymentMethods = useMemo(
@@ -83,6 +84,20 @@ export function TransactionFormDialog({ open, bankAccounts, categories, cards, p
         () => paymentMethods.find((paymentMethod) => String(paymentMethod.id) === paymentMethodId)?.guid === CREDIT_CARD_PAYMENT_METHOD_GUID,
         [paymentMethods, paymentMethodId],
     )
+
+    // Mesma regra do backend (buildTransactionPayments): fora do cartão, data futura vira lançamento
+    // agendado (PENDING) em vez de já entrar pago — comparação por dia, não por instante.
+    const isScheduled = useMemo(() => {
+        if (isCreditCard || !date) return false
+
+        const today = new Date()
+        today.setHours(0, 0, 0, 0)
+
+        const chosenDay = new Date(date)
+        chosenDay.setHours(0, 0, 0, 0)
+
+        return chosenDay > today
+    }, [isCreditCard, date])
 
     // Categorias do sistema (userId null — empréstimo, fatura de cartão, transferência) não aparecem
     // aqui: só podem ser usadas pelos fluxos dedicados, montar uma transação manual com elas quebraria
@@ -321,6 +336,13 @@ export function TransactionFormDialog({ open, bankAccounts, categories, cards, p
                                 <DateTimePicker id="transaction-date" value={value} onChange={onChange} container={dialogContentRef} />
                             )}
                         />
+                        {isScheduled && (
+                            <p className="flex items-start gap-1.5 text-sm text-muted-foreground">
+                                <CalendarClock className="mt-0.5 size-4 shrink-0" />
+                                Como a data é futura, esse lançamento ficará pendente (agendado) e só vai contar no saldo da conta depois que
+                                você der o aceite em Contas a pagar.
+                            </p>
+                        )}
                     </Field>
 
                     <Field>

@@ -8,7 +8,8 @@ import apiGetCards from '@/api/card/list'
 import apiGetLoans from '@/api/loan/list'
 import apiGetPendingPayments from '@/api/payment/pending'
 import { CardInvoice, PayInvoiceDialog } from '@/components/card/payInvoiceDialog'
-import { groupPendingPayments, isOverdue } from '@/components/payables/groupPendingPayments'
+import { AcceptScheduledPaymentDialog } from '@/components/payables/acceptScheduledPaymentDialog'
+import { groupPendingPayments, isOverdue, ScheduledPaymentGroup } from '@/components/payables/groupPendingPayments'
 import { SubTitle, Title } from '@/components/title'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -23,6 +24,7 @@ export default function ContasAPagarPage() {
     const [pendingPayments, setPendingPayments] = useState<PendingPayment[]>([])
     const [loading, setLoading] = useState(true)
     const [payingInvoice, setPayingInvoice] = useState<CardInvoice | null>(null)
+    const [acceptingScheduled, setAcceptingScheduled] = useState<ScheduledPaymentGroup | null>(null)
 
     useEffect(() => {
         fetchAll()
@@ -69,6 +71,17 @@ export default function ContasAPagarPage() {
                 }}
             />
 
+            <AcceptScheduledPaymentDialog
+                scheduled={acceptingScheduled}
+                closed={(reload = false) => {
+                    setAcceptingScheduled(null)
+
+                    if (reload) {
+                        fetchAll()
+                    }
+                }}
+            />
+
             <div>
                 <Title>Contas a pagar</Title>
                 <SubTitle>Saldo das suas contas e quanto falta pagar nos próximos meses</SubTitle>
@@ -95,7 +108,10 @@ export default function ContasAPagarPage() {
 
             <div className="grid gap-4">
                 {months.map((month) => {
-                    const monthTotal = [...month.cardGroups, ...month.loanGroups].reduce((sum, group) => sum + group.totalAmount, 0)
+                    const monthTotal = [...month.cardGroups, ...month.loanGroups, ...month.scheduledGroups].reduce(
+                        (sum, group) => sum + group.totalAmount,
+                        0,
+                    )
 
                     return (
                         <UiCard key={month.monthKey}>
@@ -170,6 +186,23 @@ export default function ContasAPagarPage() {
                                                 </TableRow>
                                             )
                                         })}
+
+                                        {month.scheduledGroups.map((group) => (
+                                            <TableRow key={group.key}>
+                                                <TableCell>
+                                                    <Badge variant="secondary">Agendado</Badge>
+                                                </TableCell>
+                                                <TableCell>{group.payment.transaction.description}</TableCell>
+                                                <TableCell>{new Date(group.dueDate).toLocaleDateString('pt-BR')}</TableCell>
+                                                <TableCell>{isOverdue(group.dueDate) && <Badge variant="destructive">Atrasado</Badge>}</TableCell>
+                                                <TableCell>{numberToBrl(group.totalAmount)}</TableCell>
+                                                <TableCell className="text-right">
+                                                    <Button size="sm" onClick={() => setAcceptingScheduled(group)}>
+                                                        Aceitar pagamento
+                                                    </Button>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
                                     </TableBody>
                                 </Table>
                             </CardContent>

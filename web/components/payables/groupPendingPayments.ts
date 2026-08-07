@@ -1,9 +1,9 @@
 // Agrupa os Payments PENDING do usuário (GET /payment/pending) por mês de vencimento e, dentro do
 // mês, por origem: fatura de cartão (cardId + dueDate exato — todas as parcelas de um cartão que
-// vencem no mesmo mês compartilham o mesmo dueDate, ver api/src/utils/calculateMonthlyDueDates.ts)
-// ou parcela de empréstimo (loanId + mês). Hoje todo Payment PENDING tem cardId XOR loanId (garantido
-// por api/src/modules/transaction/functions/buildTransactionPayments.ts) — itens que não caem em
-// nenhum dos dois são ignorados, por robustez.
+// vencem no mesmo mês compartilham o mesmo dueDate, ver api/src/utils/calculateMonthlyDueDates.ts),
+// parcela de empréstimo (loanId + mês), ou PIX/débito agendado (sem cardId nem loanId — ver
+// buildTransactionPayments.ts/acceptScheduledPayment.ts). Um Payment agendado é sempre seu próprio
+// grupo (não compartilha vencimento com mais ninguém, ao contrário de fatura/parcela).
 
 export interface CardInvoiceGroup {
     key: string
@@ -21,11 +21,19 @@ export interface LoanInstallmentGroup {
     payments: PendingPayment[]
 }
 
+export interface ScheduledPaymentGroup {
+    key: string
+    dueDate: string
+    totalAmount: number
+    payment: PendingPayment
+}
+
 export interface MonthGroup {
     monthKey: string
     monthLabel: string
     cardGroups: CardInvoiceGroup[]
     loanGroups: LoanInstallmentGroup[]
+    scheduledGroups: ScheduledPaymentGroup[]
 }
 
 const MONTH_LABELS = [
@@ -64,7 +72,7 @@ export function groupPendingPayments(payments: PendingPayment[]): MonthGroup[] {
         let month = monthsByKey.get(monthKey)
 
         if (!month) {
-            month = { monthKey, monthLabel: monthLabelOf(monthKey), cardGroups: [], loanGroups: [] }
+            month = { monthKey, monthLabel: monthLabelOf(monthKey), cardGroups: [], loanGroups: [], scheduledGroups: [] }
             monthsByKey.set(monthKey, month)
         }
 
@@ -92,6 +100,8 @@ export function groupPendingPayments(payments: PendingPayment[]): MonthGroup[] {
 
             group.totalAmount += payment.amount
             group.payments.push(payment)
+        } else {
+            month.scheduledGroups.push({ key: String(payment.id), dueDate: payment.dueDate, totalAmount: payment.amount, payment })
         }
     }
 

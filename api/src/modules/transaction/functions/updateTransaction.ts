@@ -74,9 +74,10 @@ export async function updateTransaction(userId: number, id: number, data: Update
         (installmentTotal ?? 1) !== (existing.installmentTotal ?? 1)
 
     // A proteção contra "mexer no que já foi pago" só faz sentido pra parcelamento no cartão: uma
-    // transação em dinheiro/débito nasce com o único Payment já `PAID` (é assim por definição), então
-    // isso nunca poderia travar a edição dela. O risco real é desalinhar parcelas de cartão que já
-    // foram marcadas como pagas.
+    // transação em dinheiro/débito/pix tem só um Payment, que ou já nasce `PAID` (data hoje/passada)
+    // ou nasce `PENDING` agendado (data futura, ver buildTransactionPayments) — em ambos os casos essa
+    // edição aqui é sempre permitida, o status é só recalculado de novo a partir da nova data. O risco
+    // real é desalinhar parcelas de cartão que já foram marcadas como pagas.
     const hasSettledCardInstallment = !!existingCardId && existing.payments.some((existingPayment) => existingPayment.status !== 'PENDING')
 
     if (paymentsStructureChanged && hasSettledCardInstallment) {

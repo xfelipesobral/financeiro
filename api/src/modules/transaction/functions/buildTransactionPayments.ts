@@ -4,7 +4,7 @@ import { bankAccount } from '../../bankAccount/service'
 import { card } from '../../card/service'
 import { paymentMethod } from '../../paymentMethod/service'
 import { PAYMENT_METHOD_GUID } from '../../paymentMethod/constants'
-import { calculateCardInvoiceDueDates } from '../../../utils/calculateMonthlyDueDates'
+import { calculateCardInvoiceDueDates, startOfDay } from '../../../utils/calculateMonthlyDueDates'
 import { splitAmountIntoInstallments } from '../../../utils/splitAmountIntoInstallments'
 
 export interface BuildTransactionPaymentsInput {
@@ -38,8 +38,11 @@ export interface BuiltTransactionPayments {
  * decide o caminho, não um campo separado:
  * - Cartão de crédito (guid `cartao-credito`): N parcelas `PENDING`, com vencimento
  *   calculado a partir do fechamento e do vencimento da fatura do cartão (`closingDay`/`dueDay`).
- * - Qualquer outro (dinheiro, débito, pix, ...): 1 parcela já `PAID`, usando a
- *   conta bancária informada.
+ * - Qualquer outro (dinheiro, débito, pix, ...) com `date` futura: 1 parcela `PENDING`
+ *   (agendada) — fica de fora do saldo da conta (ver `sumTotalAmountByBankAccount`) até o
+ *   usuário dar o aceite em `acceptScheduledPayment`.
+ * - Qualquer outro com `date` hoje/passada: 1 parcela já `PAID` na hora, usando a conta
+ *   bancária informada — comportamento de sempre, sem agendamento.
  */
 export async function buildTransactionPayments(userId: number, input: BuildTransactionPaymentsInput): Promise<BuiltTransactionPayments> {
     const paymentMethodId = Number(input.paymentMethodId)
@@ -69,6 +72,10 @@ export async function buildTransactionPayments(userId: number, input: BuildTrans
             throw new ApiError('BANK_ACCOUNT_NOT_FOUND', 'Conta bancária não encontrada', 404)
         }
 
+        // Data futura = lançamento agendado: fica PENDING (fora do saldo) até o aceite. Comparação
+        // por dia (startOfDay), não por instante — agendar "hoje mais cedo" não deve virar pendente.
+        const isScheduled = startOfDay(input.date) > startOfDay(new Date())
+
         return {
             bankAccountId,
             paymentMethodId,
@@ -77,9 +84,9 @@ export async function buildTransactionPayments(userId: number, input: BuildTrans
                 {
                     amount: input.totalAmount,
                     installmentNumber: null,
-                    status: 'PAID',
+                    status: isScheduled ? 'PENDING' : 'PAID',
                     dueDate: input.date,
-                    paidAt: new Date(),
+                    paidAt: isScheduled ? null : new Date(),
                     cardId: null,
                 },
             ],

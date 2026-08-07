@@ -113,9 +113,14 @@ export class TransactionRepository {
     }
 
     // Soma o totalAmount das transações de um tipo (DEBIT/CREDIT), agrupado por conta bancária, para
-    // calcular saldo. Transações no cartão de crédito são excluídas (`payments.none.cardId != null`):
-    // o dinheiro só sai da conta bancária quando a fatura é paga, o que hoje não existe como
-    // transação própria — incluí-las contaria uma compra parcelada como se já tivesse saído da conta.
+    // calcular saldo. Duas exclusões:
+    // - Cartão de crédito (`payments.none.cardId != null`): o dinheiro só sai da conta bancária quando
+    //   a fatura é paga, o que hoje não existe como transação própria — incluí-las contaria uma compra
+    //   parcelada como se já tivesse saído da conta.
+    // - PIX/débito agendado ainda não aceito (`payments.none` de um Payment PENDING sem cardId nem
+    //   loanId — ver buildTransactionPayments/acceptScheduledPayment): só deve contar no saldo depois
+    //   do aceite. `loanId: null` é necessário aqui pra não excluir o desembolso do empréstimo, que
+    //   também nasce com Payments PENDING (um por parcela) mas deve contar no saldo imediatamente.
     sumTotalAmountByBankAccount(userId: number, type: CategoryType, db: Prisma.TransactionClient = prisma) {
         return db.transaction.groupBy({
             by: ['bankAccountId'],
@@ -123,6 +128,7 @@ export class TransactionRepository {
                 userId,
                 category: { type },
                 payments: { none: { cardId: { not: null } } },
+                NOT: { payments: { some: { status: 'PENDING', cardId: null, loanId: null } } },
             },
             _sum: { totalAmount: true },
         })
