@@ -2,7 +2,7 @@
 
 import { useMemo } from 'react'
 import { CalendarIcon, X } from 'lucide-react'
-import { format } from 'date-fns'
+import { format, subDays } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import type { DateRange } from 'react-day-picker'
 
@@ -38,6 +38,15 @@ export const emptyTransactionFilters: TransactionFiltersValue = {
     type: 'ALL',
 }
 
+// Filtro inicial da tela: gastos (débitos) dos últimos 30 dias.
+export function getDefaultTransactionFilters(): TransactionFiltersValue {
+    return {
+        dateRange: { from: subDays(new Date(), 30), to: new Date() },
+        categoryId: '',
+        type: 'ALL',
+    }
+}
+
 interface Params {
     categories: Category[]
     value: TransactionFiltersValue
@@ -45,8 +54,6 @@ interface Params {
 }
 
 export function TransactionFilters({ categories, value, onChange }: Params) {
-    // includeBase: aqui (diferente do formulário de lançamento) a categoria base continua
-    // selecionável diretamente — útil pra achar lançamentos antigos categorizados assim.
     const categoryGroups: CategoryOptionGroup[] = useMemo(() => groupCategoriesByBase(categories, { includeBase: true }), [categories])
     const categoryOptions = useMemo(() => categoryGroups.flatMap((group) => group.items), [categoryGroups])
 

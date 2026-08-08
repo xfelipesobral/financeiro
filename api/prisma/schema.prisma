@@ -72,6 +72,7 @@ model Transaction {
     transfer         Transfer?   @relation(fields: [transferId], references: [id])
 
     @@index([userId])
+    @@index([userId, date])
     @@index([bankAccountId])
     @@index([categoryId])
     @@index([date])

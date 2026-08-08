@@ -16,7 +16,7 @@ import { TransactionsList } from '@/components/transaction/list'
 import { TransactionPaymentsDialog } from '@/components/transaction/paymentsDialog'
 import { TransactionFormDialog } from '@/components/transaction/transactionFormDialog'
 import { TransferFormDialog } from '@/components/transaction/transferFormDialog'
-import { emptyTransactionFilters, TransactionFilters, TransactionFiltersValue } from '@/components/transaction/transactionFilters'
+import { getDefaultTransactionFilters, TransactionFilters, TransactionFiltersValue } from '@/components/transaction/transactionFilters'
 import { SubTitle, Title } from '@/components/title'
 import { Button } from '@/components/ui/button'
 
@@ -35,39 +35,45 @@ export default function TransacoesPage() {
     const [deletingTransfer, setDeletingTransfer] = useState<Transaction | null>(null)
     const [viewingPaymentsTransaction, setViewingPaymentsTransaction] = useState<Transaction | null>(null)
 
-    const [filters, setFilters] = useState<TransactionFiltersValue>(emptyTransactionFilters)
+    const [filters, setFilters] = useState<TransactionFiltersValue>(getDefaultTransactionFilters)
     const [page, setPage] = useState(1)
     const [transactions, setTransactions] = useState<Transaction[]>([])
     const [total, setTotal] = useState(0)
     const [loading, setLoading] = useState(true)
 
-    const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+    const debounceRef = useRef<number>(undefined)
+    const isFirstFetchRef = useRef(true)
+    const requestIdRef = useRef(0)
 
     useEffect(() => {
         fetchOptions()
     }, [])
 
-    // Sempre que os filtros mudam, volta pra primeira página.
     useEffect(() => {
         setPage(1)
     }, [filters])
 
     useEffect(() => {
-        if (debounceRef.current) clearTimeout(debounceRef.current)
+        if (debounceRef.current) window.clearTimeout(debounceRef.current)
 
-        debounceRef.current = setTimeout(() => {
+        if (isFirstFetchRef.current) {
+            isFirstFetchRef.current = false
+            fetchTransactions()
+            return
+        }
+
+        debounceRef.current = window.setTimeout(() => {
             fetchTransactions()
         }, FILTER_DEBOUNCE_MS)
 
         return () => {
-            if (debounceRef.current) clearTimeout(debounceRef.current)
+            if (debounceRef.current) window.clearTimeout(debounceRef.current)
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filters, page])
 
     const fetchOptions = async () => {
         const [bankAccountsResponse, categoriesResponse, cardsResponse, paymentMethodsResponse] = await Promise.all([
-            apiGetBankAccounts(),
+            apiGetBankAccounts({ includeBalance: false }),
             apiGetCategories(),
             apiGetCards(),
             apiGetPaymentMethods(),
@@ -99,6 +105,8 @@ export default function TransacoesPage() {
     }
 
     const fetchTransactions = async () => {
+        const requestId = ++requestIdRef.current
+
         setLoading(true)
 
         const response = await apiGetTransactions({
@@ -109,6 +117,8 @@ export default function TransacoesPage() {
             startDate: filters.dateRange?.from ? startOfDay(filters.dateRange.from).toISOString() : undefined,
             endDate: filters.dateRange?.to ? endOfDay(filters.dateRange.to).toISOString() : undefined,
         })
+
+        if (requestId !== requestIdRef.current) return
 
         if (!response.success) {
             toast.error(response.message || 'Erro ao buscar lançamentos')

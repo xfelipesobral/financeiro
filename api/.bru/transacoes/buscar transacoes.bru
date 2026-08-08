@@ -1,0 +1,16 @@
+meta {
+  name: buscar transacoes
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{url}}/transaction
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

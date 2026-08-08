@@ -42,6 +42,7 @@ export function TransactionsList({
             <Table>
                 <TableHeader>
                     <TableRow>
+                        <TableHead>#</TableHead>
                         <TableHead>Data</TableHead>
                         <TableHead>Descrição</TableHead>
                         <TableHead>Categoria</TableHead>
@@ -61,6 +62,7 @@ export function TransactionsList({
 
                         return (
                             <TableRow key={transaction.id}>
+                                <TableCell>{transaction.id}</TableCell>
                                 <TableCell>
                                     {new Date(transaction.date).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })}
                                 </TableCell>
@@ -69,14 +71,9 @@ export function TransactionsList({
                                     <Badge variant={isCredit ? 'default' : 'destructive'}>{transaction.category.description}</Badge>
                                 </TableCell>
                                 <TableCell>
-                                    {firstPayment?.card ? (
-                                        `Cartão · ${firstPayment.card.name}`
-                                    ) : (
-                                        <>
-                                            {transaction.bankAccount.bank.name} ·{' '}
-                                            {transaction.bankAccount.description || transaction.bankAccount.accountNumber}
-                                        </>
-                                    )}
+                                    {firstPayment?.card
+                                        ? firstPayment.card.name
+                                        : transaction.bankAccount.description || transaction.bankAccount.accountNumber}
                                 </TableCell>
                                 <TableCell>
                                     <div className="flex flex-col gap-1">

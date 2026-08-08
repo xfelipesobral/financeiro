@@ -21,6 +21,7 @@ export interface ApiGetTransactionsResponse {
 
 export default async function apiGetTransactions(params: ApiGetTransactionsParams = {}): Promise<ResponseApi<ApiGetTransactionsResponse>> {
     try {
+        console.log(params)
         const { data } = await (await api()).get<ApiGetTransactionsResponse>('/transaction', { params })
 
         return {
