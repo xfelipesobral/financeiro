@@ -11,6 +11,10 @@ export async function createNewUser(request: FastifyRequest, reply: FastifyReply
         throw new ApiError('REQUIRED_FIELDS_MISSING', 'Email e senha são obrigatórios', 400)
     }
 
+    if (password.length < 8) {
+        throw new ApiError('WEAK_PASSWORD', 'A senha deve ter pelo menos 8 caracteres', 400)
+    }
+
     try {
         const guid = uuid()
         const passwordHash = await generateHash(password)

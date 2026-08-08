@@ -12,6 +12,7 @@ import {
     HandCoins,
     Landmark,
     LayoutDashboard,
+    LogOut,
     Tags,
     type LucideIcon,
 } from 'lucide-react'
@@ -19,6 +20,7 @@ import {
 import {
     Sidebar,
     SidebarContent,
+    SidebarFooter,
     SidebarGroup,
     SidebarGroupContent,
     SidebarGroupLabel,
@@ -28,6 +30,7 @@ import {
     SidebarMenuItem,
     SidebarRail,
 } from '@/components/ui/sidebar'
+import logout from '@/api/user/logout'
 
 interface NavItem {
     title: string
@@ -74,7 +77,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <Link href="/painel">
+                            <Link href="/painel" prefetch={false}>
                                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
                                     <DollarSign size={18} />
                                 </div>
@@ -96,7 +99,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                                 {group.items.map((item) => (
                                     <SidebarMenuItem key={item.title}>
                                         <SidebarMenuButton asChild isActive={pathname === item.url} tooltip={item.title}>
-                                            <Link href={item.url}>
+                                            <Link href={item.url} prefetch={false}>
                                                 <item.icon />
                                                 <span>{item.title}</span>
                                             </Link>
@@ -108,6 +111,18 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     </SidebarGroup>
                 ))}
             </SidebarContent>
+            <SidebarFooter>
+                <SidebarMenu>
+                    <SidebarMenuItem>
+                        <form action={logout}>
+                            <SidebarMenuButton type="submit" tooltip="Sair">
+                                <LogOut />
+                                <span>Sair</span>
+                            </SidebarMenuButton>
+                        </form>
+                    </SidebarMenuItem>
+                </SidebarMenu>
+            </SidebarFooter>
             <SidebarRail />
         </Sidebar>
     )

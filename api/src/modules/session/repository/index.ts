@@ -15,12 +15,12 @@ export class SessionRepository {
         })
     }
 
-    create(userId: number, refreshToken: string, expiresAt: Date, origin: string = '', userAgent: string = '', ipAddress?: string) {
+    create(userId: number, refreshTokenHash: string, expiresAt: Date, origin: string = '', userAgent: string = '', ipAddress?: string) {
         return this.session.create({
             data: {
                 userId,
                 guid: uuid(),
-                refreshToken,
+                refreshToken: refreshTokenHash,
                 origin,
                 userAgent,
                 ipAddress,
@@ -40,10 +40,10 @@ export class SessionRepository {
         })
     }
 
-    revokeByRefreshToken(refreshToken: string) {
+    revokeByRefreshToken(refreshTokenHash: string) {
         return this.session.updateMany({
             where: {
-                refreshToken,
+                refreshToken: refreshTokenHash,
             },
             data: {
                 revokedAt: new Date(),
@@ -67,10 +67,10 @@ export class SessionRepository {
         })
     }
 
-    findByRefreshToken(refreshToken: string) {
+    findByRefreshToken(refreshTokenHash: string) {
         return this.session.findUnique({
             where: {
-                refreshToken,
+                refreshToken: refreshTokenHash,
             },
         })
     }

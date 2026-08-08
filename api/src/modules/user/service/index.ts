@@ -2,7 +2,6 @@ import { session } from '../../session/service'
 import { createAccessToken } from '../../../utils/token'
 import { UserRepository } from '../repository'
 import { ApiError } from '../../../utils/error'
-import { uuid } from '../../../utils/uuid'
 import { validateHash } from '../../../utils/hash'
 
 export class UserService extends UserRepository {
@@ -25,7 +24,7 @@ export class UserService extends UserRepository {
             //     ipAddressHash = generateHashSha256(ipAddress)
             // }
 
-            const sessionCreated = await session.create(user.id, uuid(), session.generateExpiresAt(), origin, userAgent, ipAddressHash)
+            const { session: sessionCreated, refreshToken } = await session.createSession(user.id, origin, userAgent, ipAddressHash)
 
             const { token } = createAccessToken({
                 options: {
@@ -37,7 +36,7 @@ export class UserService extends UserRepository {
 
             return {
                 accessToken: token,
-                refreshToken: sessionCreated.refreshToken,
+                refreshToken,
             }
         }
 

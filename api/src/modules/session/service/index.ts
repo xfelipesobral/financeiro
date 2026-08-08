@@ -1,6 +1,6 @@
-import { addDays } from '../../../utils/addDays'
 import { ApiError } from '../../../utils/error'
-import { createAccessToken } from '../../../utils/token'
+import { createAccessToken, generateRefreshToken } from '../../../utils/token'
+import { hashToken } from '../../../utils/hash'
 import { user } from '../../user/service'
 import { SessionRepository } from '../repository'
 
@@ -11,6 +11,25 @@ export class SessionService extends SessionRepository {
         const expiresAt = new Date()
         expiresAt.setDate(expiresAt.getDate() + this.daysLimitSession)
         return expiresAt
+    }
+
+    // Gera o refresh token e devolve o valor em texto puro (pra mandar pro cliente) — só o hash dele
+    // é persistido (ver hashToken em utils/hash). Substitui o antigo `session.create(userId, uuid(), ...)`
+    // chamado direto em UserService.authenticate.
+    async createSession(userId: number, origin?: string, userAgent?: string, ipAddress?: string) {
+        const refreshToken = generateRefreshToken()
+
+        const sessionCreated = await super.create(userId, hashToken(refreshToken), this.generateExpiresAt(), origin, userAgent, ipAddress)
+
+        return { session: sessionCreated, refreshToken }
+    }
+
+    findByRawRefreshToken(refreshToken: string) {
+        return super.findByRefreshToken(hashToken(refreshToken))
+    }
+
+    revokeByRawRefreshToken(refreshToken: string) {
+        return super.revokeByRefreshToken(hashToken(refreshToken))
     }
 
     async validate(guid: string) {
@@ -30,7 +49,7 @@ export class SessionService extends SessionRepository {
     }
 
     async renew(refreshToken: string, origin: string, userAgent: string) {
-        const session = await super.findByRefreshToken(refreshToken)
+        const session = await this.findByRawRefreshToken(refreshToken)
 
         if (!session || session.revokedAt || session.origin !== origin || session.userAgent !== userAgent || session.expiresAt < new Date()) {
             if (session && !session.revokedAt) {
@@ -47,10 +66,9 @@ export class SessionService extends SessionRepository {
             throw new ApiError('USER_NOT_FOUND', 'Usuário não encontrado')
         }
 
-        // Renova o access token
         const { token } = createAccessToken({
             options: {
-                subject: sessionUser.guid,
+                subject: sessionUser.id.toString(),
                 expiresIn: '1h',
                 jwtid: session.guid,
             },

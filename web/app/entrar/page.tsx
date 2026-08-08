@@ -2,6 +2,7 @@
 
 import { useForm } from 'react-hook-form'
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Loader2, Lock, Mail } from 'lucide-react'
 
 import login from '@/api/user/login'
@@ -18,6 +19,8 @@ interface Form {
 
 export default function EntrarPage() {
     const [loading, setLoading] = useState(false)
+    const router = useRouter()
+
     const {
         register,
         handleSubmit,
@@ -40,7 +43,7 @@ export default function EntrarPage() {
         }
 
         toast.success('Login efetuado com sucesso')
-        console.log(response)
+        router.push('/painel')
     }
 
     return (
