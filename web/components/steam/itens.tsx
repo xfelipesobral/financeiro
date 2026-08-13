@@ -43,12 +43,15 @@ export function SteamItens() {
                 {itens.map((item) => {
                     const profit = calcProfit(item.lastPrice, item.averagePaidPrice ?? 0)
 
+                    item.quantity = 10
+
                     return (
                         <Link
                             key={item.id}
-                            className="border rounded-lg flex flex-col hover:shadow-md hover:-translate-y-1 hover:border-stone-300 transition-all relative"
+                            className="border rounded-lg flex flex-col hover:shadow-md hover:border-stone-300 transition-all relative"
                             href={`/painel/inventario-steam/${item.id}`}
-                            prefetch={false}>
+                            prefetch={false}
+                            title={item.name}>
                             <ProfitRender percentage={profit.percentage} flag={profit.flag} />
 
                             {item.quantity > 1 && (
@@ -64,9 +67,9 @@ export function SteamItens() {
                                 }}>
                                 <img src={item.imageUrl} alt={item.name} className="w-32 object-contain rounded" />
                             </div>
-                            <div className="p-2 flex flex-col items-start justify-between gap-2 flex-1">
+                            <div className="p-2 flex flex-col items-start justify-between  flex-1">
                                 <div>
-                                    <p className="text-sm mb-1 line-clamp-2">{item.name}</p>
+                                    <p className="text-sm mb-1 line-clamp-1">{item.name}</p>
                                 </div>
 
                                 <div className="flex items-center gap-1">

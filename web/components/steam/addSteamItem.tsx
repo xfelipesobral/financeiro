@@ -1,11 +1,12 @@
 'use client'
 
 import { Controller, useForm } from 'react-hook-form'
-import { useEffect, useState } from 'react'
+import { FocusEvent, useEffect, useState } from 'react'
 import { Loader2, Plus } from 'lucide-react'
 import { toast } from 'sonner'
 
 import apiCreateSteamInventoryItem from '@/api/steam/itens/createItem'
+import apiGetSteamItemInfo from '@/api/steam/itens/getItemInfo'
 import { DecimalInput } from '@/components/inputs/maskedInput'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
@@ -18,6 +19,7 @@ interface Params {
 }
 
 interface Form {
+    marketUrl: string
     name: string
     marketHashName: string
     imageUrl: string
@@ -26,9 +28,11 @@ interface Form {
 
 export function AddSteamItem({ open, closed }: Params) {
     const [loading, setLoading] = useState(false)
+    const [fetchingItemInfo, setFetchingItemInfo] = useState(false)
 
-    const { control, handleSubmit, register, reset } = useForm<Form>({
+    const { control, handleSubmit, register, reset, setValue } = useForm<Form>({
         defaultValues: {
+            marketUrl: '',
             name: '',
             marketHashName: '',
             imageUrl: '',
@@ -39,9 +43,33 @@ export function AddSteamItem({ open, closed }: Params) {
     useEffect(() => {
         if (!open) {
             setLoading(false)
+            setFetchingItemInfo(false)
             reset()
         }
     }, [open, reset])
+
+    const onMarketUrlBlur = async (event: FocusEvent<HTMLInputElement>) => {
+        const marketUrl = event.target.value.trim()
+
+        if (!marketUrl || !isValidHttpUrl(marketUrl)) {
+            return
+        }
+
+        setFetchingItemInfo(true)
+
+        const response = await apiGetSteamItemInfo(marketUrl)
+
+        setFetchingItemInfo(false)
+
+        if (!response.success || !response.data) {
+            toast.error(response.message || 'Não foi possível buscar as informações do item. Preencha manualmente.')
+            return
+        }
+
+        setValue('name', response.data.name)
+        setValue('marketHashName', response.data.marketName)
+        setValue('imageUrl', response.data.imageUrl)
+    }
 
     const onSubmit = async ({ name, marketHashName, imageUrl, initialPaidPrice }: Form) => {
         const normalizedName = name.trim()
@@ -109,6 +137,21 @@ export function AddSteamItem({ open, closed }: Params) {
                 </DialogHeader>
 
                 <form onSubmit={handleSubmit(onSubmit)} className="grid gap-3">
+                    <Field>
+                        <FieldLabel htmlFor="steam-item-market-url">Link do mercado</FieldLabel>
+                        <Input
+                            id="steam-item-market-url"
+                            type="url"
+                            placeholder="https://steamcommunity.com/market/listings/730/..."
+                            {...register('marketUrl', { onBlur: onMarketUrlBlur })}
+                        />
+                        <FieldDescription>
+                            {fetchingItemInfo
+                                ? 'Buscando informações do item...'
+                                : 'Cole o link do item no mercado da Steam para preencher os campos abaixo automaticamente.'}
+                        </FieldDescription>
+                    </Field>
+
                     <Field>
                         <FieldLabel htmlFor="steam-item-name">Nome</FieldLabel>
                         <Input id="steam-item-name" type="text" placeholder="AK-47 | Redline" {...register('name')} />

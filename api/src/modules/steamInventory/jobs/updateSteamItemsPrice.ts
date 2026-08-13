@@ -15,10 +15,9 @@ export async function updateSteamItemsPrice() {
         const marketUrls = await steamInventoryItemPriceHistory.getAllLastRecorded()
         const totalItens = marketUrls.length
 
-        const marketUrlsUpdated: { marketUrl: string; priceSteam: number }[] = []
-
         const today = new Date().toDateString()
         let updatedCount = 0
+        let getPriceSuccessCount = 0
 
         console.log(`Iniciando atualização de preços dos itens da steam. Total de itens: ${totalItens}`)
         for (const {
@@ -27,7 +26,12 @@ export async function updateSteamItemsPrice() {
         } of marketUrls) {
             updatedCount++
 
-            if (!marketUrl || (recordedAt && recordedAt.toDateString() === today)) {
+            if (!marketUrl) {
+                console.log(`Item sem marketUrl. Pulando... (${updatedCount}/${totalItens})`)
+                continue
+            }
+
+            if (recordedAt && recordedAt.toDateString() === today) {
                 console.log(`Item ${marketUrl} já atualizado hoje. Pulando... (${updatedCount}/${totalItens})`)
                 continue
             }
@@ -38,16 +42,16 @@ export async function updateSteamItemsPrice() {
 
             try {
                 const lastPriceSteam = (await getCs2PriceByMarketUrl(marketUrl)).price
-                marketUrlsUpdated.push({ marketUrl, priceSteam: lastPriceSteam })
 
+                await steamInventoryItemPriceHistory.create(marketUrl, lastPriceSteam, 0)
                 console.log(`Preço atualizado para ${marketUrl}: ${lastPriceSteam.toFixed(2)}`)
+                getPriceSuccessCount++
             } catch (error) {
                 console.error(`Erro ao atualizar preço do item: ${marketUrl}`)
             }
         }
 
-        await steamInventoryItemPriceHistory.insertMany(marketUrlsUpdated)
-        console.log(`Atualização de preços concluída. Total de itens atualizados: ${marketUrlsUpdated.length}`)
+        console.log(`Atualização de preços concluída. Total de itens atualizados: ${getPriceSuccessCount}/${totalItens}`)
     } catch (error) {
         console.error('Erro durante a atualização de preços dos itens da steam:', error)
     } finally {

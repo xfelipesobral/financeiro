@@ -46,9 +46,9 @@ export default function PainelContainer({ children }: Params) {
             <SidebarProvider>
                 <AppSidebar />
                 <SidebarInset>
-                    <header className="sticky z-50 top-0 flex h-16 shrink-0 items-center gap-2 border-b bg-background/90 backdrop-blur-sm px-4">
-                        <SidebarTrigger className="-ml-1" />
-                        <Separator orientation="vertical" className="mr-2 data-vertical:h-4" />
+                    <header className="sticky z-50 top-0 flex h-12 shrink-0 items-center gap-2 border-b bg-background/90 backdrop-blur-sm px-2">
+                        <SidebarTrigger />
+                        <Separator orientation="vertical" className="mr-2" />
                         <Breadcrumb>
                             <BreadcrumbList>
                                 {crumbs.map((crumb, i) => (

@@ -1,0 +1,22 @@
+meta {
+  name: steam-cs2-item-info
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{url}}/steam/itens/cs2-item-info
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "marketUrl": "https://steamcommunity.com/market/listings/730/M4A1-S%20%7C%20Vaporwave%20(Field-Tested)"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
