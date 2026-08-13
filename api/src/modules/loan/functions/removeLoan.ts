@@ -1,5 +1,4 @@
 import { ApiError } from '../../../utils/error'
-import { prisma } from '../../../db'
 import { payment } from '../../payment/service'
 import { transaction } from '../../transaction/service'
 import { loan } from '../service'
@@ -17,13 +16,11 @@ export async function removeLoan(userId: number, id: number) {
 
     const transactionIds = [...new Set(existing.payments.map((existingPayment) => existingPayment.transactionId))]
 
-    await prisma.$transaction(async (tx) => {
-        await payment.deleteMany({ loanId: id }, tx)
+    await payment.deleteMany({ loanId: id })
 
-        for (const transactionId of transactionIds) {
-            await transaction.deleteById(transactionId, tx)
-        }
+    for (const transactionId of transactionIds) {
+        await transaction.deleteById(transactionId)
+    }
 
-        await loan.deleteById(id, tx)
-    })
+    await loan.deleteById(id)
 }

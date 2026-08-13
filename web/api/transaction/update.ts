@@ -14,9 +14,9 @@ export interface ApiUpdateTransactionParams {
     installmentTotal?: number
 }
 
-export default async function apiUpdateTransaction(id: number | string, params: ApiUpdateTransactionParams): Promise<ResponseApi<Transaction>> {
+export default async function apiUpdateTransaction(id: number | string, params: ApiUpdateTransactionParams): Promise<ResponseApi<{ id: number }>> {
     try {
-        const { data } = await (await api()).patch<Transaction>(`/transaction/${id}`, params)
+        const { data } = await (await api()).patch<{ id: number }>(`/transaction/${id}`, params)
 
         return {
             success: true,

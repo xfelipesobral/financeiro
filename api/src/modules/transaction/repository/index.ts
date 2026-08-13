@@ -60,8 +60,8 @@ export class TransactionRepository {
         })
     }
 
-    userFindById(userId: number, id: number, db: Prisma.TransactionClient = prisma) {
-        return db.transaction.findFirst({
+    userFindById(userId: number, id: number) {
+        return this.transaction.findFirst({
             where: { userId, id },
             include: TransactionRepository.includeDefault,
         })
@@ -81,9 +81,8 @@ export class TransactionRepository {
         description: string,
         date: Date,
         installmentTotal: number | null = null,
-        db: Prisma.TransactionClient = prisma,
     ) {
-        return db.transaction.create({
+        return this.transaction.create({
             data: {
                 guid: uuid(),
                 userId,
@@ -98,16 +97,16 @@ export class TransactionRepository {
         })
     }
 
-    updateById(id: number, data: UpdateData, db: Prisma.TransactionClient = prisma) {
-        return db.transaction.update({
+    updateById(id: number, data: UpdateData) {
+        return this.transaction.update({
             where: { id },
             data,
             include: TransactionRepository.includeDefault,
         })
     }
 
-    deleteById(id: number, db: Prisma.TransactionClient = prisma) {
-        return db.transaction.delete({
+    deleteById(id: number) {
+        return this.transaction.delete({
             where: { id },
         })
     }
@@ -121,8 +120,8 @@ export class TransactionRepository {
     //   loanId — ver buildTransactionPayments/acceptScheduledPayment): só deve contar no saldo depois
     //   do aceite. `loanId: null` é necessário aqui pra não excluir o desembolso do empréstimo, que
     //   também nasce com Payments PENDING (um por parcela) mas deve contar no saldo imediatamente.
-    sumTotalAmountByBankAccount(userId: number, type: CategoryType, db: Prisma.TransactionClient = prisma) {
-        return db.transaction.groupBy({
+    sumTotalAmountByBankAccount(userId: number, type: CategoryType) {
+        return this.transaction.groupBy({
             by: ['bankAccountId'],
             where: {
                 userId,

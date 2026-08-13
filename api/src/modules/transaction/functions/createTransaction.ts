@@ -1,5 +1,4 @@
 import { ApiError } from '../../../utils/error'
-import { prisma } from '../../../db'
 import { category } from '../../category/service'
 import { payment } from '../../payment/service'
 import { transaction } from '../service'
@@ -43,39 +42,33 @@ export async function createTransaction(userId: number, data: CreateTransactionD
         date,
     })
 
-    return prisma.$transaction(async (tx) => {
-        const createdTransaction = await transaction.create(
-            userId,
-            built.bankAccountId,
-            categoryId,
-            totalAmount,
-            description,
-            date,
-            built.installmentTotal,
-            tx,
-        )
+    const createdTransaction = await transaction.create(
+        userId,
+        built.bankAccountId,
+        categoryId,
+        totalAmount,
+        description,
+        date,
+        built.installmentTotal,
+    )
 
-        await Promise.all(
-            built.payments.map((builtPayment) =>
-                payment.create(
-                    {
-                        userId,
-                        paymentMethodId: built.paymentMethodId,
-                        transactionId: createdTransaction.id,
-                        cardId: builtPayment.cardId,
-                        amount: builtPayment.amount,
-                        installmentNumber: builtPayment.installmentNumber,
-                        status: builtPayment.status,
-                        dueDate: builtPayment.dueDate,
-                        paidAt: builtPayment.paidAt,
-                    },
-                    tx,
-                ),
-            ),
-        )
+    await Promise.all(
+        built.payments.map((builtPayment) =>
+            payment.create({
+                userId,
+                paymentMethodId: built.paymentMethodId,
+                transactionId: createdTransaction.id,
+                cardId: builtPayment.cardId,
+                amount: builtPayment.amount,
+                installmentNumber: builtPayment.installmentNumber,
+                status: builtPayment.status,
+                dueDate: builtPayment.dueDate,
+                paidAt: builtPayment.paidAt,
+            }),
+        ),
+    )
 
-        return (await transaction.userFindById(userId, createdTransaction.id, tx))!
-    })
+    return createdTransaction.guid
 }
 
 export interface CreateTransactionDTO {

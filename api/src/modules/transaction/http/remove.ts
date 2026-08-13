@@ -1,6 +1,7 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { ApiError, handleApiError } from '../../../utils/error'
 import { transaction } from '../service'
+import { payment } from '../../payment/service'
 
 export async function remove(request: FastifyRequest, reply: FastifyReply) {
     try {
@@ -30,6 +31,7 @@ export async function remove(request: FastifyRequest, reply: FastifyReply) {
             )
         }
 
+        await payment.deleteByTransactionId(id)
         await transaction.deleteById(id)
 
         reply.status(204).send()

@@ -17,9 +17,11 @@ export async function update(request: FastifyRequest<{ Body: UpdateLoanDTO }>, r
             throw new ApiError('INVALID_LOAN_ID', 'Empréstimo inválido', 400)
         }
 
-        const updatedLoan = await updateLoan(request.authenticated!.userId, id, request.body)
+        await updateLoan(request.authenticated!.userId, id, request.body)
 
-        reply.status(200).send(formatLoan(updatedLoan))
+        reply.status(200).send({
+            id,
+        })
     } catch (error) {
         handleApiError(error, reply)
     }

@@ -45,22 +45,18 @@ export async function updateLoan(userId: number, id: number, data: UpdateLoanDTO
         updateData.dueDay = dueDay
     }
 
-    return prisma.$transaction(async (tx) => {
-        await loan.updateById(id, updateData, tx)
+    await loan.updateById(id, updateData)
 
-        // Alterar o dia de vencimento só desloca as parcelas ainda PENDING; as já PAID mantêm a data histórica.
-        if (dueDay !== undefined) {
-            const pendingPayments = existing.payments.filter((existingPayment) => existingPayment.status === 'PENDING')
+    // Alterar o dia de vencimento só desloca as parcelas ainda PENDING; as já PAID mantêm a data histórica.
+    if (dueDay !== undefined) {
+        const pendingPayments = existing.payments.filter((existingPayment) => existingPayment.status === 'PENDING')
 
-            await Promise.all(
-                pendingPayments.map((pendingPayment) =>
-                    payment.updateById(pendingPayment.id, { dueDate: changeDayOfMonth(pendingPayment.dueDate, dueDay!) }, tx),
-                ),
-            )
-        }
-
-        return (await loan.userFindById(userId, id, tx))!
-    })
+        await Promise.all(
+            pendingPayments.map((pendingPayment) =>
+                payment.updateById(pendingPayment.id, { dueDate: changeDayOfMonth(pendingPayment.dueDate, dueDay!) }),
+            ),
+        )
+    }
 }
 
 export interface UpdateLoanDTO {

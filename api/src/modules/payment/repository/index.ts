@@ -46,8 +46,8 @@ export class PaymentRepository {
         })
     }
 
-    create(data: CreatePaymentData, db: Prisma.TransactionClient = prisma) {
-        return db.payment.create({
+    create(data: CreatePaymentData) {
+        return this.payment.create({
             data: {
                 guid: uuid(),
                 ...data,
@@ -56,8 +56,8 @@ export class PaymentRepository {
         })
     }
 
-    updateById(id: number, data: UpdatePaymentData, db: Prisma.TransactionClient = prisma) {
-        return db.payment.update({
+    updateById(id: number, data: UpdatePaymentData) {
+        return this.payment.update({
             where: { id },
             data: {
                 ...data,
@@ -66,13 +66,16 @@ export class PaymentRepository {
         })
     }
 
-    deleteMany(where: Prisma.PaymentWhereInput, db: Prisma.TransactionClient = prisma) {
-        return db.payment.deleteMany({ where })
+    deleteMany(where: Prisma.PaymentWhereInput) {
+        return this.payment.deleteMany({ where })
     }
 
-    // Todos os Payments PENDING do usuário — base de dados do dashboard "Contas a pagar". Inclui só a
-    // descrição da transação original (rótulo de fallback); card/loan completos já são buscados à
-    // parte pelo front (GET /card, GET /loan) para exibição/seleção de conta.
+    deleteByTransactionId(transactionId: number) {
+        return this.payment.deleteMany({
+            where: { transactionId },
+        })
+    }
+
     userFindManyPending(userId: number) {
         return this.payment.findMany({
             where: { userId, status: 'PENDING' },
@@ -83,10 +86,6 @@ export class PaymentRepository {
         })
     }
 
-    // Parcelas PENDING de uma fatura específica: mesmo cardId + mesmo dueDate exato. Todas as
-    // parcelas de um cartão que vencem no mesmo mês compartilham o mesmo dueDate (calculado a partir
-    // de card.closingDay, ver calculateMonthlyDueDates/buildTransactionPayments), então isso é o
-    // suficiente para identificar "a fatura".
     findManyPendingByCardIdAndDueDate(cardId: number, dueDate: Date) {
         return this.payment.findMany({
             where: { cardId, dueDate: startOfDay(dueDate), status: 'PENDING' },

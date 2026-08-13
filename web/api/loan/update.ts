@@ -9,9 +9,9 @@ export interface ApiUpdateLoanParams {
     interestRate?: number | null
 }
 
-export default async function apiUpdateLoan(id: number | string, params: ApiUpdateLoanParams): Promise<ResponseApi<Loan>> {
+export default async function apiUpdateLoan(id: number | string, params: ApiUpdateLoanParams): Promise<ResponseApi<{ id: number }>> {
     try {
-        const { data } = await (await api()).patch<Loan>(`/loan/${id}`, params)
+        const { data } = await (await api()).patch<{ id: number }>(`/loan/${id}`, params)
 
         return {
             success: true,

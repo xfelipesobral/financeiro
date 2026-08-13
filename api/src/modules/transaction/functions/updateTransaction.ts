@@ -60,7 +60,7 @@ export async function updateTransaction(userId: number, id: number, data: Update
 
     const paymentMethodId = data.paymentMethodId !== undefined ? data.paymentMethodId : existing.payments[0]?.paymentMethodId
 
-    const installmentTotal = data.installmentTotal !== undefined ? data.installmentTotal : existing.installmentTotal ?? undefined
+    const installmentTotal = data.installmentTotal !== undefined ? data.installmentTotal : (existing.installmentTotal ?? undefined)
 
     // O front sempre reenvia todos os campos (mesmo os que o usuário não mexeu), então não dá pra
     // decidir o que "mudou de verdade" olhando só quais chaves vieram no body — comparamos os valores
@@ -81,9 +81,7 @@ export async function updateTransaction(userId: number, id: number, data: Update
     const hasSettledCardInstallment = !!existingCardId && existing.payments.some((existingPayment) => existingPayment.status !== 'PENDING')
 
     if (paymentsStructureChanged && hasSettledCardInstallment) {
-        throw new ApiError('TRANSACTION_HAS_PAID_PAYMENTS', 'Este lançamento já tem parcelas pagas e não pode mais ser editado',
-            400,
-        )
+        throw new ApiError('TRANSACTION_HAS_PAID_PAYMENTS', 'Este lançamento já tem parcelas pagas e não pode mais ser editado', 400)
     }
 
     if (!paymentsStructureChanged) {
@@ -100,41 +98,34 @@ export async function updateTransaction(userId: number, id: number, data: Update
         date,
     })
 
-    return prisma.$transaction(async (tx) => {
-        await payment.deleteMany({ transactionId: id }, tx)
+    await payment.deleteMany({ transactionId: id })
 
-        await Promise.all(
-            built.payments.map((builtPayment) =>
-                payment.create(
-                    {
-                        userId,
-                        paymentMethodId: built.paymentMethodId,
-                        transactionId: id,
-                        cardId: builtPayment.cardId,
-                        amount: builtPayment.amount,
-                        installmentNumber: builtPayment.installmentNumber,
-                        status: builtPayment.status,
-                        dueDate: builtPayment.dueDate,
-                        paidAt: builtPayment.paidAt,
-                    },
-                    tx,
-                ),
-            ),
-        )
+    await Promise.all(
+        built.payments.map((builtPayment) =>
+            payment.create({
+                userId,
+                paymentMethodId: built.paymentMethodId,
+                transactionId: id,
+                cardId: builtPayment.cardId,
+                amount: builtPayment.amount,
+                installmentNumber: builtPayment.installmentNumber,
+                status: builtPayment.status,
+                dueDate: builtPayment.dueDate,
+                paidAt: builtPayment.paidAt,
+            }),
+        ),
+    )
 
-        return transaction.updateById(
-            id,
-            {
-                bankAccountId: built.bankAccountId,
-                categoryId,
-                totalAmount,
-                description,
-                date,
-                installmentTotal: built.installmentTotal,
-            },
-            tx,
-        )
+    await transaction.updateById(id, {
+        bankAccountId: built.bankAccountId,
+        categoryId,
+        totalAmount,
+        description,
+        date,
+        installmentTotal: built.installmentTotal,
     })
+
+    return id
 }
 
 export interface UpdateTransactionDTO {

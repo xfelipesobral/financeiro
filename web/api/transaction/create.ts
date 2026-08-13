@@ -14,9 +14,9 @@ export interface ApiCreateTransactionParams {
     installmentTotal?: number
 }
 
-export default async function apiCreateTransaction(params: ApiCreateTransactionParams): Promise<ResponseApi<Transaction>> {
+export default async function apiCreateTransaction(params: ApiCreateTransactionParams): Promise<ResponseApi<{ id: string }>> {
     try {
-        const { data, status } = await (await api()).post<Transaction>('/transaction', params)
+        const { data, status } = await (await api()).post<{ id: string }>('/transaction', params)
 
         if (status !== 201) {
             throw new Error('UNKNOWN_ERROR')

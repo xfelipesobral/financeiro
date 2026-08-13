@@ -31,6 +31,7 @@ import {
     SidebarRail,
 } from '@/components/ui/sidebar'
 import logout from '@/api/user/logout'
+import { useUsuarioLogado } from '@/app/painel/usuarioLogadoContext'
 
 interface NavItem {
     title: string
@@ -70,6 +71,7 @@ export const navGroups: NavGroup[] = [
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const pathname = usePathname()
+    const { usuario, loading: loadingUsuario } = useUsuarioLogado()
 
     return (
         <Sidebar collapsible="icon" {...props}>
@@ -113,6 +115,22 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarContent>
             <SidebarFooter>
                 <SidebarMenu>
+                    {(usuario || loadingUsuario) && (
+                        <SidebarMenuItem>
+                            <div className="flex flex-col px-2 py-1 text-sm leading-tight group-data-[collapsible=icon]:hidden">
+                                {loadingUsuario ? (
+                                    <span className="text-muted-foreground">Carregando...</span>
+                                ) : (
+                                    <>
+                                        <span className="truncate font-medium">
+                                            {usuario!.firstName} {usuario!.lastName}
+                                        </span>
+                                        <span className="truncate text-xs text-muted-foreground">{usuario!.email}</span>
+                                    </>
+                                )}
+                            </div>
+                        </SidebarMenuItem>
+                    )}
                     <SidebarMenuItem>
                         <form action={logout}>
                             <SidebarMenuButton type="submit" tooltip="Sair">
