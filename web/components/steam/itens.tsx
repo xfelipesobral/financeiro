@@ -43,8 +43,6 @@ export function SteamItens() {
                 {itens.map((item) => {
                     const profit = calcProfit(item.lastPrice, item.averagePaidPrice ?? 0)
 
-                    item.quantity = 10
-
                     return (
                         <Link
                             key={item.id}
